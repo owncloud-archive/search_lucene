@@ -46,7 +46,7 @@ class Lucene {
 			
 			//let lucene search for numbers as well as words
 			\Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-				new \Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive()
+				new \Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive()
 			);
 			
 			// Create index
