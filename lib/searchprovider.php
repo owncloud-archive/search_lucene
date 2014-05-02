@@ -105,7 +105,7 @@ class SearchProvider extends \OC_Search_Provider {
 				$url = Util::linkTo('files', 'index.php') . '?dir='.$hit->path;
 				break;
 			default:
-				$url = \OC::getRouter()->generate('download', array('file'=>$hit->path));
+				$url = \OC::$server->getRouter()->generate('download', array('file'=>$hit->path));
 		}
 		
 		return new \OC_Search_Result(
