@@ -63,7 +63,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase {
 		\OC_Util::setupFS($this->userName);
 		\OC_User::setUserId($this->userName);
 
-		$view = new \OC_FilesystemView('/' . $this->userName . '/files');
+		$view = new \OC\Files\View('/' . $this->userName . '/files');
 
 		// setup files
 		$filesToCopy = array(
@@ -121,9 +121,10 @@ abstract class TestCase extends PHPUnit_Framework_TestCase {
 		}
 		$cache = $this->storage->getCache();
 		$ids = $cache->getAll();
-		$permissionsCache = $this->storage->getPermissionsCache();
-		$permissionsCache->removeMultiple($ids, \OC_User::getUser());
 		$cache->clear();
+		foreach ($ids as $id) {
+			\OCA\Search_Lucene\Status::delete($id);
+		}
 	}
 	
 	protected function getFileId($path) {

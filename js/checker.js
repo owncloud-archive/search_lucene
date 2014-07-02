@@ -53,5 +53,10 @@ $(document).ready(function () {
 	//hovering over it shows the current file
 	//clicking it stops the indexer: ⌛
 
+	OC.search.resultTypes.content = 'In' // translated
+
+	OC.search.customResults.content = function (row, item){
+		row.find('td.result .text').text(t('search_lucene', 'Score: {score}', {score: Math.round(item.score*100)/100}));
+	};
 
 });
