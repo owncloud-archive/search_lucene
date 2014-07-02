@@ -6,6 +6,4 @@ if (version_compare($currentVersion, '0.6.0', '<')) {
 	//force reindexing of files
 	$stmt = OCP\DB::prepare('DELETE FROM `*PREFIX*lucene_status`');
 	$stmt->execute();
-	//FIXME wipe index on disk because primary key changed
-
 }

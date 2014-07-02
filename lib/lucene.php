@@ -16,7 +16,7 @@ class Lucene {
 	 * used as signalclass in OC_Hooks::emit()
 	 */
 	const CLASSNAME = 'Lucene';
-	
+
 	public $user;
 	public $index;
 
@@ -24,13 +24,13 @@ class Lucene {
 		$this->user = $user;
 		$this->index = self::openOrCreate();
 	}
-	
+
 	private function getIndexURL () {
 		// TODO profile: encrypt the index on logout, decrypt on login
 		//return OCP\Files::getStorage('search_lucene');
 		return \OC_User::getHome($this->user) . '/lucene_index';
 	}
-	
+
 	/**
 	 * opens or creates the users lucene index
 	 * 
@@ -52,13 +52,25 @@ class Lucene {
 			// Create index
 
 			$indexUrl = $this->getIndexURL();
-			if (file_exists($indexUrl)) {
+
+			// can we use the index?
+			if (file_exists($indexUrl.'/v0.6.0')) {
+				// correct index present
 				$index = \Zend_Search_Lucene::open($indexUrl);
+			} else if (file_exists($indexUrl)) {
+				Util::writeLog(
+					'search_lucene',
+					'recreating outdated lucene index',
+					Util::INFO
+				);
+				\OC_Helper::rmdirr($indexUrl);
+				$index = \Zend_Search_Lucene::create($indexUrl);
+				touch($indexUrl.'/v0.6.0');
 			} else {
 				$index = \Zend_Search_Lucene::create($indexUrl);
-				//todo index all user files
+				touch($indexUrl.'/v0.6.0');
 			}
-		} catch ( Exception $e ) {
+		} catch ( \Exception $e ) {
 			Util::writeLog(
 				'search_lucene',
 				$e->getMessage().' Trace:\n'.$e->getTraceAsString(),
@@ -100,7 +112,7 @@ class Lucene {
 	 * 
 	 * @author Jörn Dreyer <jfd@butonic.de>
 	 * 
-	 * @param Zend_Search_Lucene_Document $doc  the document to store for the path
+	 * @param \Zend_Search_Lucene_Document $doc  the document to store for the path
 	 * @param int $fileid fileid to update
 	 * 
 	 * @return void

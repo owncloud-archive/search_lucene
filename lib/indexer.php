@@ -32,7 +32,7 @@ class Indexer {
 		$skippedDirs = explode(';', \OCP\Config::getUserValue(\OCP\User::getUser(), 'search_lucene', 'skipped_dirs', '.git;.svn;.CVS;.bzr'));
 		
 		foreach ($fileIds as $id) {
-			$skipped = false;
+			$skip = false;
 
 			$fileStatus = \OCA\Search_Lucene\Status::fromFileId($id);
 
@@ -43,7 +43,7 @@ class Indexer {
 				$fileStatus->markError();
 
 				$path = \OC\Files\Filesystem::getPath($id);
-				
+
 				if (empty($path)) {
 					$skip = true;
 				} else {
@@ -55,14 +55,13 @@ class Indexer {
 							break;
 						}
 					}
-					$skip = false;
 				}
 				
 				if ($skip) {
 					$fileStatus->markSkipped();
 					\OCP\Util::writeLog('search_lucene',
 						'skipping file '.$id.':'.$path,
-						\OCP\Util::ERROR);
+						\OCP\Util::DEBUG);
 					continue;
 				}
 				if ($eventSource) {
@@ -77,7 +76,7 @@ class Indexer {
 						$eventSource->send('error', $path);
 					}
 				}
-			} catch (Exception $e) { //sqlite might report database locked errors when stock filescan is in progress
+			} catch (\Exception $e) { //sqlite might report database locked errors when stock filescan is in progress
 				//this also catches db locked exception that might come up when using sqlite
 				\OCP\Util::writeLog('search_lucene',
 					$e->getMessage() . ' Trace:\n' . $e->getTraceAsString(),
@@ -183,11 +182,10 @@ class Indexer {
 			// Store filecache id as unique id to lookup by when deleting
 			$doc->addField(\Zend_Search_Lucene_Field::Keyword('fileid', $data['fileid']));
 
-			// Store filename
-			$doc->addField(\Zend_Search_Lucene_Field::Text('filename', $data['name'], 'UTF-8'));
-
-			// Store document path to identify it in the search results
+			// Store document path for the search results
 			$doc->addField(\Zend_Search_Lucene_Field::Text('path', $path, 'UTF-8'));
+
+			$doc->addField(\Zend_Search_Lucene_Field::unIndexed('mtime', $data['mtime']));
 
 			$doc->addField(\Zend_Search_Lucene_Field::unIndexed('size', $data['size']));
 
