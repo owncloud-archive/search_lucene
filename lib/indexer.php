@@ -150,9 +150,7 @@ class Indexer {
 
 					$doc = Pdf::loadPdf($this->view->file_get_contents($path));
 
-				// commented the mimetype checks, as the zend classes only understand docx and not doc files.
-				// FIXME distinguish doc and docx, xls and xlsx, ppt and pptx, in oc core mimetype helper ...
-				//} else if ('application/msword' === $mimeType) {
+				// the zend classes only understand docx and not doc files
 				} else if (strtolower(substr($data['name'], -5)) === '.docx') {
 
 					$doc = \Zend_Search_Lucene_Document_Docx::loadDocxFile($localFile);
@@ -178,7 +176,6 @@ class Indexer {
 				}
 			}
 
-
 			// Store filecache id as unique id to lookup by when deleting
 			$doc->addField(\Zend_Search_Lucene_Field::Keyword('fileid', $data['fileid']));
 
@@ -190,7 +187,6 @@ class Indexer {
 			$doc->addField(\Zend_Search_Lucene_Field::unIndexed('size', $data['size']));
 
 			$doc->addField(\Zend_Search_Lucene_Field::unIndexed('mimetype', $mimeType));
-
 
 			$this->lucene->updateFile($doc, $data['fileid']);
 
