@@ -118,9 +118,14 @@ class Indexer {
 		}
 
 		// the cache already knows mime and other basic stuff
+		/** @var \OC\Files\FileInfo $data */
 		$data = $this->view->getFileInfo($path);
-		if (isset($data['mimetype'])) {
-			$mimeType = $data['mimetype'];
+
+		if (isset($data)) {
+
+			// we decide how to index on mime type or file extension
+			$mimeType = $data->getMimetype();
+			$fileExtension = strtolower(pathinfo($data->getName(), PATHINFO_EXTENSION));
 
 			// initialize plain lucene document
 			$doc = new \Zend_Search_Lucene_Document();
@@ -131,7 +136,7 @@ class Indexer {
 			if ( $localFile ) {
 				//try to use special lucene document types
 
-				if ('text/plain' === $mimeType) {
+				if ('text/plain' === $data->getMimetype()) {
 
 					$body = $this->view->file_get_contents($path);
 
@@ -151,25 +156,25 @@ class Indexer {
 					$doc = Pdf::loadPdf($this->view->file_get_contents($path));
 
 				// the zend classes only understand docx and not doc files
-				} else if (strtolower(substr($data['name'], -5)) === '.docx') {
+				} else if ($fileExtension === 'docx') {
 
 					$doc = \Zend_Search_Lucene_Document_Docx::loadDocxFile($localFile);
 
 				//} else if ('application/msexcel' === $mimeType) {
-				} else if (strtolower(substr($data['name'], -5)) === '.xlsx') {
+				} else if ($fileExtension === 'xlsx') {
 
 					$doc = \Zend_Search_Lucene_Document_Xlsx::loadXlsxFile($localFile);
 
 				//} else if ('application/mspowerpoint' === $mimeType) {
-				} else if (strtolower(substr($data['name'], -5)) === '.pptx') {
+				} else if ($fileExtension === 'pptx') {
 
 					$doc = \Zend_Search_Lucene_Document_Pptx::loadPptxFile($localFile);
 
-				} else if (strtolower(substr($data['name'], -4)) === '.odt') {
+				} else if ($fileExtension === 'odt') {
 
 					$doc = Odt::loadOdtFile($localFile);
 
-				} else if (strtolower(substr($data['name'], -4)) === '.ods') {
+				} else if ($fileExtension === 'ods') {
 
 					$doc = Ods::loadOdsFile($localFile);
 
@@ -177,25 +182,25 @@ class Indexer {
 			}
 
 			// Store filecache id as unique id to lookup by when deleting
-			$doc->addField(\Zend_Search_Lucene_Field::Keyword('fileid', $data['fileid']));
+			$doc->addField(\Zend_Search_Lucene_Field::Keyword('fileid', $data->getId()));
 
 			// Store document path for the search results
 			$doc->addField(\Zend_Search_Lucene_Field::Text('path', $path, 'UTF-8'));
 
-			$doc->addField(\Zend_Search_Lucene_Field::unIndexed('mtime', $data['mtime']));
+			$doc->addField(\Zend_Search_Lucene_Field::unIndexed('mtime', $data->getMTime()));
 
-			$doc->addField(\Zend_Search_Lucene_Field::unIndexed('size', $data['size']));
+			$doc->addField(\Zend_Search_Lucene_Field::unIndexed('size', $data->getSize()));
 
 			$doc->addField(\Zend_Search_Lucene_Field::unIndexed('mimetype', $mimeType));
 
-			$this->lucene->updateFile($doc, $data['fileid']);
+			$this->lucene->updateFile($doc, $data->getId());
 
 			return true;
 
 		} else {
 			Util::writeLog(
 				'search_lucene',
-				'need mimetype for content extraction',
+				'need file info object for content extraction',
 				Util::ERROR
 			);
 			return false;

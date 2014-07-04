@@ -78,9 +78,12 @@ class Hooks {
 		}
 		if (!empty($param['newpath'])) {
 			$view = new \OC\Files\View('/' . $user . '/files');
+			/** @var \OC\Files\FileInfo $info */
 			$info = $view->getFileInfo($param['newpath']);
-			Status::fromFileId($info['fileid'])->markNew();
-			self::indexFile(array('path'=>$param['newpath']));
+			if ($info) {
+				Status::fromFileId($info->getId())->markNew();
+				self::indexFile(array('path'=>$param['newpath']));
+			}
 		}
 	}
 
@@ -98,18 +101,23 @@ class Hooks {
 		$lucene = new Lucene($user);
 		$deletedIds = Status::getDeleted();
 		$count = 0;
-		foreach ($deletedIds as $fileid) {
+		foreach ($deletedIds as $fileId) {
 			Util::writeLog(
 				'search_lucene',
-				'deleting status for ('.$fileid.') ',
+				'deleting status for ('.$fileId.') ',
 				Util::DEBUG
 			);
 			//delete status
-			\OCA\Search_Lucene\Status::delete($fileid);
+			Status::delete($fileId);
 			//delete from lucene
-			$count += $lucene->deleteFile($fileid);
+			$count += $lucene->deleteFile($fileId);
 			
 		}
+		Util::writeLog(
+			'search_lucene',
+			'removed '.$count.' files from index',
+			Util::DEBUG
+		);
 
 	}
 	

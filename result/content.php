@@ -37,7 +37,7 @@ class Content extends \OC\Search\Result\File {
 
 	/**
 	 * Create a new content search result
-	 * @param array $data file data given by provider
+	 * @param \Zend_Search_Lucene_Search_QueryHit $hit file data given by provider
 	 */
 	public function __construct(\Zend_Search_Lucene_Search_QueryHit $hit) {
 		$this->id = (string)$hit->fileid;
