@@ -3,12 +3,11 @@
 namespace OCA\Search_Lucene;
 
 class OptimizeJob extends \OC\BackgroundJob\TimedJob {
-	
-	
+
 	public function __construct() {
 		$this->setInterval(86400); //execute at most once a day
 	}
-	
+
 	public function run($arguments){
 		if (!empty($arguments['user'])) {
 			$user = $arguments['user'];

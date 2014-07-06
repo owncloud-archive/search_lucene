@@ -2,8 +2,6 @@
 
 namespace OCA\Search_Lucene;
 
-use \OC\Files\Filesystem;
-use \OCP\User;
 use \OCP\Util;
 
 /**
@@ -17,76 +15,109 @@ class Lucene {
 	 */
 	const CLASSNAME = 'Lucene';
 
-	public $user;
 	public $index;
 
-	public function __construct($user) {
-		$this->user = $user;
-		$this->index = self::openOrCreate();
-	}
-
-	private function getIndexURL () {
-		// TODO profile: encrypt the index on logout, decrypt on login
-		//return OCP\Files::getStorage('search_lucene');
-		return \OC_User::getHome($this->user) . '/lucene_index';
+	/**
+	 * The default location of '<user>/lucene_index' can be overridden by passing in a different folder
+	 *
+	 * @param \OCP\Files\Folder $indexFolder location of the lucene_index
+	 */
+	public function __construct(\OCP\Files\Folder $indexFolder = null) {
+		if (is_null($indexFolder)) {
+			$indexFolder = $this->getIndexFolder();
+		}
+		$this->index = $this->openOrCreate($indexFolder);
 	}
 
 	/**
-	 * opens or creates the users lucene index
+	 * @return null|\OCP\Files\Folder
+	 */
+	private function getIndexFolder() {
+
+		// TODO profile: encrypt the index on logout, decrypt on login
+		//return OCP\Files::getStorage('search_lucene');
+		// FIXME \OC::$server->getAppFolder() returns '/search'
+		//$indexFolder = \OC::$server->getAppFolder();
+
+		$root = \OC::$server->getRootFolder();
+		$dir = '/'.\OCP\User::getUser();
+		$userFolder = null;
+		if(!$root->nodeExists($dir)) {
+			$userFolder = $root->newFolder($dir);
+		} else {
+			$userFolder = $root->get($dir);
+		}
+		$dir = 'lucene_index';
+		$indexFolder = null;
+		if(!$userFolder->nodeExists($dir)) {
+			$indexFolder = $userFolder->newFolder($dir);
+		} else {
+			$indexFolder = $userFolder->get($dir);
+		}
+
+		return $indexFolder;
+	}
+
+	/**
+	 * opens or creates the given lucene index
 	 * 
-	 * stores the index in <datadirectory>/<user>/lucene_index
+	 * stores the index in $indexFolder
 	 * 
 	 * @author Jörn Dreyer <jfd@butonic.de>
 	 *
-	 * @return Zend_Search_Lucene_Interface 
+	 * @param \OCP\Files\Folder $indexFolder
+	 * @return \Zend_Search_Lucene_Interface
+	 * @throws \Exception
 	 */
-	private function openOrCreate() {
+	private function openOrCreate(\OCP\Files\Folder $indexFolder) {
+
+		if (is_null($indexFolder)) {
+			throw new \Exception('No Index folder given');
+		}
 
 		try {
-			
+
+			$storage = $indexFolder->getStorage();
+			$localPath = $storage->getLocalFile($indexFolder->getInternalPath());
+
 			//let lucene search for numbers as well as words
 			\Zend_Search_Lucene_Analysis_Analyzer::setDefault(
 				new \Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive()
 			);
-			
-			// Create index
-
-			$indexUrl = $this->getIndexURL();
 
 			// can we use the index?
-			if (file_exists($indexUrl.'/v0.6.0')) {
+			if ($indexFolder->nodeExists('/v0.6.0')) {
 				// correct index present
-				$index = \Zend_Search_Lucene::open($indexUrl);
-			} else if (file_exists($indexUrl)) {
+				$index = \Zend_Search_Lucene::open($localPath);
+			} else if (file_exists($indexFolder)) {
 				Util::writeLog(
 					'search_lucene',
 					'recreating outdated lucene index',
 					Util::INFO
 				);
-				\OC_Helper::rmdirr($indexUrl);
-				$index = \Zend_Search_Lucene::create($indexUrl);
-				touch($indexUrl.'/v0.6.0');
+				$indexFolder->delete();
+				$index = \Zend_Search_Lucene::create($localPath);
+				touch($indexFolder.'/v0.6.0');
 			} else {
-				$index = \Zend_Search_Lucene::create($indexUrl);
-				touch($indexUrl.'/v0.6.0');
+				$index = \Zend_Search_Lucene::create($localPath);
+				touch($indexFolder.'/v0.6.0');
 			}
+			return $index;
 		} catch ( \Exception $e ) {
 			Util::writeLog(
 				'search_lucene',
 				$e->getMessage().' Trace:\n'.$e->getTraceAsString(),
 				Util::ERROR
 			);
-			return null;
 		}
-		
 
-		return $index;
+		return null;
+
 	}
 
 	/**
 	 * optimizes the lucene index
-	 * 
-	 * 
+	 *
 	 * @author Jörn Dreyer <jfd@butonic.de>
 	 * 
 	 * @return void
