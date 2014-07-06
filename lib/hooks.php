@@ -48,9 +48,15 @@ class Hooks {
 	 * @param $param array from postWriteFile-Hook
 	 */
 	public static function indexFile(array $param) {
+		//FIXME use fileid to index correct file, otherwise there will never be an update
 		$user = \OCP\User::getUser();
 		if (!empty($user)) {
-			$arguments = array('user' => $user);
+			$userFolder = \OC::$server->getUserFolder();
+			$folder = $userFolder->get($param['path']);
+			$arguments = array(
+				'user' => $user,
+				'fileId' => $folder->getId()
+			);
 			//Add Background Job:
 			BackgroundJob::registerJob( '\OCA\Search_Lucene\IndexJob', $arguments );
 		} else {
@@ -70,20 +76,16 @@ class Hooks {
 	 * @param $param array from postRenameFile-Hook
 	 */
 	public static function renameFile(array $param) {
-			$user = \OCP\User::getUser();
 		if (!empty($param['oldpath'])) {
 			//delete from lucene index
-			$lucene = new Lucene($user);
+			$lucene = new Lucene();
 			$lucene->deleteFile($param['oldpath']);
 		}
 		if (!empty($param['newpath'])) {
-			$view = new \OC\Files\View('/' . $user . '/files');
-			/** @var \OC\Files\FileInfo $info */
-			$info = $view->getFileInfo($param['newpath']);
-			if ($info) {
-				Status::fromFileId($info->getId())->markNew();
-				self::indexFile(array('path'=>$param['newpath']));
-			}
+			$userFolder = \OC::$server->getUserFolder();
+			$folder = $userFolder->get($param['newpath']);
+			Status::fromFileId($folder->getId())->markNew();
+			self::indexFile(array('path'=>$param['newpath']));
 		}
 	}
 
@@ -97,8 +99,7 @@ class Hooks {
 	static public function deleteFile(array $param) {
 		// we cannot use post_delete as $param would not contain the id
 		// of the deleted file and we could not fetch it with getId
-		$user = \OCP\User::getUser();
-		$lucene = new Lucene($user);
+		$lucene = new Lucene();
 		$deletedIds = Status::getDeleted();
 		$count = 0;
 		foreach ($deletedIds as $fileId) {
@@ -111,7 +112,7 @@ class Hooks {
 			Status::delete($fileId);
 			//delete from lucene
 			$count += $lucene->deleteFile($fileId);
-			
+
 		}
 		Util::writeLog(
 			'search_lucene',
@@ -120,7 +121,7 @@ class Hooks {
 		);
 
 	}
-	
+
 	/**
 	 * was used by backgroundjobs to index individual files
 	 * 
@@ -131,5 +132,5 @@ class Hooks {
 	 * @param $param array from deleteFile-Hook
 	 */
 	static public function doIndexFile(array $param) {/* ignore */}
-	
+
 }

@@ -9,8 +9,6 @@
 
 namespace OCA\Search_Lucene;
 
-use \OC\Files\Filesystem;
-use \OCP\User;
 use \OCP\Util;
 
 /**
@@ -39,7 +37,7 @@ class SearchProvider extends \OCP\Search\Provider {
 			//	TODO add end user guide for search terms ... 
 			//}
 			try {
-				$lucene = new Lucene(\OCP\User::getUser());
+				$lucene = new Lucene();
 				//default is 3, 0 needed to keep current search behaviour
 				//Zend_Search_Lucene_Search_Query_Wildcard::setMinPrefixLength(0); 
 				
@@ -50,7 +48,7 @@ class SearchProvider extends \OCP\Search\Provider {
 
 				//limit results. we cant show more than ~30 anyway. TODO use paging later
 				for ($i = 0; $i < 30 && $i < count($hits); $i++) {
-					$results[] = new \OCA\Search_Lucene\Result\Content($hits[$i]);
+					$results[] = new Result\Content($hits[$i]);
 				}
 
 			} catch ( \Exception $e ) {

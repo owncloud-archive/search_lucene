@@ -14,7 +14,7 @@ class Status {
 	const STATUS_INDEXED = 'I';
 	const STATUS_SKIPPED = 'S';
 	const STATUS_ERROR = 'E';
-	
+
 	private $fileId;
 	private $status;
 
@@ -22,6 +22,7 @@ class Status {
 		$this->fileId = $fileId;
 		$this->status = $status;
 	}
+
 	public static function fromFileId($fileId) {
 		$status = self::get($fileId);
 		if ($status) {
@@ -30,29 +31,36 @@ class Status {
 			return new Status($fileId, null);
 		}
 	}
+
 	public function getFileId() {
 		return $this->fileId;
 	}
+
 	public function getStatus() {
 		return $this->status;
 	}
+
 	// always write status to db immediately
 	public function markNew() {
 		$this->status = self::STATUS_NEW;
 		return $this->store();
 	}
+
 	public function markIndexed() {
 		$this->status = self::STATUS_INDEXED;
 		return $this->store();
 	}
+
 	public function markSkipped() {
 		$this->status = self::STATUS_SKIPPED;
 		return $this->store();
 	}
+
 	public function markError() {
 		$this->status = self::STATUS_ERROR;
 		return $this->store();
 	}
+
 	private function store() {
 		$savedStatus = self::get($this->fileId);
 		if ($savedStatus) {
@@ -61,6 +69,7 @@ class Status {
 			return self::insert($this->fileId, $this->status);
 		}
 	}
+
 	public static function delete($fileId) {
 		$query = \OC_DB::prepare('
 			DELETE FROM `*PREFIX*lucene_status` WHERE `fileid` = ?
@@ -82,12 +91,14 @@ class Status {
 			return null;
 		}
 	}
+
 	private static function insert($fileId, $status) {
 		$query = \OC_DB::prepare('
 			INSERT INTO `*PREFIX*lucene_status` VALUES (?,?)
 		');
 		return $query->execute(array($fileId, $status));
 	}
+
 	private static function update($fileId, $status) {
 		$query = \OC_DB::prepare('
 			UPDATE `*PREFIX*lucene_status`
@@ -96,7 +107,7 @@ class Status {
 		');
 		return $query->execute(array($status, $fileId));
 	}
-	
+
 	/**
 	 * get the list of all unindexed files for the user
 	 *
@@ -155,7 +166,7 @@ class Status {
 
 	static public function getDeleted() {
 		$files = array();
-		
+
 		$query = \OCP\DB::prepare('
 			SELECT `*PREFIX*lucene_status`.`fileid`
 			FROM `*PREFIX*lucene_status`
@@ -163,13 +174,15 @@ class Status {
 				ON `*PREFIX*filecache`.`fileid` = `*PREFIX*lucene_status`.`fileid`
 			WHERE `*PREFIX*filecache`.`fileid` IS NULL
 		');
-		
+
 		$result = $query->execute();
-		
+
 		while ($row = $result->fetchRow()) {
 			$files[] = $row['fileid'];
 		}
-		
+
 		return $files;
+
 	}
+
 }
