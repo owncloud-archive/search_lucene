@@ -37,71 +37,68 @@ class Indexer {
 		);
 
 		foreach ($fileIds as $id) {
-			$skip = false;
 
-			$fileStatus = \OCA\Search_Lucene\Status::fromFileId($id);
+			$fileStatus = Status::fromFileId($id);
 
-			try{
+			try {
 				// before we start mark the file as error so we know there
 				// was a problem in case the php execution dies and we don't try
 				// the file again
 				$fileStatus->markError();
 
-				// FIXME use Folder
 				/** @var \OCP\Files\Node $folder */
-				$folder = \OC::$server->getUserFolder()->getById($id);
-				// TODO why does getById return an array?!?!
-				if (empty($folder)) {
-					$path = null;
+				$nodes = \OC::$server->getUserFolder()->getById($id);
+				// getById can return more than one id because the containing storage might be mounted more than once
+				// Since we only want to index the file once, we only use the first entry
+
+				if (isset($nodes[0])) {
+					/** @var \OCP\Files\File $node */
+					$node = $nodes[0];
 				} else {
-					$folder = $folder[0];
-					//$path = \OC\Files\Filesystem::getPath($id);
-					$path = $folder->getPath();
+					throw new \Exception('no file found for fileid '.$id);
 				}
 
-				if (empty($path)) {
-					$skip = true;
-				} else {
-					foreach ($skippedDirs as $skippedDir) {
-						if (strpos($path, '/' . $skippedDir . '/') !== false //contains dir
-							|| strrpos($path, '/' . $skippedDir) === strlen($path) - (strlen($skippedDir) + 1) // ends with dir
-						) {
-							$skip = true;
-							break;
-						}
+				if ( ! $node instanceof \OCP\Files\File ) {
+					throw new NotIndexedException();
+				}
+
+				$path = $node->getPath();
+
+				foreach ($skippedDirs as $skippedDir) {
+					if (strpos($path, '/' . $skippedDir . '/') !== false //contains dir
+						|| strrpos($path, '/' . $skippedDir) === strlen($path) - (strlen($skippedDir) + 1) // ends with dir
+					) {
+						throw new SkippedException('skipping file '.$id.':'.$path);
 					}
 				}
 
-				if ($skip) {
-					$fileStatus->markSkipped();
-					\OCP\Util::writeLog('search_lucene',
-						'skipping file '.$id.':'.$path,
-						\OCP\Util::DEBUG);
-					continue;
-				}
 				if ($eventSource) {
 					$eventSource->send('indexing', $path);
 				}
 
-				if ($this->indexFile($path)) {
+				if ($this->indexFile($node)) {
 					$fileStatus->markIndexed();
-				} else {
-					\OCP\JSON::error(array('message' => 'Could not index file '.$id.':'.$path));
-					if ($eventSource) {
-						$eventSource->send('error', $path);
-					}
 				}
-			} catch (\Exception $e) { //sqlite might report database locked errors when stock filescan is in progress
+
+			} catch (NotIndexedException $e) {
+
+				$fileStatus->markUnIndexed();
+
+			} catch (SkippedException $e) {
+
+				$fileStatus->markSkipped();
+				\OCP\Util::writeLog('search_lucene', $e->getMessage(), \OCP\Util::DEBUG);
+
+			} catch (\Exception $e) {
+				//sqlite might report database locked errors when stock filescan is in progress
 				//this also catches db locked exception that might come up when using sqlite
 				\OCP\Util::writeLog('search_lucene',
 					$e->getMessage() . ' Trace:\n' . $e->getTraceAsString(),
 					\OCP\Util::ERROR);
-				\OCP\JSON::error(array('message' => 'Could not index file.'));
-					if ($eventSource) {
-						$eventSource->send('error', $e->getMessage());
-					}
-				//try to mark the file as new to let it reindex
-				$fileStatus->markNew();  // Add UI to trigger rescan of files with status 'E'rror?
+				$fileStatus->markError();  // Add UI to trigger rescan of files with status 'E'rror?
+				if ($eventSource) {
+					$eventSource->send('error', $e->getMessage());
+				}
 			}
 		}
 	}
@@ -111,108 +108,92 @@ class Indexer {
 	 *
 	 * @author Jörn Dreyer <jfd@butonic.de>
 	 *
-	 * @param string $path the path of the file
+	 * @param \OCP\Files\File $file the file to be indexed
 	 *
 	 * @return bool true when something was stored in the index, false otherwise (eg, folders are not indexed)
-	 * @throws \Exception indicating an error
+	 * @throws \OCA\Search_Lucene\NotIndexedException when an unsupported file type is encvountered
 	 */
-	public function indexFile($path = '') {
+	public function indexFile(\OCP\Files\File $file) {
 
-		try {
+			// we decide how to index on mime type or file extension
+			$mimeType = $file->getMimeType();
+			$fileExtension = strtolower(pathinfo($file->getName(), PATHINFO_EXTENSION));
 
-			// the cache already knows mime and other basic stuff
-			/** @var \OCP\Files\Node $data */
-			$node = $this->folder->get($path);
+			// initialize plain lucene document
+			$doc = new \Zend_Search_Lucene_Document();
 
-			if ($node instanceof \OCP\Files\File) {
+			// index content for local files only
+			$storage = $file->getStorage();
 
-				// we decide how to index on mime type or file extension
-				$mimeType = $node->getMimetype();
-				$fileExtension = strtolower(pathinfo($node->getName(), PATHINFO_EXTENSION));
+			if ($storage->isLocal()) {
 
-				// initialize plain lucene document
-				$doc = new \Zend_Search_Lucene_Document();
+				$path = $storage->getLocalFile($file->getInternalPath());
 
-				// index content for local files only
-				$storage = $node->getStorage();
+				//try to use special lucene document types
 
-				$internalPath = $node->getInternalPath();
-				$path = $node->getPath();
+				if ('text/plain' === $mimeType) {
 
-				if ($storage->isLocal()) {
+					$body = $file->getContent();
 
-					//try to use special lucene document types
-
-					if ('text/plain' === $mimeType) {
-
-						$body = $node->getContent();
-
-						if ($body != '') {
-							$doc->addField(\Zend_Search_Lucene_Field::UnStored('body', $body));
-						}
-
-					// FIXME other text files? c, php, java ...
-
-					} else if ('text/html' === $mimeType) {
-
-						//TODO could be indexed, even if not local
-						$doc = \Zend_Search_Lucene_Document_Html::loadHTML($node->getContent());
-
-					} else if ('application/pdf' === $mimeType) {
-
-						$doc = Pdf::loadPdf($node->getContent());
-
-					// the zend classes only understand docx and not doc files
-					} else if ($fileExtension === 'docx') {
-
-						$doc = \Zend_Search_Lucene_Document_Docx::loadDocxFile($path);
-
-					//} else if ('application/msexcel' === $mimeType) {
-					} else if ($fileExtension === 'xlsx') {
-
-						$doc = \Zend_Search_Lucene_Document_Xlsx::loadXlsxFile($path);
-
-					//} else if ('application/mspowerpoint' === $mimeType) {
-					} else if ($fileExtension === 'pptx') {
-
-						$doc = \Zend_Search_Lucene_Document_Pptx::loadPptxFile($path);
-
-					} else if ($fileExtension === 'odt') {
-
-						$doc = Odt::loadOdtFile($path);
-
-					} else if ($fileExtension === 'ods') {
-
-						$doc = Ods::loadOdsFile($path);
-
+					if ($body != '') {
+						$doc->addField(\Zend_Search_Lucene_Field::UnStored('body', $body));
 					}
+
+				// FIXME other text files? c, php, java ...
+
+				} else if ('text/html' === $mimeType) {
+
+					//TODO could be indexed, even if not local
+					$doc = \Zend_Search_Lucene_Document_Html::loadHTML($file->getContent());
+
+				} else if ('application/pdf' === $mimeType) {
+
+					$doc = Pdf::loadPdf($file->getContent());
+
+				// the zend classes only understand docx and not doc files
+				} else if ($fileExtension === 'docx') {
+
+					$doc = \Zend_Search_Lucene_Document_Docx::loadDocxFile($path);
+
+				//} else if ('application/msexcel' === $mimeType) {
+				} else if ($fileExtension === 'xlsx') {
+
+					$doc = \Zend_Search_Lucene_Document_Xlsx::loadXlsxFile($path);
+
+				//} else if ('application/mspowerpoint' === $mimeType) {
+				} else if ($fileExtension === 'pptx') {
+
+					$doc = \Zend_Search_Lucene_Document_Pptx::loadPptxFile($path);
+
+				} else if ($fileExtension === 'odt') {
+
+					$doc = Odt::loadOdtFile($path);
+
+				} else if ($fileExtension === 'ods') {
+
+					$doc = Ods::loadOdsFile($path);
+
+				} else {
+					throw new NotIndexedException();
 				}
-
-				// Store filecache id as unique id to lookup by when deleting
-				$doc->addField(\Zend_Search_Lucene_Field::Keyword('fileid', $node->getId()));
-
-				// Store document path for the search results
-				$doc->addField(\Zend_Search_Lucene_Field::Text('path', $path, 'UTF-8'));
-
-				$doc->addField(\Zend_Search_Lucene_Field::unIndexed('mtime', $node->getMTime()));
-
-				$doc->addField(\Zend_Search_Lucene_Field::unIndexed('size', $node->getSize()));
-
-				$doc->addField(\Zend_Search_Lucene_Field::unIndexed('mimetype', $mimeType));
-
-				$this->lucene->updateFile($doc, $data->getId());
 			}
+
+			// Store filecache id as unique id to lookup by when deleting
+			$doc->addField(\Zend_Search_Lucene_Field::Keyword('fileid', $file->getId()));
+
+			// Store document path for the search results
+			$doc->addField(\Zend_Search_Lucene_Field::Text('path', $path, 'UTF-8'));
+
+			$doc->addField(\Zend_Search_Lucene_Field::unIndexed('mtime', $file->getMTime()));
+
+			$doc->addField(\Zend_Search_Lucene_Field::unIndexed('size', $file->getSize()));
+
+			$doc->addField(\Zend_Search_Lucene_Field::unIndexed('mimetype', $mimeType));
+
+			$this->lucene->updateFile($doc, $file->getId());
 
 			return true;
 
-		} catch (\Exception $ex) {
-			Util::writeLog(
-				'search_lucene',
-				$ex->getCode().':'.$ex->getMessage(),
-				Util::DEBUG
-			);
-			return false;
-		}
 	}
 
 }

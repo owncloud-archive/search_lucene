@@ -11,12 +11,8 @@ class IndexJob extends \OC\BackgroundJob\Job {
 
 			$folder = Util::setUpUserFolder($user);
 			if ($folder) {
-				$fileIds = Status::getUnindexed();
 
-				// we might have to update an already indexed file
-				if (isset($arguments['fileId']) && ! in_array($arguments['fileId'], $fileIds)) {
-					$fileIds[] = $arguments['fileId'];
-				}
+				$fileIds = Status::getUnindexed();
 
 				\OCP\Util::writeLog(
 					'search_lucene',

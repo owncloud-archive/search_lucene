@@ -2,8 +2,6 @@
 
 namespace OCA\Search_Lucene;
 
-use \OCP\Util;
-
 /**
  * @author Jörn Dreyer <jfd@butonic.de>
  */
@@ -24,38 +22,9 @@ class Lucene {
 	 */
 	public function __construct(\OCP\Files\Folder $indexFolder = null) {
 		if (is_null($indexFolder)) {
-			$indexFolder = $this->getIndexFolder();
+			$indexFolder = Util::setUpIndexFolder();
 		}
 		$this->index = $this->openOrCreate($indexFolder);
-	}
-
-	/**
-	 * @return null|\OCP\Files\Folder
-	 */
-	private function getIndexFolder() {
-
-		// TODO profile: encrypt the index on logout, decrypt on login
-		//return OCP\Files::getStorage('search_lucene');
-		// FIXME \OC::$server->getAppFolder() returns '/search'
-		//$indexFolder = \OC::$server->getAppFolder();
-
-		$root = \OC::$server->getRootFolder();
-		$dir = '/'.\OCP\User::getUser();
-		$userFolder = null;
-		if(!$root->nodeExists($dir)) {
-			$userFolder = $root->newFolder($dir);
-		} else {
-			$userFolder = $root->get($dir);
-		}
-		$dir = 'lucene_index';
-		$indexFolder = null;
-		if(!$userFolder->nodeExists($dir)) {
-			$indexFolder = $userFolder->newFolder($dir);
-		} else {
-			$indexFolder = $userFolder->get($dir);
-		}
-
-		return $indexFolder;
 	}
 
 	/**
@@ -86,28 +55,25 @@ class Lucene {
 			);
 
 			// can we use the index?
-			if ($indexFolder->nodeExists('/v0.6.0')) {
+			if ($indexFolder->nodeExists('v0.6.0')) {
 				// correct index present
 				$index = \Zend_Search_Lucene::open($localPath);
-			} else if (file_exists($indexFolder)) {
-				Util::writeLog(
+			} else {
+				\OCP\Util::writeLog(
 					'search_lucene',
 					'recreating outdated lucene index',
-					Util::INFO
+					\OCP\Util::INFO
 				);
 				$indexFolder->delete();
 				$index = \Zend_Search_Lucene::create($localPath);
-				touch($indexFolder.'/v0.6.0');
-			} else {
-				$index = \Zend_Search_Lucene::create($localPath);
-				touch($indexFolder.'/v0.6.0');
+				$indexFolder->newFile('v0.6.0');
 			}
 			return $index;
 		} catch ( \Exception $e ) {
-			Util::writeLog(
+			\OCP\Util::writeLog(
 				'search_lucene',
 				$e->getMessage().' Trace:\n'.$e->getTraceAsString(),
-				Util::ERROR
+				\OCP\Util::ERROR
 			);
 		}
 
@@ -124,10 +90,10 @@ class Lucene {
 	 */
 	public function optimizeIndex() {
 
-		Util::writeLog(
+		\OCP\Util::writeLog(
 			'search_lucene',
 			'optimizing index',
-			Util::DEBUG
+			\OCP\Util::DEBUG
 		);
 
 		$this->index->optimize();
@@ -156,10 +122,10 @@ class Lucene {
 		// TODO profile perfomance for searching before adding to index
 		$this->deleteFile($fileid);
 
-		Util::writeLog(
+		\OCP\Util::writeLog(
 			'search_lucene',
 			'adding ' . $fileid .' '.json_encode($doc),
-			Util::DEBUG
+			\OCP\Util::DEBUG
 		);
 		
 		// Add document to the index
@@ -182,17 +148,17 @@ class Lucene {
 
 		$hits = $this->index->find( 'fileid:' . $fileid );
 
-		Util::writeLog(
+		\OCP\Util::writeLog(
 			'search_lucene',
 			'found ' . count($hits) . ' hits for fileid ' . $fileid,
-			Util::DEBUG
+			\OCP\Util::DEBUG
 		);
 
 		foreach ($hits as $hit) {
-			Util::writeLog(
+			\OCP\Util::writeLog(
 				'search_lucene',
 				'removing ' . $hit->id . ':' . $hit->path . ' from index',
-				Util::DEBUG
+				\OCP\Util::DEBUG
 			);
 			$this->index->delete($hit);
 		}

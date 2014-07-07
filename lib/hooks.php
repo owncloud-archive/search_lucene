@@ -48,17 +48,24 @@ class Hooks {
 	 * @param $param array from postWriteFile-Hook
 	 */
 	public static function indexFile(array $param) {
-		//FIXME use fileid to index correct file, otherwise there will never be an update
 		$user = \OCP\User::getUser();
 		if (!empty($user)) {
+
+			// mark written file as new
 			$userFolder = \OC::$server->getUserFolder();
-			$folder = $userFolder->get($param['path']);
-			$arguments = array(
-				'user' => $user,
-				'fileId' => $folder->getId()
-			);
+			$node = $userFolder->get($param['path']);
+			$status = Status::fromFileId($node->getId());
+
+			// only index files
+			if ($node instanceof \OCP\Files\File) {
+				/** @var \OCP\Files\File $node */
+				$status->markNew();
+			} else {
+				$status->markSkipped();
+			}
+
 			//Add Background Job:
-			BackgroundJob::registerJob( '\OCA\Search_Lucene\IndexJob', $arguments );
+			BackgroundJob::registerJob( '\OCA\Search_Lucene\IndexJob', array('user' => $user) );
 		} else {
 			\OCP\Util::writeLog(
 				'search_lucene',
