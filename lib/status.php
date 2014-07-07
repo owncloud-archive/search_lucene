@@ -13,6 +13,7 @@ class Status {
 	const STATUS_NEW = 'N';
 	const STATUS_INDEXED = 'I';
 	const STATUS_SKIPPED = 'S';
+	const STATUS_UNINDEXED = 'U';
 	const STATUS_ERROR = 'E';
 
 	private $fileId;
@@ -53,6 +54,11 @@ class Status {
 
 	public function markSkipped() {
 		$this->status = self::STATUS_SKIPPED;
+		return $this->store();
+	}
+
+	public function markUnIndexed() {
+		$this->status = self::STATUS_UNINDEXED;
 		return $this->store();
 	}
 
