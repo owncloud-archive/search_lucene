@@ -175,8 +175,6 @@ class Indexer {
 
 					$doc = Ods::loadOdsFile($path);
 
-				} else {
-					throw new NotIndexedException();
 				}
 			}
 
