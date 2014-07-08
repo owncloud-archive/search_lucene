@@ -178,7 +178,7 @@ class Indexer {
 		$doc->addField(\Zend_Search_Lucene_Field::Keyword('fileid', $file->getId()));
 
 		// Store document path for the search results
-		$doc->addField(\Zend_Search_Lucene_Field::Text('path', $path, 'UTF-8'));
+		$doc->addField(\Zend_Search_Lucene_Field::Text('path', $file->getPath(), 'UTF-8'));
 
 		$doc->addField(\Zend_Search_Lucene_Field::unIndexed('mtime', $file->getMTime()));
 
