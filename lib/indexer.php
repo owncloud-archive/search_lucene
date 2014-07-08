@@ -5,7 +5,6 @@ namespace OCA\Search_Lucene;
 use OCA\Search_Lucene\Document\Ods;
 use OCA\Search_Lucene\Document\Odt;
 use OCA\Search_Lucene\Document\Pdf;
-use OCP\Util;
 
 /**
  * @author Jörn Dreyer <jfd@butonic.de>
@@ -117,82 +116,79 @@ class Indexer {
 	 */
 	public function indexFile(\OCP\Files\File $file, $commit = true) {
 
-			// we decide how to index on mime type or file extension
-			$mimeType = $file->getMimeType();
-			$fileExtension = strtolower(pathinfo($file->getName(), PATHINFO_EXTENSION));
+		// we decide how to index on mime type or file extension
+		$mimeType = $file->getMimeType();
+		$fileExtension = strtolower(pathinfo($file->getName(), PATHINFO_EXTENSION));
 
-			// initialize plain lucene document
-			$doc = new \Zend_Search_Lucene_Document();
+		// initialize plain lucene document
+		$doc = new \Zend_Search_Lucene_Document();
 
-			// index content for local files only
-			$storage = $file->getStorage();
+		// index content for local files only
+		$storage = $file->getStorage();
 
-			if ($storage->isLocal()) {
+		if ($storage->isLocal()) {
 
-				$path = $storage->getLocalFile($file->getInternalPath());
+			$path = $storage->getLocalFile($file->getInternalPath());
 
-				//try to use special lucene document types
+			//try to use special lucene document types
 
-				if ('text/plain' === $mimeType) {
+			if ('text/html' === $mimeType) {
 
-					$body = $file->getContent();
+				//TODO could be indexed, even if not local
+				$doc = \Zend_Search_Lucene_Document_Html::loadHTML($file->getContent());
+			} else if ('text/' === substr($mimeType, 0, 5)) {
 
-					if ($body != '') {
-						$doc->addField(\Zend_Search_Lucene_Field::UnStored('body', $body));
-					}
+				$body = $file->getContent();
 
-				// FIXME other text files? c, php, java ...
-
-				} else if ('text/html' === $mimeType) {
-
-					//TODO could be indexed, even if not local
-					$doc = \Zend_Search_Lucene_Document_Html::loadHTML($file->getContent());
-
-				} else if ('application/pdf' === $mimeType) {
-
-					$doc = Pdf::loadPdf($file->getContent());
-
-				// the zend classes only understand docx and not doc files
-				} else if ($fileExtension === 'docx') {
-
-					$doc = \Zend_Search_Lucene_Document_Docx::loadDocxFile($path);
-
-				//} else if ('application/msexcel' === $mimeType) {
-				} else if ($fileExtension === 'xlsx') {
-
-					$doc = \Zend_Search_Lucene_Document_Xlsx::loadXlsxFile($path);
-
-				//} else if ('application/mspowerpoint' === $mimeType) {
-				} else if ($fileExtension === 'pptx') {
-
-					$doc = \Zend_Search_Lucene_Document_Pptx::loadPptxFile($path);
-
-				} else if ($fileExtension === 'odt') {
-
-					$doc = Odt::loadOdtFile($path);
-
-				} else if ($fileExtension === 'ods') {
-
-					$doc = Ods::loadOdsFile($path);
-
+				if ($body != '') {
+					$doc->addField(\Zend_Search_Lucene_Field::UnStored('body', $body));
 				}
+
+			} else if ('application/pdf' === $mimeType) {
+
+				$doc = Pdf::loadPdf($file->getContent());
+
+			// the zend classes only understand docx and not doc files
+			} else if ($fileExtension === 'docx') {
+
+				$doc = \Zend_Search_Lucene_Document_Docx::loadDocxFile($path);
+
+			//} else if ('application/msexcel' === $mimeType) {
+			} else if ($fileExtension === 'xlsx') {
+
+				$doc = \Zend_Search_Lucene_Document_Xlsx::loadXlsxFile($path);
+
+			//} else if ('application/mspowerpoint' === $mimeType) {
+			} else if ($fileExtension === 'pptx') {
+
+				$doc = \Zend_Search_Lucene_Document_Pptx::loadPptxFile($path);
+
+			} else if ($fileExtension === 'odt') {
+
+				$doc = Odt::loadOdtFile($path);
+
+			} else if ($fileExtension === 'ods') {
+
+				$doc = Ods::loadOdsFile($path);
+
 			}
+		}
 
-			// Store filecache id as unique id to lookup by when deleting
-			$doc->addField(\Zend_Search_Lucene_Field::Keyword('fileid', $file->getId()));
+		// Store filecache id as unique id to lookup by when deleting
+		$doc->addField(\Zend_Search_Lucene_Field::Keyword('fileid', $file->getId()));
 
-			// Store document path for the search results
-			$doc->addField(\Zend_Search_Lucene_Field::Text('path', $path, 'UTF-8'));
+		// Store document path for the search results
+		$doc->addField(\Zend_Search_Lucene_Field::Text('path', $path, 'UTF-8'));
 
-			$doc->addField(\Zend_Search_Lucene_Field::unIndexed('mtime', $file->getMTime()));
+		$doc->addField(\Zend_Search_Lucene_Field::unIndexed('mtime', $file->getMTime()));
 
-			$doc->addField(\Zend_Search_Lucene_Field::unIndexed('size', $file->getSize()));
+		$doc->addField(\Zend_Search_Lucene_Field::unIndexed('size', $file->getSize()));
 
-			$doc->addField(\Zend_Search_Lucene_Field::unIndexed('mimetype', $mimeType));
+		$doc->addField(\Zend_Search_Lucene_Field::unIndexed('mimetype', $mimeType));
 
-			$this->lucene->updateFile($doc, $file->getId(), $commit);
+		$this->lucene->updateFile($doc, $file->getId(), $commit);
 
-			return true;
+		return true;
 
 	}
 
