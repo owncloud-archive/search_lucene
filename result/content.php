@@ -18,6 +18,7 @@
  */
 
 namespace OCA\Search_Lucene\Result;
+use OC\Files\Filesystem;
 
 /**
  * A found file
@@ -41,16 +42,16 @@ class Content extends \OC\Search\Result\File {
 	 */
 	public function __construct(\Zend_Search_Lucene_Search_QueryHit $hit) {
 		$this->id = (string)$hit->fileid;
-		$this->path = $hit->path;
-		$this->name = basename($hit->path);
+		$this->path = Filesystem::getView()->getRelativePath($hit->path);
+		$this->name = basename($this->path);
 		$this->size = (int)$hit->size;
 		$this->score = $hit->score;
 		$this->link = \OCP\Util::linkTo(
 			'files',
 			'index.php',
-			array('dir' => dirname($hit->path), 'file' => basename($hit->path))
+			array('dir' => dirname($this->path), 'file' => basename($this->path))
 		);
-		$this->permissions = self::get_permissions($hit->path);
+		$this->permissions = self::get_permissions($this->path);
 		$this->modified = (int)$hit->mtime;
 		$this->mime_type = $hit->mimetype;
 	}
