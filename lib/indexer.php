@@ -76,7 +76,7 @@ class Indexer {
 					$eventSource->send('indexing', $path);
 				}
 
-				if ($this->indexFile($node)) {
+				if ($this->indexFile($node, false)) {
 					$fileStatus->markIndexed();
 				}
 
@@ -101,6 +101,7 @@ class Indexer {
 				}
 			}
 		}
+		$this->lucene->commit();
 	}
 
 	/**
@@ -109,11 +110,12 @@ class Indexer {
 	 * @author Jörn Dreyer <jfd@butonic.de>
 	 *
 	 * @param \OCP\Files\File $file the file to be indexed
+	 * @param bool $commit
 	 *
 	 * @return bool true when something was stored in the index, false otherwise (eg, folders are not indexed)
 	 * @throws \OCA\Search_Lucene\NotIndexedException when an unsupported file type is encvountered
 	 */
-	public function indexFile(\OCP\Files\File $file) {
+	public function indexFile(\OCP\Files\File $file, $commit = true) {
 
 			// we decide how to index on mime type or file extension
 			$mimeType = $file->getMimeType();
@@ -190,7 +192,7 @@ class Indexer {
 
 			$doc->addField(\Zend_Search_Lucene_Field::unIndexed('mimetype', $mimeType));
 
-			$this->lucene->updateFile($doc, $file->getId());
+			$this->lucene->updateFile($doc, $file->getId(), $commit);
 
 			return true;
 

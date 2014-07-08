@@ -111,12 +111,14 @@ class Lucene {
 	 * 
 	 * @param \Zend_Search_Lucene_Document $doc  the document to store for the path
 	 * @param int $fileid fileid to update
+	 * @param bool $commit
 	 * 
 	 * @return void
 	 */
 	public function updateFile(
 		\Zend_Search_Lucene_Document $doc,
-		$fileid
+		$fileid,
+		$commit = true
 	) {
 
 		// TODO profile perfomance for searching before adding to index
@@ -131,8 +133,9 @@ class Lucene {
 		// Add document to the index
 		$this->index->addDocument($doc);
 
-		$this->index->commit();
-
+		if ($commit) {
+			$this->index->commit();
+		}
 	}
 
 	/**
@@ -168,6 +171,10 @@ class Lucene {
 
 	public function find ($query) {
 		return $this->index->find($query);
+	}
+
+	public function commit () {
+		$this->index->commit();
 	}
 
 }
