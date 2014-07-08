@@ -136,7 +136,8 @@ class Indexer {
 
 				//TODO could be indexed, even if not local
 				$doc = \Zend_Search_Lucene_Document_Html::loadHTML($file->getContent());
-			} else if ('text/' === substr($mimeType, 0, 5)) {
+			} else if ('text/' === substr($mimeType, 0, 5)
+				|| 'application/x-tex' === $mimeType) {
 
 				$body = $file->getContent();
 
