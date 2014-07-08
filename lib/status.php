@@ -149,7 +149,7 @@ class Status {
 					Util::DEBUG);
 			}
 			//only index local files for now
-			if ($storage instanceof \OC\Files\Storage\Local) {
+			if ($storage->instanceOfStorage('\OC\Files\Storage\Local')) {
 				$cache = $storage->getCache();
 				$numericId = $cache->getNumericStorageId();
 
