@@ -175,7 +175,7 @@ class StatusMapper extends Mapper {
 				$cache = $storage->getCache();
 				$numericId = $cache->getNumericStorageId();
 
-				$result = $query->execute(array($numericId, self::STATUS_NEW));
+				$result = $query->execute(array($numericId, Status::STATUS_NEW));
 
 				while ($row = $result->fetchRow()) {
 					$files[] = $row['fileid'];
