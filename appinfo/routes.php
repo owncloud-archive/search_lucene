@@ -23,5 +23,5 @@ $application = new Application();
 
 $application->registerRoutes($this, array('routes' => array(
 	array('name' => 'api#index', 'url' => '/indexer/index', 'verb' => 'GET'),
-    array('name' => 'api#optimize', 'url' => '/indexer/optimize', 'verb' => 'POST'),
+	array('name' => 'api#optimize', 'url' => '/indexer/optimize', 'verb' => 'POST'),
 )));
