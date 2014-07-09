@@ -161,7 +161,8 @@ class StatusMapper extends Mapper {
 			LEFT JOIN `*PREFIX*lucene_status`
 			ON `*PREFIX*filecache`.`fileid` = `*PREFIX*lucene_status`.`fileid`
 			WHERE `storage` = ?
-			AND `status` IS NULL OR `status` = ?
+			AND ( `status` IS NULL OR `status` = ? )
+			AND `path` LIKE \'files/%\'
 		');
 
 		foreach ($mounts as $mount) {
@@ -229,6 +230,11 @@ class StatusMapper extends Mapper {
 
 	public function markUnIndexed(Status $status) {
 		$status->setStatus(Status::STATUS_UNINDEXED);
+		return $this->update($status);
+	}
+
+	public function markVanished(Status $status) {
+		$status->setStatus(Status::STATUS_VANISHED);
 		return $this->update($status);
 	}
 
