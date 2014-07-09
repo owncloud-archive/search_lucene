@@ -13,7 +13,6 @@ namespace OCA\Search_Lucene\Controller;
 
 
 use OCA\Search_Lucene\Db\StatusMapper;
-use OCA\Search_Lucene\Http\EventSourceResponse;
 use OCA\Search_Lucene\Lucene\Index;
 use OCA\Search_Lucene\Lucene\Indexer;
 use \OCP\IRequest;
