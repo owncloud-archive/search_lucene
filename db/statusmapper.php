@@ -23,12 +23,6 @@ use OCP\AppFramework\Db\Mapper;
  */
 class StatusMapper extends Mapper {
 
-	const STATUS_NEW = 'N';
-	const STATUS_INDEXED = 'I';
-	const STATUS_SKIPPED = 'S';
-	const STATUS_UNINDEXED = 'U';
-	const STATUS_ERROR = 'E';
-
 	private $logger;
 
 	public function __construct(Db $db, Logger $logger){
