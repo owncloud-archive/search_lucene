@@ -82,9 +82,9 @@ class TestSearchProvider extends TestCase {
 	 */
 	function testSearchLuceneResultContent(\Zend_Search_Lucene_Search_QueryHit $hit, $fileId, $name, $path, $size, $score, $mimeType, $modified, $container) {
 
-		$searchResult = new \OCA\Search_Lucene\Result\Content($hit);
+		$searchResult = new \OCA\Search_Lucene\Search\LuceneResult($hit);
 
-		$this->assertInstanceOf('OCA\Search_Lucene\Result\Content', $searchResult);
+		$this->assertInstanceOf('OCA\Search_Lucene\Search\LuceneResult', $searchResult);
 		$this->assertEquals($searchResult->id, $fileId);
 		$this->assertEquals($searchResult->type, 'content');
 		$this->assertEquals($searchResult->path, $path);
