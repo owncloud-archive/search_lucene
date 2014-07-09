@@ -25,6 +25,9 @@ namespace OCA\Search_Lucene\Tests\Unit;
 
 use OC\Files\Storage\Storage;
 use OC\Files\View;
+use OCA\Search_Lucene\AppInfo\Application;
+use OCA\Search_Lucene\Db\Status;
+use OCA\Search_Lucene\Db\StatusMapper;
 use PHPUnit_Framework_TestCase;
 
 abstract class TestCase extends PHPUnit_Framework_TestCase {
@@ -122,8 +125,14 @@ abstract class TestCase extends PHPUnit_Framework_TestCase {
 		$cache = $this->storage->getCache();
 		$ids = $cache->getAll();
 		$cache->clear();
+		$app = new Application();
+		$container = $app->getContainer();
+		/** @var StatusMapper $mapper */
+		$mapper = $container->query('StatusMapper');
 		foreach ($ids as $id) {
-			\OCA\Search_Lucene\Status::delete($id);
+			$status = new Status();
+			$status->setFileId($id);
+			$mapper->delete($status);
 		}
 	}
 	
