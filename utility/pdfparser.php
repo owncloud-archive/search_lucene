@@ -16,7 +16,10 @@
  * @link https://github.com/philipnorton42/PDFSearch
  * @link http://www.hashbangcode.com/blog/zend-lucene-and-pdf-documents-part-2-pdf-data-extraction-437.html  
  */
-class App_Search_Helper_PdfParser {
+
+namespace OCA\Search_Lucene\Utility;
+
+class PdfParser {
 
 	/**
 	 * Convert a PDF into text.
