@@ -41,7 +41,7 @@ class LuceneResult extends \OC\Search\Result\File {
 		$this->link = \OCP\Util::linkTo(
 			'files',
 			'index.php',
-			array('dir' => dirname($this->path), 'file' => basename($this->path))
+			array('dir' => dirname($this->path), 'file' => $this->name)
 		);
 		$this->permissions = self::get_permissions($this->path);
 		$this->modified = (int)$hit->mtime;

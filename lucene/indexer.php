@@ -60,7 +60,7 @@ class Indexer {
 					/** @var \OCP\Files\File $node */
 					$node = $nodes[0];
 				} else {
-					throw new \Exception('no file found for fileid '.$id);
+					throw new VanishedException($id);
 				}
 
 				if ( ! $node instanceof \OCP\Files\File ) {
@@ -84,6 +84,10 @@ class Indexer {
 				if ($this->indexFile($node, false)) {
 					$this->mapper->markIndexed($fileStatus);
 				}
+
+			} catch (VanishedException $e) {
+
+				$this->mapper->markVanished($fileStatus);
 
 			} catch (NotIndexedException $e) {
 

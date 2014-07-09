@@ -25,6 +25,7 @@ class Status extends Entity {
 	const STATUS_INDEXED = 'I';
 	const STATUS_SKIPPED = 'S';
 	const STATUS_UNINDEXED = 'U';
+	const STATUS_VANISHED = 'V';
 	const STATUS_ERROR = 'E';
 
 	public $fileId;
