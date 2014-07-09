@@ -9,10 +9,6 @@
  * @copyright Jörn Friedrich Dreyer 2012-2014
  */
 
-$currentVersion=OCP\Config::getAppValue('search_lucene', 'installed_version');
+OC::$CLASSPATH['getID3'] = 'getid3/getid3.php';
 
-if (version_compare($currentVersion, '0.6.0', '<')) {
-	//force reindexing of files
-	$stmt = OCP\DB::prepare('DELETE FROM `*PREFIX*lucene_status`');
-	$stmt->execute();
-}
+OC::$CLASSPATH['App_Search_Helper_PdfParser'] = 'search_lucene/3rdparty/pdf2text.php';

@@ -1,9 +1,23 @@
 <?php
+/**
+ * ownCloud - search_lucene
+ *
+ * This file is licensed under the Affero General Public License version 3 or
+ * later. See the COPYING file.
+ *
+ * @author Jörn Friedrich Dreyer <jfd@butonic.de>
+ * @copyright Jörn Friedrich Dreyer 2012-2014
+ */
 
-namespace OCA\Search_Lucene;
+namespace OCA\Search_Lucene\Core;
 
-class Util {
+class Files {
 
+	private $userId;
+
+	public function __construct($userId){
+		$this->userId = $userId;
+	}
 	/**
 	 * Returns a folder for the users 'files' folder
 	 * Warning, this will tear down the current filesystem
@@ -11,8 +25,8 @@ class Util {
 	 * @param string $user the user id
 	 * @return \OCP\Files\Folder
 	 */
-	static function setUpUserFolder($user = null) {
-		$userHome = self::setUpUserHome($user);
+	public function setUpUserFolder($user = null) {
+		$userHome = $this->setUpUserHome($user);
 
 		$dir = 'files';
 		$folder = null;
@@ -29,8 +43,8 @@ class Util {
 	/**
 	 * @return null|\OCP\Files\Folder
 	 */
-	static function setUpIndexFolder($user = null) {
-		$userHome = self::setUpUserHome($user);
+	public function setUpIndexFolder($user = null) {
+		$userHome = $this->setUpUserHome($user);
 		// TODO profile: encrypt the index on logout, decrypt on login
 		//return OCP\Files::getStorage('search_lucene');
 		// FIXME \OC::$server->getAppFolder() returns '/search'
@@ -50,16 +64,17 @@ class Util {
 	/**
 	 * @return null|\OCP\Files\Folder
 	 */
-	static function setUpUserHome($user = null) {
+	public function setUpUserHome($user = null) {
 		if (is_null($user)) {
-			$user = \OCP\User::getUser();
+			$user = $this->userId;
 		}
 		if (!\OCP\User::userExists($user)) {
 			return null;
 		}
-		if ($user !==  \OCP\User::getUser()) {
+		if ($user !== $this->userId) {
 			\OC_Util::tearDownFS();
 			\OC_User::setUserId($user);
+			$this->userId = $user;
 		}
 		\OC_Util::setupFS($user);
 

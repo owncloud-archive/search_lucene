@@ -5,7 +5,7 @@ function luceneIndexFiles() {
 	}
 	t('search_lucene', 'Indexing... {count} files left', {count: 0}); //preload translations
 	luceneIndexFiles.active = true;
-	updateEventSource = new OC.EventSource(OC.filePath('search_lucene', 'ajax', 'lucene.php'), {operation: 'index'});
+	updateEventSource = new OC.EventSource(OC.generateUrl('/apps/search_lucene/indexer/index', {}));
 	updateEventSource.listen('count', function (unIndexedCount) {
 		count = unIndexedCount;
 		if (count > 0) {
@@ -53,9 +53,9 @@ $(document).ready(function () {
 	//hovering over it shows the current file
 	//clicking it stops the indexer: ⌛
 
-	OC.search.resultTypes.content = 'In' // translated
+	OC.search.resultTypes.lucene = t('search_lucene', 'In');
 
-	OC.search.customResults.content = function (row, item){
+	OC.search.customResults.lucene = function (row, item){
 		row.find('td.result .text').text(t('search_lucene', 'Score: {score}', {score: Math.round(item.score*100)/100}));
 	};
 
