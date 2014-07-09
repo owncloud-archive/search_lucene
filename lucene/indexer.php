@@ -13,7 +13,6 @@ namespace OCA\Search_Lucene\Lucene;
 
 use OCA\Search_Lucene\Core\Files;
 use OCA\Search_Lucene\Core\Logger;
-use OCA\Search_Lucene\Db\Status;
 use OCA\Search_Lucene\Db\StatusMapper;
 use OCA\Search_Lucene\Document\Ods;
 use OCA\Search_Lucene\Document\Odt;
