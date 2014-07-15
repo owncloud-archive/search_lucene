@@ -15,6 +15,9 @@ use OC\Files\Node\Folder;
 
 class Files {
 
+	/**
+	 * @var string
+	 */
 	private $userId;
 
 	/**
@@ -30,11 +33,11 @@ class Files {
 	 * Returns a folder for the users 'files' folder
 	 * Warning, this will tear down the current filesystem
 	 *
-	 * @param string $user the user id
+	 * @param string $userId
 	 * @return \OCP\Files\Folder
 	 */
-	public function setUpUserFolder($user = null) {
-		$userHome = $this->setUpUserHome($user);
+	public function setUpUserFolder($userId = null) {
+		$userHome = $this->setUpUserHome($userId);
 
 		$dir = 'files';
 		$folder = null;
@@ -49,10 +52,11 @@ class Files {
 	}
 
 	/**
+	 * @param string $userId
 	 * @return null|\OCP\Files\Folder
 	 */
-	public function setUpIndexFolder($user = null) {
-		$userHome = $this->setUpUserHome($user);
+	public function setUpIndexFolder($userId = null) {
+		$userHome = $this->setUpUserHome($userId);
 		// TODO profile: encrypt the index on logout, decrypt on login
 		//return OCP\Files::getStorage('search_lucene');
 		// FIXME \OC::$server->getAppFolder() returns '/search'
@@ -70,23 +74,24 @@ class Files {
 	}
 
 	/**
+	 * @param string $userId
 	 * @return null|\OCP\Files\Folder
 	 */
-	public function setUpUserHome($user = null) {
-		if (is_null($user)) {
-			$user = $this->userId;
+	public function setUpUserHome($userId = null) {
+		if (is_null($userId)) {
+			$userId = $this->userId;
 		}
-		if (!\OCP\User::userExists($user)) {
+		if (!\OCP\User::userExists($userId)) {
 			return null;
 		}
-		if ($user !== $this->userId) {
+		if ($userId !== $this->userId) {
 			\OC_Util::tearDownFS();
-			\OC_User::setUserId($user);
-			$this->userId = $user;
+			\OC_User::setUserId($userId);
+			$this->userId = $userId;
 		}
-		\OC_Util::setupFS($user);
+		\OC_Util::setupFS($userId);
 
-		$dir = '/' . $user;
+		$dir = '/' . $userId;
 		$folder = null;
 
 		if(!$this->rootFolder->nodeExists($dir)) {
