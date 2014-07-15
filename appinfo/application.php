@@ -94,7 +94,14 @@ class Application extends App {
 		});
 
 		$container->registerService('FileUtility', function($c) {
-			return new Files($c->query('UserId'));
+			return new Files(
+				$c->query('UserId'),
+				$c->query('RootFolder')
+			);
+		});
+
+		$container->registerService('RootFolder', function($c) {
+			return $c->query('ServerContainer')->getRootFolder();
 		});
 
 	}
