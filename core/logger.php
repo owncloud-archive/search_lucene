@@ -10,40 +10,39 @@
  */
 
 namespace OCA\Search_Lucene\Core;
+use OCP\ILogger;
 
-class Logger {
+/**
+ * Class Logger
+ *
+ * inserts the app name when not set in context
+ *
+ * @package OCA\Search_Lucene\Core
+ */
+class Logger extends \OC\Log {
 
-	protected $appName;
+	private $appName;
+	private $logger;
 
-	public function __construct($appName) {
+	public function __construct($appName, ILogger $logger) {
 		$this->appName = $appName;
+		$this->logger = $logger;
 	}
 
 	/**
-	 * Writes a function into the error log
-	 * @param string $msg the error message to be logged
-	 * @param int $level the error level
+	 * Logs with an arbitrary level.
+	 *
+	 * @param mixed $level
+	 * @param string $message
+	 * @param array $context
+	 *
+	 * @return void
 	 */
-	public function log($msg, $level=null){
-		switch($level){
-			case 'debug':
-				$level = \OCP\Util::DEBUG;
-				break;
-			case 'info':
-				$level = \OCP\Util::INFO;
-				break;
-			case 'warn':
-				$level = \OCP\Util::WARN;
-				break;
-			case 'fatal':
-				$level = \OCP\Util::FATAL;
-				break;
-			default:
-				$level = \OCP\Util::ERROR;
-				break;
+	public function log($level, $message, array $context = array()) {
+		if (empty($context['app'])) {
+			$context['app'] = $this->appName;
 		}
-		\OCP\Util::writeLog($this->appName, $msg, $level);
+		$this->logger->log($level, $message, $context);
 	}
-
 }
 

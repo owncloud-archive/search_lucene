@@ -28,15 +28,13 @@ class IndexJob extends \OC\BackgroundJob\QueuedJob {
 
 				$fileIds = $container->query('StatusMapper')->getUnindexed();
 
-				$container->query('Logger')->
-					log('background job indexing '.count($fileIds).' files for '.$userId, 'debug' );
+				$container->query('Logger')->debug('background job indexing '.count($fileIds).' files for '.$userId );
 
 				$container->query('Indexer')->indexFiles($fileIds);
 
 			}
 		} else {
-			$container->query('Logger')->
-				log('indexer job did not receive user in arguments: '.json_encode($arguments), 'debug' );
+			$container->query('Logger')->debug('indexer job did not receive user in arguments: '.json_encode($arguments));
 		}
  	}
 }

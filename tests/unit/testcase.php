@@ -116,6 +116,9 @@ abstract class TestCase extends PHPUnit_Framework_TestCase {
 		 */
 
 		$this->scanner->scan('');
+
+		// init 3rdparty classloader
+		//new Application();
 	}
 
 	public function tearDown() {

@@ -12,25 +12,39 @@
 namespace OCA\Search_Lucene\Lucene;
 
 use OCA\Search_Lucene\Core\Files;
-use OCA\Search_Lucene\Core\Logger;
 use OCA\Search_Lucene\Db\StatusMapper;
 use OCA\Search_Lucene\Document\Ods;
 use OCA\Search_Lucene\Document\Odt;
 use OCA\Search_Lucene\Document\Pdf;
+use OCP\ILogger;
 
 /**
  * @author Jörn Dreyer <jfd@butonic.de>
  */
 class Indexer {
 
+	/**
+	 * @var \OCA\Search_Lucene\Core\Files
+	 */
 	private $files;
+	/**
+	 * @var Index
+	 */
 	private $index;
+	/**
+	 * @var \OCA\Search_Lucene\Db\StatusMapper
+	 */
 	private $mapper;
+	/**
+	 * @var \OCP\ILogger
+	 */
+	private $logger;
 
-	public function __construct(Files $files, Index $index, StatusMapper $mapper, Logger $logger) {
+	public function __construct(Files $files, Index $index, StatusMapper $mapper, ILogger $logger) {
 		$this->files = $files;
 		$this->index = $index;
 		$this->mapper = $mapper;
+		$this->logger = $logger;
 	}
 
 	public function indexFiles (array $fileIds, \OC_EventSource $eventSource = null) {
@@ -95,14 +109,12 @@ class Indexer {
 			} catch (SkippedException $e) {
 
 				$this->mapper->markSkipped($fileStatus);
-				\OCP\Util::writeLog('search_lucene', $e->getMessage(), \OCP\Util::DEBUG);
+				$this->logger->debug( $e->getMessage() );
 
 			} catch (\Exception $e) {
 				//sqlite might report database locked errors when stock filescan is in progress
 				//this also catches db locked exception that might come up when using sqlite
-				\OCP\Util::writeLog('search_lucene',
-					$e->getMessage() . ' Trace:\n' . $e->getTraceAsString(),
-					\OCP\Util::ERROR);
+				$this->logger->error($e->getMessage() . ' Trace:\n' . $e->getTraceAsString() );
 				$this->mapper->markError($fileStatus);
 				// TODO Add UI to trigger rescan of files with status 'E'rror?
 				if ($eventSource) {
