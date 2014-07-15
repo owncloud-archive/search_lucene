@@ -11,12 +11,20 @@
 
 namespace OCA\Search_Lucene\Core;
 
+use OC\Files\Node\Folder;
+
 class Files {
 
 	private $userId;
 
-	public function __construct($userId){
+	/**
+	 * @var \OC\Files\Node\Folder
+	 */
+	private $rootFolder;
+
+	public function __construct($userId, Folder $rootFolder){
 		$this->userId = $userId;
+		$this->rootFolder = $rootFolder;
 	}
 	/**
 	 * Returns a folder for the users 'files' folder
@@ -79,13 +87,12 @@ class Files {
 		\OC_Util::setupFS($user);
 
 		$dir = '/' . $user;
-		$root = \OC::$server->getRootFolder();
 		$folder = null;
 
-		if(!$root->nodeExists($dir)) {
-			$folder = $root->newFolder($dir);
+		if(!$this->rootFolder->nodeExists($dir)) {
+			$folder = $this->rootFolder->newFolder($dir);
 		} else {
-			$folder = $root->get($dir);
+			$folder = $this->rootFolder->get($dir);
 		}
 
 		return $folder;
