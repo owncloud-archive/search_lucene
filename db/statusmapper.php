@@ -13,10 +13,11 @@ namespace OCA\Search_Lucene\Db;
 
 use OC\Files\Filesystem;
 use OCA\Search_Lucene\Core\Db;
-use OCA\Search_Lucene\Core\Logger;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\Mapper;
+use OCP\IDb;
+use OCP\ILogger;
 
 /**
  * @author Jörn Dreyer <jfd@butonic.de>
@@ -25,7 +26,7 @@ class StatusMapper extends Mapper {
 
 	private $logger;
 
-	public function __construct(Db $db, Logger $logger){
+	public function __construct(IDb $db, ILogger $logger){
 		parent::__construct($db, 'lucene_status', '\OCA\Search_Lucene\Db\Status');
 		$this->logger = $logger;
 	}
@@ -166,9 +167,8 @@ class StatusMapper extends Mapper {
 				$storage = $mount->getStorage();
 			} else {
 				$storage = null;
-				$this->logger->log(
-					'expected string or instance of \OC\Files\Mount\Mount got ' . json_encode($mount), 'debug'
-				);
+				$this->logger->
+					debug( 'expected string or instance of \OC\Files\Mount\Mount got ' . json_encode($mount) );
 			}
 			//only index local files for now
 			if ($storage->isLocal()) {

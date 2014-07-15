@@ -11,7 +11,7 @@
 
 namespace OCA\Search_Lucene\Lucene;
 use OCA\Search_Lucene\Core\Files;
-use OCA\Search_Lucene\Core\Logger;
+use OCP\ILogger;
 
 /**
  * @author Jörn Dreyer <jfd@butonic.de>
@@ -23,9 +23,12 @@ class Index {
 	 * @var \Zend_Search_Lucene
 	 */
 	public $index;
+	/**
+	 * @var \OCP\ILogger
+	 */
 	public $logger;
 
-	public function __construct(Files $files, Logger $logger) {
+	public function __construct(Files $files, ILogger $logger) {
 		$this->files = $files;
 		$this->logger = $logger;
 	}
@@ -58,7 +61,7 @@ class Index {
 			// correct index present
 			$this->index = \Zend_Search_Lucene::open($localPath);
 		} else {
-			$this->logger->log( 'recreating outdated lucene index', 'info' );
+			$this->logger->info( 'recreating outdated lucene index' );
 			$indexFolder->delete();
 			$this->index = \Zend_Search_Lucene::create($localPath);
 			$indexFolder->newFile('v0.6.0');
@@ -74,7 +77,7 @@ class Index {
 	 * @return void
 	 */
 	public function optimizeIndex() {
-		$this->logger->log( 'optimizing index', 'debug' );
+		$this->logger->debug( 'optimizing index' );
 		$this->index->optimize();
 	}
 
@@ -102,7 +105,7 @@ class Index {
 		// TODO profile perfomance for searching before adding to index
 		$this->deleteFile($fileId);
 
-		$this->logger->log( 'adding ' . $fileId .' '.json_encode($doc), 'debug' );
+		$this->logger->debug( 'adding ' . $fileId .' '.json_encode($doc) );
 		
 		// Add document to the index
 		$this->index->addDocument($doc);
@@ -126,10 +129,10 @@ class Index {
 
 		$hits = $this->index->find( 'fileId:' . $fileId );
 
-		$this->logger->log( 'found ' . count($hits) . ' hits for fileId ' . $fileId, 'debug' );
+		$this->logger->debug( 'found ' . count($hits) . ' hits for fileId ' . $fileId );
 
 		foreach ($hits as $hit) {
-			$this->logger->log( 'removing ' . $hit->id . ':' . $hit->path . ' from index', 'debug' );
+			$this->logger->debug( 'removing ' . $hit->id . ':' . $hit->path . ' from index' );
 			$this->index->delete($hit);
 		}
 		

@@ -32,29 +32,7 @@ class TestStatus extends TestCase {
 	/**
 	 * @dataProvider statusDataProvider
 	 */
-	function testFromFileIdNull($fileName) {
-
-		// preparation
-		$fileId = $this->getFileId($fileName);
-		$this->assertNotNull($fileId, 'Precondition failed: file id not found!');
-
-		$app = new Application();
-		$container = $app->getContainer();
-		/** @var StatusMapper $mapper */
-		$mapper = $container->query('StatusMapper');
-
-		// run test
-		$status = $mapper->getOrCreateFromFileId($fileId);
-
-		$this->assertInstanceOf('OCA\Search_Lucene\Db\Status', $status);
-		$this->assertEquals($fileId, $status->getFileId());
-		$this->assertEquals(null, $status->getStatus());
-	}
-
-	/**
-	 * @dataProvider statusDataProvider
-	 */
-	function testMarkNew($fileName) {
+	function testMarkingMethods($fileName, $method, $expectedStatus) {
 
 		// preparation
 		$fileId = $this->getFileId($fileName);
@@ -68,182 +46,51 @@ class TestStatus extends TestCase {
 		// run test
 		$status = new Status();
 		$status->setFileId($fileId);
-		$mapper->markNew($status);
+		$mapper->$method($status);
 
 		$this->assertInstanceOf('OCA\Search_Lucene\Db\Status', $status);
 		$this->assertEquals($fileId, $status->getFileId());
-		$this->assertEquals(Status::STATUS_NEW, $status->getStatus());
+		$this->assertEquals($expectedStatus, $status->getStatus());
 
 		//check after loading from db
 		$status2 = $mapper->getOrCreateFromFileId($fileId);
 
 		$this->assertInstanceOf('OCA\Search_Lucene\Db\Status', $status2);
 		$this->assertEquals($fileId, $status2->getFileId());
-		$this->assertEquals(Status::STATUS_NEW, $status2->getStatus());
-		
-	}
-
-	/**
-	 * @dataProvider statusDataProvider
-	 */
-	function testMarkSkipped($fileName) {
-
-		// preparation
-		$fileId = $this->getFileId($fileName);
-		$this->assertNotNull($fileId, 'Precondition failed: file id not found!');
-
-		$app = new Application();
-		$container = $app->getContainer();
-		/** @var StatusMapper $mapper */
-		$mapper = $container->query('StatusMapper');
-
-		// run test
-		$status = new Status($fileId);
-		$mapper->markSkipped($status);
-
-		$this->assertInstanceOf('OCA\Search_Lucene\Db\Status', $status);
-		$this->assertEquals($fileId, $status->getFileId());
-		$this->assertEquals(Status::STATUS_SKIPPED, $status->getStatus());
-
-		//check after loading from db
-		$status2 = $mapper->getOrCreateFromFileId($fileId);
-
-		$this->assertInstanceOf('OCA\Search_Lucene\Db\Status', $status2);
-		$this->assertEquals($fileId, $status2->getFileId());
-		$this->assertEquals(Status::STATUS_SKIPPED, $status2->getStatus());
-		
-	}
-
-	/**
-	 * @dataProvider statusDataProvider
-	 */
-	function testMarkIndexed($fileName) {
-
-		// preparation
-		$fileId = $this->getFileId($fileName);
-		$this->assertNotNull($fileId, 'Precondition failed: file id not found!');
-
-		$app = new Application();
-		$container = $app->getContainer();
-		/** @var StatusMapper $mapper */
-		$mapper = $container->query('StatusMapper');
-
-		// run test
-		$status = new Status($fileId);
-		$mapper->markIndexed($status);
-
-		$this->assertInstanceOf('OCA\Search_Lucene\Db\Status', $status);
-		$this->assertEquals($fileId, $status->getFileId());
-		$this->assertEquals(Status::STATUS_INDEXED, $status->getStatus());
-
-		//check after loading from db
-		$status2 = $mapper->getOrCreateFromFileId($fileId);
-
-		$this->assertInstanceOf('OCA\Search_Lucene\Db\Status', $status2);
-		$this->assertEquals($fileId, $status2->getFileId());
-		$this->assertEquals(Status::STATUS_INDEXED, $status2->getStatus());
-		
-	}
-
-	/**
-	 * @dataProvider statusDataProvider
-	 */
-	function testMarkError($fileName) {
-
-		// preparation
-		$fileId = $this->getFileId($fileName);
-		$this->assertNotNull($fileId, 'Precondition failed: file id not found!');
-
-		$app = new Application();
-		$container = $app->getContainer();
-		/** @var StatusMapper $mapper */
-		$mapper = $container->query('StatusMapper');
-
-		// run test
-		$status = new Status($fileId);
-		$mapper->markError($status);
-
-		$this->assertInstanceOf('OCA\Search_Lucene\Db\Status', $status);
-		$this->assertEquals($fileId, $status->getFileId());
-		$this->assertEquals(Status::STATUS_ERROR, $status->getStatus());
-
-		//check after loading from db
-		$status2 = $mapper->getOrCreateFromFileId($fileId);
-
-		$this->assertInstanceOf('OCA\Search_Lucene\Db\Status', $status2);
-		$this->assertEquals($fileId, $status2->getFileId());
-		$this->assertEquals(Status::STATUS_ERROR, $status2->getStatus());
-
-	}
-
-	/**
-	 * @dataProvider statusDataProvider
-	 */
-	function testMarkVanished($fileName) {
-
-		// preparation
-		$fileId = $this->getFileId($fileName);
-		$this->assertNotNull($fileId, 'Precondition failed: file id not found!');
-
-		$app = new Application();
-		$container = $app->getContainer();
-		/** @var StatusMapper $mapper */
-		$mapper = $container->query('StatusMapper');
-
-		// run test
-		$status = new Status($fileId);
-		$mapper->markVanished($status);
-
-		$this->assertInstanceOf('OCA\Search_Lucene\Db\Status', $status);
-		$this->assertEquals($fileId, $status->getFileId());
-		$this->assertEquals(Status::STATUS_VANISHED, $status->getStatus());
-
-		//check after loading from db
-		$status2 = $mapper->getOrCreateFromFileId($fileId);
-
-		$this->assertInstanceOf('OCA\Search_Lucene\Db\Status', $status2);
-		$this->assertEquals($fileId, $status2->getFileId());
-		$this->assertEquals(Status::STATUS_VANISHED, $status2->getStatus());
-
-	}
-
-	/**
-	 * @dataProvider statusDataProvider
-	 */
-	function testMarkUnIndexed($fileName) {
-
-		// preparation
-		$fileId = $this->getFileId($fileName);
-		$this->assertNotNull($fileId, 'Precondition failed: file id not found!');
-
-		$app = new Application();
-		$container = $app->getContainer();
-		/** @var StatusMapper $mapper */
-		$mapper = $container->query('StatusMapper');
-
-		// run test
-		$status = new Status($fileId);
-		$mapper->markUnIndexed($status);
-
-		$this->assertInstanceOf('OCA\Search_Lucene\Db\Status', $status);
-		$this->assertEquals($fileId, $status->getFileId());
-		$this->assertEquals(Status::STATUS_UNINDEXED, $status->getStatus());
-
-		//check after loading from db
-		$status2 = $mapper->getOrCreateFromFileId($fileId);
-
-		$this->assertInstanceOf('OCA\Search_Lucene\Db\Status', $status2);
-		$this->assertEquals($fileId, $status2->getFileId());
-		$this->assertEquals(Status::STATUS_UNINDEXED, $status2->getStatus());
+		$this->assertEquals($status->getFileId(), $status2->getFileId());
+		$this->assertEquals($expectedStatus, $status2->getStatus());
 
 	}
 
 	public function statusDataProvider() {
 		return array(
-			array('/documents/document.pdf'),
-			array('/documents/document.docx'),
-			array('/documents/document.odt'),
-			array('/documents/document.txt'),
+			array('/documents/document.pdf',	'markNew',			Status::STATUS_NEW),
+			array('/documents/document.pdf',	'markSkipped',		Status::STATUS_SKIPPED),
+			array('/documents/document.pdf',	'markIndexed',		Status::STATUS_INDEXED),
+			array('/documents/document.pdf',	'markUnIndexed',	Status::STATUS_UNINDEXED),
+			array('/documents/document.pdf',	'markError',		Status::STATUS_ERROR),
+			array('/documents/document.pdf',	'markVanished',		Status::STATUS_VANISHED),
+
+			array('/documents/document.docx',	'markNew',			Status::STATUS_NEW),
+			array('/documents/document.docx',	'markSkipped',		Status::STATUS_SKIPPED),
+			array('/documents/document.docx',	'markIndexed',		Status::STATUS_INDEXED),
+			array('/documents/document.docx',	'markUnIndexed',	Status::STATUS_UNINDEXED),
+			array('/documents/document.docx',	'markError',		Status::STATUS_ERROR),
+			array('/documents/document.docx',	'markVanished',		Status::STATUS_VANISHED),
+
+			array('/documents/document.odt',	'markNew',			Status::STATUS_NEW),
+			array('/documents/document.odt',	'markSkipped',		Status::STATUS_SKIPPED),
+			array('/documents/document.odt',	'markIndexed',		Status::STATUS_INDEXED),
+			array('/documents/document.odt',	'markUnIndexed',	Status::STATUS_UNINDEXED),
+			array('/documents/document.odt',	'markError',		Status::STATUS_ERROR),
+			array('/documents/document.odt',	'markVanished',		Status::STATUS_VANISHED),
+
+			array('/documents/document.txt',	'markNew',			Status::STATUS_NEW),
+			array('/documents/document.txt',	'markSkipped',		Status::STATUS_SKIPPED),
+			array('/documents/document.txt',	'markIndexed',		Status::STATUS_INDEXED),
+			array('/documents/document.txt',	'markUnIndexed',	Status::STATUS_UNINDEXED),
+			array('/documents/document.txt',	'markError',		Status::STATUS_ERROR),
+			array('/documents/document.txt',	'markVanished',		Status::STATUS_VANISHED),
 		);
 	}
 }

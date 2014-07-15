@@ -25,13 +25,14 @@ class OptimizeJob extends \OC\BackgroundJob\TimedJob {
 
 		if (!empty($arguments['user'])) {
 			$userId = $arguments['user'];
-			$container->query('Logger')->log('background job optimizing index for '.$userId, 'debug' );
+			$container->query('Logger')->
+				debug('background job optimizing index for '.$userId );
 			$folder = $container->query('FileUtility')->setUpIndexFolder($userId);
 			//TODO use folder?
 			$container->query('Index')->optimizeIndex();
 		} else {
 			$container->query('Logger')->
-				log('indexer job did not receive user in arguments: '.json_encode($arguments), 'debug' );
+				debug('indexer job did not receive user in arguments: '.json_encode($arguments) );
 		}
 	}
 }

@@ -58,7 +58,7 @@ class LuceneProvider extends \OCP\Search\Provider {
 				}
 
 			} catch ( \Exception $e ) {
-				$container->query('Logger')->log( $e->getMessage().' Trace:\n'.$e->getTraceAsString(), 'error' );
+				$container->query('Logger')->error( $e->getMessage().' Trace:\n'.$e->getTraceAsString() );
 			}
 
 		}

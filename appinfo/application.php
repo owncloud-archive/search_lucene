@@ -83,11 +83,14 @@ class Application extends App {
 		});
 
 		$container->registerService('Logger', function($c) {
-			return new Logger($c->query('AppName'));
+			return new Logger(
+				$c->query('AppName'),
+				$c->query('ServerContainer')->getLogger()
+			);
 		});
 
-		$container->registerService('Db', function() {
-			return new Db();
+		$container->registerService('Db', function($c) {
+			return $c->query('ServerContainer')->getDb();
 		});
 
 		$container->registerService('FileUtility', function($c) {
