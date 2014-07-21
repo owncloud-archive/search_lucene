@@ -22,17 +22,16 @@ class OptimizeJob extends \OC\BackgroundJob\TimedJob {
 	public function run($arguments){
 		$app = new Application();
 		$container = $app->getContainer();
+		/** @var Logger $logger */
+		$logger = $container->query('Logger');
 
 		if (!empty($arguments['user'])) {
 			$userId = $arguments['user'];
-			$container->query('Logger')->
-				debug('background job optimizing index for '.$userId );
-			$folder = $container->query('FileUtility')->setUpIndexFolder($userId);
-			//TODO use folder?
+			$logger->debug('background job optimizing index for '.$userId );
+			$container->query('FileUtility')->setUpIndexFolder($userId);
 			$container->query('Index')->optimizeIndex();
 		} else {
-			$container->query('Logger')->
-				debug('indexer job did not receive user in arguments: '.json_encode($arguments) );
+			$logger->debug('indexer job did not receive user in arguments: '.json_encode($arguments) );
 		}
 	}
 }
