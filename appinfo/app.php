@@ -22,8 +22,11 @@ OCP\Util::addStyle('search_lucene', 'lucene');
 // add background job for index optimization:
 
 $arguments = array('user' => \OCP\User::getUser());
-//Add Background Job:
-\OCP\BackgroundJob::registerJob( 'OCA\Search_Lucene\Jobs\OptimizeJob', $arguments );
+
+//only when we know for which user:
+if ($arguments['user']) {
+	\OCP\BackgroundJob::registerJob( 'OCA\Search_Lucene\Jobs\OptimizeJob', $arguments );
+}
 
 // --- add hooks -----------------------------------------------
 
