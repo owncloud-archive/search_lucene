@@ -46,6 +46,9 @@ class Application extends App {
 			);
 		});
 
+		/**
+		 * Lucene
+		 */
 		$container->registerService('Index', function($c) {
 			$index = new Index(
 				$c->query('FileUtility'),
@@ -59,9 +62,18 @@ class Application extends App {
 		$container->registerService('Indexer', function($c) {
 			return new Indexer(
 				$c->query('FileUtility'),
+				$c->query('ServerContainer'),
 				$c->query('Index'),
+				$c->query('SkippedDirs'),
 				$c->query('StatusMapper'),
 				$c->query('Logger')
+			);
+		});
+
+		$container->registerService('SkippedDirs', function($c) {
+			return explode(
+				';',
+				\OCP\Config::getUserValue($c->query('UserId'), 'search_lucene', 'skipped_dirs', '.git;.svn;.CVS;.bzr')
 			);
 		});
 
@@ -78,8 +90,8 @@ class Application extends App {
 		/**
 		 * Core
 		 */
-		$container->registerService('UserId', function() {
-			return \OCP\User::getUser();
+		$container->registerService('UserId', function($c) {
+			return $c->query('ServerContainer')->getUserSession()->getUser()->getUID();
 		});
 
 		$container->registerService('Logger', function($c) {
@@ -95,7 +107,8 @@ class Application extends App {
 
 		$container->registerService('FileUtility', function($c) {
 			return new Files(
-				$c->query('UserId'),
+				$c->query('ServerContainer')->getUserManager(),
+				$c->query('ServerContainer')->getUserSession(),
 				$c->query('RootFolder')
 			);
 		});

@@ -12,8 +12,10 @@
 namespace OCA\Search_Lucene\Hooks;
 
 use OCA\Search_Lucene\AppInfo\Application;
+use OCA\Search_Lucene\Core\Logger;
 use OCA\Search_Lucene\Db\StatusMapper;
-use \OCP\BackgroundJob;
+use OCA\Search_Lucene\Lucene\Index;
+use OCP\BackgroundJob;
 
 /**
  * 
@@ -60,7 +62,7 @@ class Files {
 		if (!empty($userId)) {
 
 			// mark written file as new
-			$userFolder = \OC::$server->getUserFolder();
+			$userFolder = $container->query('ServerContainer')->getUserFolder();
 			$node = $userFolder->get($param['path']);
 			/** @var StatusMapper $mapper */
 			$mapper = $container->query('StatusMapper');
@@ -76,9 +78,8 @@ class Files {
 			//Add Background Job:
 			BackgroundJob::registerJob( 'OCA\Search_Lucene\Jobs\IndexJob', array('user' => $userId) );
 		} else {
-			$container->query('Logger')->log(
-				'Hook indexFile could not determine user when called with param '.json_encode($param),
-				'debug'
+			$container->query('Logger')->debug(
+				'Hook indexFile could not determine user when called with param '.json_encode($param)
 			);
 		}
 	}
@@ -100,7 +101,7 @@ class Files {
 		}
 
 		if (!empty($param['newpath'])) {
-			$userFolder = \OC::$server->getUserFolder();
+			$userFolder = $container->query('ServerContainer')->getUserFolder();
 			$node = $userFolder->get($param['newpath']);
 
 			// only index files
@@ -126,21 +127,26 @@ class Files {
 		$app = new Application();
 		$container = $app->getContainer();
 
+		/** @var Index $index */
 		$index = $container->query('Index');
+
+		/** @var StatusMapper $mapper */
 		$mapper = $container->query('StatusMapper');
+
+		/** @var Logger $logger */
 		$logger = $container->query('Logger');
 
 		$deletedIds = $mapper->getDeleted();
 		$count = 0;
 		foreach ($deletedIds as $fileId) {
-			$logger->log( 'deleting status for ('.$fileId.') ', 'debug' );
+			$logger->debug( 'deleting status for ('.$fileId.') ' );
 			//delete status
 			$mapper->delete($fileId);
 			//delete from lucene
 			$count += $index->deleteFile($fileId);
 
 		}
-		$logger->log( 'removed '.$count.' files from index', 'debug' );
+		$logger->debug( 'removed '.$count.' files from index' );
 
 	}
 
