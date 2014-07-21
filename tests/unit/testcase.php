@@ -51,20 +51,26 @@ abstract class TestCase extends PHPUnit_Framework_TestCase {
 	//for search lucene
 	public function setUp() {
 
+		$app = new Application();
+		$container = $app->getContainer();
+
 		// reset backend
-		\OC_User::clearBackends();
-		\OC_User::useBackend('database');
+		$um = $container->getServer()->getUserManager();
+		$us = $container->getServer()->getUserSession();
+		$um->clearBackends();
+		$um->registerBackend(new \OC_User_Database());
 
 		// create test user
 		$this->userName = 'test';
 		\OC_User::deleteUser($this->userName);
-		\OC_User::createUser($this->userName, $this->userName);
+		$um->createUser($this->userName, $this->userName);
 
 		\OC_Util::tearDownFS();
-		\OC_User::setUserId('');
+		$us->setUser(null);
 		\OC\Files\Filesystem::tearDown();
 		\OC_Util::setupFS($this->userName);
-		\OC_User::setUserId($this->userName);
+
+		$us->setUser($um->get($this->userName));
 
 		$view = new \OC\Files\View('/' . $this->userName . '/files');
 
