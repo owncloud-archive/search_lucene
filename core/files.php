@@ -10,23 +10,29 @@
  */
 
 namespace OCA\Search_Lucene\Core;
-
-use OC\Files\Node\Folder;
+use OCP\Files\Folder;
+use OCP\IUserManager;
+use OCP\IUserSession;
 
 class Files {
 
 	/**
-	 * @var string
+	 * @var \OCP\IUserManager
 	 */
-	private $userId;
+	private $userManager;
+	/**
+	 * @var \OCP\IUserSession
+	 */
+	private $userSession;
 
 	/**
 	 * @var \OC\Files\Node\Folder
 	 */
 	private $rootFolder;
 
-	public function __construct($userId, Folder $rootFolder){
-		$this->userId = $userId;
+	public function __construct(IUserManager $userManager, IUserSession $userSession, Folder $rootFolder){
+		$this->userManager = $userManager;
+		$this->userSession = $userSession;
 		$this->rootFolder = $rootFolder;
 	}
 	/**
@@ -35,72 +41,70 @@ class Files {
 	 *
 	 * @param string $userId
 	 * @return \OCP\Files\Folder
+	 * @throws SetUpException
 	 */
 	public function setUpUserFolder($userId = null) {
+
 		$userHome = $this->setUpUserHome($userId);
 
-		$dir = 'files';
-		$folder = null;
-		if(!$userHome->nodeExists($dir)) {
-			$folder = $userHome->newFolder($dir);
-		} else {
-			$folder = $userHome->get($dir);
-		}
-
-		return $folder;
+		return $this->getOrCreateSubFolder($userHome, 'files');
 
 	}
 
 	/**
 	 * @param string $userId
 	 * @return null|\OCP\Files\Folder
+	 * @throws SetUpException
 	 */
 	public function setUpIndexFolder($userId = null) {
-		$userHome = $this->setUpUserHome($userId);
 		// TODO profile: encrypt the index on logout, decrypt on login
 		//return OCP\Files::getStorage('search_lucene');
 		// FIXME \OC::$server->getAppFolder() returns '/search'
 		//$indexFolder = \OC::$server->getAppFolder();
 
-		$dir = 'lucene_index';
-		$folder = null;
-		if(!$userHome->nodeExists($dir)) {
-			$folder = $userHome->newFolder($dir);
-		} else {
-			$folder = $userHome->get($dir);
-		}
+		$userHome = $this->setUpUserHome($userId);
 
-		return $folder;
+		return $this->getOrCreateSubFolder($userHome, 'lucene_index');
 	}
 
 	/**
 	 * @param string $userId
 	 * @return null|\OCP\Files\Folder
+	 * @throws SetUpException
 	 */
 	public function setUpUserHome($userId = null) {
+
 		if (is_null($userId)) {
-			$userId = $this->userId;
-		}
-		if (!\OCP\User::userExists($userId)) {
-			return null;
-		}
-		if ($userId !== $this->userId) {
-			\OC_Util::tearDownFS();
-			\OC_User::setUserId($userId);
-			$this->userId = $userId;
-		}
-		\OC_Util::setupFS($userId);
-
-		$dir = '/' . $userId;
-		$folder = null;
-
-		if(!$this->rootFolder->nodeExists($dir)) {
-			$folder = $this->rootFolder->newFolder($dir);
+			$user = $this->userSession->getUser();
 		} else {
-			$folder = $this->rootFolder->get($dir);
+			$user = $this->userManager->get($userId);
 		}
+		if (is_null($user) || !$this->userManager->userExists($user->getUID())) {
+			throw new SetUpException('could not set up user home for '.json_encode($user));
+		}
+		//if ($user !== $this->userSession->getUser()) {
+		if ($user !== $this->userSession->getUser()) {
+			\OC_Util::tearDownFS();
+			$this->userSession->setUser($user);
+		}
+		\OC_Util::setupFS($user->getUID());
 
-		return $folder;
+		return $this->getOrCreateSubFolder($this->rootFolder, '/' . $user->getUID());
 
 	}
+
+	/**
+	 * @param \OCP\Files\Folder $parent
+	 * @param string $folderName
+	 * @return null|\OCP\Files\Folder
+	 * @throws SetUpException
+	 */
+	private function getOrCreateSubFolder(Folder $parent, $folderName) {
+		if($parent->nodeExists($folderName)) {
+			return $parent->get($folderName);
+		} else {
+			return $parent->newFolder($folderName);
+		}
+	}
+
 }

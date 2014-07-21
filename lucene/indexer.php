@@ -17,6 +17,7 @@ use OCA\Search_Lucene\Document\Ods;
 use OCA\Search_Lucene\Document\Odt;
 use OCA\Search_Lucene\Document\Pdf;
 use OCP\ILogger;
+use OCP\IServerContainer;
 
 /**
  * @author Jörn Dreyer <jfd@butonic.de>
@@ -28,9 +29,17 @@ class Indexer {
 	 */
 	private $files;
 	/**
+	 * @var \OCP\IServerContainer
+	 */
+	private $server;
+	/**
 	 * @var Index
 	 */
 	private $index;
+	/**
+	 * @var array
+	 */
+	private $skippedDirs;
 	/**
 	 * @var \OCA\Search_Lucene\Db\StatusMapper
 	 */
@@ -40,19 +49,16 @@ class Indexer {
 	 */
 	private $logger;
 
-	public function __construct(Files $files, Index $index, StatusMapper $mapper, ILogger $logger) {
+	public function __construct(Files $files, IServerContainer $server, Index $index, array $skippedDirs, StatusMapper $mapper, ILogger $logger) {
 		$this->files = $files;
+		$this->server = $server;
 		$this->index = $index;
+		$this->skippedDirs = $skippedDirs;
 		$this->mapper = $mapper;
 		$this->logger = $logger;
 	}
 
 	public function indexFiles (array $fileIds, \OC_EventSource $eventSource = null) {
-
-		$skippedDirs = explode(
-			';',
-			\OCP\Config::getUserValue(\OCP\User::getUser(), 'search_lucene', 'skipped_dirs', '.git;.svn;.CVS;.bzr')
-		);
 
 		foreach ($fileIds as $id) {
 
@@ -64,8 +70,8 @@ class Indexer {
 				// the file again
 				$this->mapper->markError($fileStatus);
 
-				/** @var \OCP\Files\Node $folder */
-				$nodes = \OC::$server->getUserFolder()->getById($id);
+				/** @var \OCP\Files\Node[] $nodes */
+				$nodes = $this->server->getUserFolder()->getById($id);
 				// getById can return more than one id because the containing storage might be mounted more than once
 				// Since we only want to index the file once, we only use the first entry
 
@@ -82,7 +88,7 @@ class Indexer {
 
 				$path = $node->getPath();
 
-				foreach ($skippedDirs as $skippedDir) {
+				foreach ($this->skippedDirs as $skippedDir) {
 					if (strpos($path, '/' . $skippedDir . '/') !== false //contains dir
 						|| strrpos($path, '/' . $skippedDir) === strlen($path) - (strlen($skippedDir) + 1) // ends with dir
 					) {

@@ -43,6 +43,7 @@ class ApiController extends Controller {
 			$fileIds = $this->mapper->getUnindexed();
 		}
 
+		//TODO use public api when available in \OCP\AppFramework\IApi
 		$eventSource = new \OC_EventSource();
 		$eventSource->send('count', count($fileIds));
 
