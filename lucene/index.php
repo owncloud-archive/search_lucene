@@ -91,7 +91,7 @@ class Index {
 	 * @author Jörn Dreyer <jfd@butonic.de>
 	 * 
 	 * @param \Zend_Search_Lucene_Document $doc  the document to store for the path
-	 * @param int $fileId fileid to update
+	 * @param int $fileId file id to update
 	 * @param bool $commit
 	 * 
 	 * @return void
@@ -121,7 +121,7 @@ class Index {
 	 * 
 	 * @author Jörn Dreyer <jfd@butonic.de>
 	 * 
-	 * @param int $fileId fileid to remove from the index
+	 * @param int $fileId file id to remove from the index
 	 * 
 	 * @return int count of deleted documents in the index
 	 */
@@ -129,7 +129,7 @@ class Index {
 
 		$hits = $this->index->find( 'fileId:' . $fileId );
 
-		$this->logger->debug( 'found ' . count($hits) . ' hits for fileId ' . $fileId );
+		$this->logger->debug( 'found ' . count($hits) . ' hits for file id ' . $fileId );
 
 		foreach ($hits as $hit) {
 			$this->logger->debug( 'removing ' . $hit->id . ':' . $hit->path . ' from index' );

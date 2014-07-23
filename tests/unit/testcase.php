@@ -151,7 +151,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase {
 		$fileInfo = $view->getFileInfo($path);
 		
 		if (! empty($fileInfo)) {
-			return $fileInfo['fileid'];
+			return $fileInfo->getId();
 		}
 
 		return null;
