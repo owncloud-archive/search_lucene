@@ -33,7 +33,7 @@ class LuceneResult extends \OC\Search\Result\File {
 	 * @param \Zend_Search_Lucene_Search_QueryHit $hit file data given by provider
 	 */
 	public function __construct(\Zend_Search_Lucene_Search_QueryHit $hit) {
-		$this->id = (string)$hit->fileid;
+		$this->id = (string)$hit->fileId;
 		$this->path = $this->getRelativePath($hit->path);
 		$this->name = basename($this->path);
 		$this->size = (int)$hit->size;

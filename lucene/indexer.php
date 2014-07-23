@@ -207,7 +207,7 @@ class Indexer {
 			}
 
 			// Store filecache id as unique id to lookup by when deleting
-			$doc->addField(\Zend_Search_Lucene_Field::Keyword('fileid', $file->getId()));
+			$doc->addField(\Zend_Search_Lucene_Field::Keyword('fileId', $file->getId()));
 
 			// Store document path for the search results
 			$doc->addField(\Zend_Search_Lucene_Field::Text('path', $file->getPath(), 'UTF-8'));
