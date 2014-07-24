@@ -12,6 +12,10 @@
 namespace OCA\Search_Lucene\Lucene;
 use OCA\Search_Lucene\Core\Files;
 use OCP\ILogger;
+use ZendSearch\Lucene\Analysis\Analyzer\Analyzer;
+use ZendSearch\Lucene\Analysis\Analyzer\Common\Utf8Num\CaseInsensitive;
+use ZendSearch\Lucene\Document;
+use ZendSearch\Lucene\Lucene;
 
 /**
  * @author Jörn Dreyer <jfd@butonic.de>
@@ -52,18 +56,18 @@ class Index {
 		$localPath = $storage->getLocalFile($indexFolder->getInternalPath());
 
 		//let lucene search for numbers as well as words
-		\Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-			new \Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive()
+		Analyzer::setDefault(
+			new CaseInsensitive()
 		);
 
 		// can we use the index?
 		if ($indexFolder->nodeExists('v0.6.0')) {
 			// correct index present
-			$this->index = \Zend_Search_Lucene::open($localPath);
+			$this->index = Lucene::open($localPath);
 		} else {
 			$this->logger->info( 'recreating outdated lucene index' );
 			$indexFolder->delete();
-			$this->index = \Zend_Search_Lucene::create($localPath);
+			$this->index = Lucene::create($localPath);
 			$indexFolder->newFile('v0.6.0');
 		}
 
@@ -90,14 +94,14 @@ class Index {
 	 * 
 	 * @author Jörn Dreyer <jfd@butonic.de>
 	 * 
-	 * @param \Zend_Search_Lucene_Document $doc  the document to store for the path
+	 * @param Document $doc  the document to store for the path
 	 * @param int $fileId file id to update
 	 * @param bool $commit
 	 * 
 	 * @return void
 	 */
 	public function updateFile(
-		\Zend_Search_Lucene_Document $doc,
+		Document $doc,
 		$fileId,
 		$commit = true
 	) {

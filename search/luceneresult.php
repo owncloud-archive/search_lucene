@@ -11,6 +11,7 @@
 
 namespace OCA\Search_Lucene\Search;
 use OC\Files\Filesystem;
+use ZendSearch\Lucene\Search\QueryHit;
 
 /**
  * A found file
@@ -32,7 +33,7 @@ class LuceneResult extends \OC\Search\Result\File {
 	 * Create a new content search result
 	 * @param \Zend_Search_Lucene_Search_QueryHit $hit file data given by provider
 	 */
-	public function __construct(\Zend_Search_Lucene_Search_QueryHit $hit) {
+	public function __construct(QueryHit $hit) {
 		$this->id = (string)$hit->fileId;
 		$this->path = $this->getRelativePath($hit->path);
 		$this->name = basename($this->path);

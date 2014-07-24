@@ -11,12 +11,11 @@
 
 namespace OCA\Search_Lucene\Controller;
 
-
 use OCA\Search_Lucene\Db\StatusMapper;
 use OCA\Search_Lucene\Lucene\Index;
 use OCA\Search_Lucene\Lucene\Indexer;
-use \OCP\IRequest;
-use \OCP\AppFramework\Controller;
+use OCP\IRequest;
+use OCP\AppFramework\Controller;
 
 class ApiController extends Controller {
 

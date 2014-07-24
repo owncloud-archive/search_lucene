@@ -33,6 +33,6 @@ class TestDocumentPdf extends \PHPUnit_Framework_TestCase {
 
 		$doc = Pdf::loadPdf($data, true);
 
-		echo $doc->getFieldValue('body');
+		$this->assertGreaterThan(0,count($doc->getFieldValue('body')));
 	}
 }
