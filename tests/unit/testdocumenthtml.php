@@ -44,22 +44,23 @@
 
 namespace OCA\Search_Lucene\Tests\Unit;
 
-use OCA\Search_Lucene\Document\Pdf;
+use ZendSearch\Lucene\Document\HTML;
 
-class TestDocumentPdf extends \PHPUnit_Framework_TestCase {
+class TestDocumentHtml extends \PHPUnit_Framework_TestCase {
+
 
 	/**
-	 * @dataProvider dataProviderA1
+	 * @dataProvider dataProviderHTML
 	 */
-	function testParseA1($term, $field, $descriptiveLocation, $skipped) {
+	function testParseHTML($term, $field, $descriptiveLocation, $skipped) {
 
 		if ($skipped) {
 			$this->markTestSkipped('TODO search ' .$descriptiveLocation. ' in ' . $field);
 		}
 
-		$data = file_get_contents(__DIR__.'/data/libreoffice/document - a1.pdf');
+		$data = file_get_contents(__DIR__.'/data/libreoffice/document.html');
 
-		$doc = Pdf::loadPdf($data, true);
+		$doc = HTML::loadHTML($data, true);
 
 		$value = $doc->getFieldValue($field);
 
@@ -68,141 +69,7 @@ class TestDocumentPdf extends \PHPUnit_Framework_TestCase {
 
 	}
 
-	public function dataProviderA1() {
-		return array(
-			array('term0', 'body', 'title', false),
-			array('term1', 'body', 'subtitle', false),
-			array('term2', 'body', 'text', false),
-			array('term3', 'body', 'font1', false),
-			array('term4', 'body', 'font2', false),
-			array('term5', 'body', 'font3', false),
-			array('term6', 'body', 'link', false),
-			array('term7', 'body', 'link name', false),
-			array('term8', 'body', 'strikethrough', false),
-			array('term9', 'body', 'subscript', false),
-			array('term10', 'body', 'superscript', false),
-			array('term11', 'body', 'bulletlist', false),
-			array('term12', 'body', 'enumeration', false),
-			array('term13', 'body', 'text frame', false),
-			array('term14', 'headlines', 'heading 1', false),
-			array('term15', 'headlines', 'heading 2', false),
-			array('term16', 'headlines', 'heading 3', false),
-			array('term17', 'body', 'heading 4', false),
-			array('term18', 'body', 'centered', false),
-			array('term19', 'body', 'right', false),
-			array('term20', 'body', 'justified', false),
-			array('term21', 'body', 'bold', false),
-			array('term22', 'body', 'italic', false),
-			array('term23', 'body', 'underlined', false),
-			array('term24', 'body', 'bold italic', false),
-			array('term25', 'body', 'bold underlined', false),
-			array('term26', 'body', 'italic underlined', false),
-			array('term27', 'body', 'bold italic underlined', false),
-			array('term28', 'body', 'footer', false),
-			array('term29', 'body', 'header', false),
-			array('term30', 'body', 'color', false),
-			array('term31', 'body', 'table header', false),
-			array('term32', 'body', 'table row', false),
-			array('term33', 'body', '6pt', false),
-			array('term34', 'body', '8pt', false),
-			array('term35', 'body', 'footnote', false),
-			array('term36', 'body', 'comment', false),
-			array('term37', 'title', 'meta title', false),
-			array('term38', 'subject', 'meta subject', false),
-			array('term39', 'keywords', 'meta keywords', false),
-			array('term40', 'comment', 'meta comment', false),
-			array('term41', 'custom', 'meta custom property', false),
-		);
-	}
-
-	/**
-	 * @dataProvider dataProviderV14
-	 */
-	function testParseV14($term, $field, $descriptiveLocation, $skipped) {
-
-		if ($skipped) {
-			$this->markTestSkipped('TODO search ' .$descriptiveLocation. ' in ' . $field);
-		}
-
-		$data = file_get_contents(__DIR__.'/data/libreoffice/document - 1.4.pdf');
-
-		$doc = Pdf::loadPdf($data, true);
-
-		$value = $doc->getFieldValue($field);
-
-		$containsTestTerm = stristr($value, $term) !== false;
-		$this->assertTrue($containsTestTerm, $value.' does not contain "'.$term.'" in '.$descriptiveLocation);
-
-	}
-
-	public function dataProviderV14() {
-		return array(
-			array('term0', 'body', 'title', false),
-			array('term1', 'body', 'subtitle', false),
-			array('term2', 'body', 'text', false),
-			array('term3', 'body', 'font1', false),
-			array('term4', 'body', 'font2', false),
-			array('term5', 'body', 'font3', false),
-			array('term6', 'body', 'link', false),
-			array('term7', 'body', 'link name', false),
-			array('term8', 'body', 'strikethrough', false),
-			array('term9', 'body', 'subscript', false),
-			array('term10', 'body', 'superscript', false),
-			array('term11', 'body', 'bulletlist', false),
-			array('term12', 'body', 'enumeration', false),
-			array('term13', 'body', 'text frame', false),
-			array('term14', 'headlines', 'heading 1', false),
-			array('term15', 'headlines', 'heading 2', false),
-			array('term16', 'headlines', 'heading 3', false),
-			array('term17', 'body', 'heading 4', false),
-			array('term18', 'body', 'centered', false),
-			array('term19', 'body', 'right', false),
-			array('term20', 'body', 'justified', false),
-			array('term21', 'body', 'bold', false),
-			array('term22', 'body', 'italic', false),
-			array('term23', 'body', 'underlined', false),
-			array('term24', 'body', 'bold italic', false),
-			array('term25', 'body', 'bold underlined', false),
-			array('term26', 'body', 'italic underlined', false),
-			array('term27', 'body', 'bold italic underlined', false),
-			array('term28', 'body', 'footer', false),
-			array('term29', 'body', 'header', false),
-			array('term30', 'body', 'color', false),
-			array('term31', 'body', 'table header', false),
-			array('term32', 'body', 'table row', false),
-			array('term33', 'body', '6pt', false),
-			array('term34', 'body', '8pt', false),
-			array('term35', 'body', 'footnote', false),
-			array('term36', 'body', 'comment', false),
-			array('term37', 'title', 'meta title', false),
-			array('term38', 'subject', 'meta subject', false),
-			array('term39', 'keywords', 'meta keywords', false),
-			array('term40', 'comment', 'meta comment', false),
-			array('term41', 'custom', 'meta custom property', false),
-		);
-	}
-
-	/**
-	 * @dataProvider dataProviderV15
-	 */
-	function testParseV15($term, $field, $descriptiveLocation, $skipped) {
-
-		if ($skipped) {
-			$this->markTestSkipped('TODO search ' .$descriptiveLocation. ' in ' . $field);
-		}
-
-		$data = file_get_contents(__DIR__.'/data/cairo/document.pdf');
-
-		$doc = Pdf::loadPdf($data, true);
-
-		$value = $doc->getFieldValue($field);
-
-		$containsTestTerm = stristr($value, $term) !== false;
-		$this->assertTrue($containsTestTerm, $value.' does not contain "'.$term.'" in '.$descriptiveLocation);
-
-	}
-
-	public function dataProviderV15() {
+	public function dataProviderHTML() {
 		return array(
 			array('term0', 'body', 'title', false),
 			array('term1', 'body', 'subtitle', false),
@@ -246,6 +113,74 @@ class TestDocumentPdf extends \PHPUnit_Framework_TestCase {
 			array('term39', 'keywords', 'meta keywords', false),
 			array('term40', 'comment', 'meta comment', false),
 			array('term41', 'custom', 'meta custom property', false),
+		);
+	}
+
+
+	/**
+	 * @dataProvider dataProviderXHTML
+	 */
+	function testParseXHTML($term, $field, $descriptiveLocation, $skipped) {
+
+		if ($skipped) {
+			$this->markTestSkipped('TODO search ' .$descriptiveLocation. ' in ' . $field);
+		}
+
+		$data = file_get_contents(__DIR__.'/data/libreoffice/document.xhtml');
+
+		$doc = HTML::loadHTML($data, true);
+
+		$value = $doc->getFieldValue($field);
+
+		$containsTestTerm = stristr($value, $term) !== false;
+		$this->assertTrue($containsTestTerm, $value.' does not contain "'.$term.'" in '.$descriptiveLocation);
+
+	}
+
+	public function dataProviderXHTML() {
+		return array(
+			array('term0', 'body', 'title', false),
+			array('term1', 'body', 'subtitle', false),
+			array('term2', 'body', 'text', false),
+			array('term3', 'body', 'font1', false),
+			array('term4', 'body', 'font2', false),
+			array('term5', 'body', 'font3', false),
+			array('term6', 'body', 'link', false),
+			array('term7', 'body', 'link name', true),
+			array('term8', 'body', 'strikethrough', false),
+			array('term9', 'body', 'subscript', false),
+			array('term10', 'body', 'superscript', false),
+			array('term11', 'body', 'bulletlist', false),
+			array('term12', 'body', 'enumeration', false),
+			array('term13', 'body', 'text frame', false),
+			array('term14', 'body', 'heading 1', false),
+			array('term15', 'body', 'heading 2', false),
+			array('term16', 'body', 'heading 3', false),
+			array('term17', 'body', 'heading 4', false),
+			array('term18', 'body', 'centered', false),
+			array('term19', 'body', 'right', false),
+			array('term20', 'body', 'justified', false),
+			array('term21', 'body', 'bold', false),
+			array('term22', 'body', 'italic', false),
+			array('term23', 'body', 'underlined', false),
+			array('term24', 'body', 'bold italic', false),
+			array('term25', 'body', 'bold underlined', false),
+			array('term26', 'body', 'italic underlined', false),
+			array('term27', 'body', 'bold italic underlined', false),
+			array('term28', 'body', 'footer', true),
+			array('term29', 'body', 'header', true),
+			array('term30', 'body', 'color', false),
+			array('term31', 'body', 'table header', false),
+			array('term32', 'body', 'table row', false),
+			array('term33', 'body', '6pt', false),
+			array('term34', 'body', '8pt', false),
+			array('term35', 'body', 'footnote', false),
+			array('term36', 'body', 'comment', false),
+			array('term37', 'title', 'meta title', false),
+			array('term38', 'subject', 'meta subject', true),
+			array('term39', 'keywords', 'meta keywords', true),
+			array('term40', 'comment', 'meta comment', true),
+			array('term41', 'custom', 'meta custom property', true),
 		);
 	}
 }

@@ -13,7 +13,6 @@ namespace OCA\Search_Lucene\Document;
 
 use Smalot\PdfParser\Parser;
 use OCP\Util;
-use ZendPdf\PdfDocument;
 use ZendSearch\Lucene\Document;
 
 /**
@@ -30,44 +29,30 @@ class Pdf extends Document
 	 */
 	private function __construct($data, $storeContent) {
 
-		try {
-			//TODO check PDF >1.5 metadata extraction
+		//TODO check PDF >1.5 metadata extraction
 
-			//do the content extraction
-			$parser = new Parser();
-			$pdf    = $parser->parseContent($data);
+		//do the content extraction
+		$parser = new Parser();
+		$pdf = $parser->parseContent($data);
 
-			$details = $pdf->getDetails();
+		$body = $pdf->getText();
 
-			// Store meta data properties
-			if (isset($details['Title'])) {
-				$this->addField(Document\Field::UnStored('title', $details['Title']));
+		// Store contents
+		if ($storeContent) {
+			$this->addField(Document\Field::Text('body', $body, 'UTF-8'));
+		} else {
+			$this->addField(Document\Field::UnStored('body', $body, 'UTF-8'));
+		}
+
+		$details = $pdf->getDetails();
+
+		// Store meta data properties
+		foreach ($details as $key => $value) {
+			$key = strtolower($key);
+			if ($key === 'author') {
+				$key = 'creator';
 			}
-			if (isset($details['Author'])) {
-				$this->addField(Document\Field::UnStored('author', $details['Author']));
-			}
-			if (isset($details['Subject'])) {
-				$this->addField(Document\Field::UnStored('subject', $details['Subject']));
-			}
-			if (isset($details['Keywords'])) {
-				$this->addField(Document\Field::UnStored('keywords', $details['Keywords']));
-			}
-
-			$body = $pdf->getText();
-
-			if ($body != '') {
-				// Store contents
-				if ($storeContent) {
-					$this->addField(Document\Field::Text('body', $body, 'UTF-8'));
-				} else {
-					$this->addField(Document\Field::UnStored('body', $body, 'UTF-8'));
-				}
-			}
-
-		} catch (\Exception $e) {
-			Util::writeLog('search_lucene',
-				$e->getMessage() . ' Trace:\n' . $e->getTraceAsString(),
-				Util::ERROR);
+			$this->addField(Document\Field::Text($key, $value, 'UTF-8'));
 		}
 
 	}
@@ -78,6 +63,7 @@ class Pdf extends Document
 	 * @param string  $data
 	 * @param boolean $storeContent
 	 * @return Pdf
+	 * @throws \Exception
 	 */
 	public static function loadPdf($data, $storeContent = false)
 	{
