@@ -11,50 +11,56 @@
 
 namespace OCA\Search_Lucene\Document;
 
-use OCA\Search_Lucene\Utility\PdfParser;
-use \OCP\Util;
+use Smalot\PdfParser\Parser;
+use OCP\Util;
+use ZendPdf\PdfDocument;
+use ZendSearch\Lucene\Document;
+
 /**
  * PDF document
  */
-class Pdf extends \Zend_Search_Lucene_Document
+class Pdf extends Document
 {
 
-    /**
-     * Object constructor
-     *
-     * @param string  $data
-     * @param boolean $storeContent
-     */
-    private function __construct($data, $storeContent) {
+	/**
+	 * Object constructor
+	 *
+	 * @param string  $data
+	 * @param boolean $storeContent
+	 */
+	private function __construct($data, $storeContent) {
 
 		try {
-			$zendpdf = \Zend_Pdf::parse($data);
-
-			// Store meta data properties
-			if (isset($zendpdf->properties['Title'])) {
-				$this->addField(\Zend_Search_Lucene_Field::UnStored('title', $zendpdf->properties['Title']));
-			}
-			if (isset($zendpdf->properties['Author'])) {
-				$this->addField(\Zend_Search_Lucene_Field::UnStored('author', $zendpdf->properties['Author']));
-			}
-			if (isset($zendpdf->properties['Subject'])) {
-				$this->addField(\Zend_Search_Lucene_Field::UnStored('subject', $zendpdf->properties['Subject']));
-			}
-			if (isset($zendpdf->properties['Keywords'])) {
-				$this->addField(\Zend_Search_Lucene_Field::UnStored('keywords', $zendpdf->properties['Keywords']));
-			}
-			//TODO handle PDF 1.6 metadata Zend_Pdf::getMetadata()
+			//TODO check PDF >1.5 metadata extraction
 
 			//do the content extraction
-			$pdfParse = new PdfParser();
-			$body = $pdfParse->pdf2txt($zendpdf->render());
+			$parser = new Parser();
+			$pdf    = $parser->parseContent($data);
+
+			$details = $pdf->getDetails();
+
+			// Store meta data properties
+			if (isset($details['Title'])) {
+				$this->addField(Document\Field::UnStored('title', $details['Title']));
+			}
+			if (isset($details['Author'])) {
+				$this->addField(Document\Field::UnStored('author', $details['Author']));
+			}
+			if (isset($details['Subject'])) {
+				$this->addField(Document\Field::UnStored('subject', $details['Subject']));
+			}
+			if (isset($details['Keywords'])) {
+				$this->addField(Document\Field::UnStored('keywords', $details['Keywords']));
+			}
+
+			$body = $pdf->getText();
 
 			if ($body != '') {
 				// Store contents
 				if ($storeContent) {
-					$this->addField(\Zend_Search_Lucene_Field::Text('body', $body, 'UTF-8'));
+					$this->addField(Document\Field::Text('body', $body, 'UTF-8'));
 				} else {
-					$this->addField(\Zend_Search_Lucene_Field::UnStored('body', $body, 'UTF-8'));
+					$this->addField(Document\Field::UnStored('body', $body, 'UTF-8'));
 				}
 			}
 
@@ -64,20 +70,19 @@ class Pdf extends \Zend_Search_Lucene_Document
 				Util::ERROR);
 		}
 
-    }
+	}
 
-    /**
-     * Load PDF document from a string
-     *
-     * @param string  $data
-     * @param boolean $storeContent
-     * @return Pdf
-     */
-    public static function loadPdf($data, $storeContent = false)
-    {
-        return new Pdf($data, false, $storeContent);
-    }
-
+	/**
+	 * Load PDF document from a string
+	 *
+	 * @param string  $data
+	 * @param boolean $storeContent
+	 * @return Pdf
+	 */
+	public static function loadPdf($data, $storeContent = false)
+	{
+		return new Pdf($data, false, $storeContent);
+	}
 
 }
 

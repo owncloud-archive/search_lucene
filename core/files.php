@@ -10,6 +10,7 @@
  */
 
 namespace OCA\Search_Lucene\Core;
+
 use OCP\Files\Folder;
 use OCP\IUserManager;
 use OCP\IUserSession;

@@ -20,9 +20,6 @@ use OCA\Search_Lucene\Lucene\Indexer;
 use OCA\Search_Lucene\Core\Files;
 use OCP\AppFramework\App;
 
-//add 3rdparty folder to include path
-set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__.'/../3rdparty');
-
 class Application extends App {
 
 	public function __construct (array $urlParams=array()) {
@@ -30,8 +27,8 @@ class Application extends App {
 
 		$container = $this->getContainer();
 
-		require_once __DIR__ . '/../3rdparty/Zend/Loader/Autoloader.php';
-		\Zend_Loader_Autoloader::getInstance();
+		//add 3rdparty composer autoloader
+		require_once __DIR__ . '/../3rdparty/autoload.php';
 
 		/**
 		 * Controller

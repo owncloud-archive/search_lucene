@@ -1,0 +1,10 @@
+{
+	"name": "owncloud/search_lucene",
+	"config": {
+		"vendor-dir": "3rdparty"
+	},
+	"require": {
+		"smalot/pdfparser": "v0.9.21",
+		"zendframework/zendsearch": "dev-master#cd06d485eb679f112f9e2fceb7d4480b9b8c2816"
+	}
+}
