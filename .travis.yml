@@ -16,13 +16,13 @@ branches:
     - stable7
 
 before_install:
-  - composer install
+#  - composer install
   - wget https://raw.githubusercontent.com/owncloud/administration/master/travis-ci/before_install.sh
-  - bash ./before_install.sh seach_lucene $CORE_BRANCH $DB
+  - bash ./before_install.sh search_lucene $CORE_BRANCH $DB
 
 script:
   # Test lint
-  - cd ../core/apps/seach_lucene
+  - cd ../core/apps/search_lucene
   - sh -c "if [ '$DB' = 'sqlite' ]; then ant test; fi"
 
   # Run phpunit tests
