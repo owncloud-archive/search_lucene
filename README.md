@@ -2,6 +2,7 @@
 
 [![Build Status](https://secure.travis-ci.org/owncloud/search_lucene.png)](http://travis-ci.org/owncloud/search_lucene)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/search_lucene/badges/quality-score.png)](https://scrutinizer-ci.com/g/owncloud/search_lucene/)
+[![Scrutinizer Code Coverage](https://scrutinizer-ci.com/g/owncloud/search_lucene/badges/coverage.png)](https://scrutinizer-ci.com/g/owncloud/search_lucene/)
 
 The Search Lucene app adds a full text search for files stored in ownCloud. It is based on
 [Zend Search Lucene](http://framework.zend.com/manual/1.12/en/zend.search.lucene.html) and
