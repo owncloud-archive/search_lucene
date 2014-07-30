@@ -11,11 +11,19 @@
 	<!--<file>apps.php</file>-->
 </testsuite>
 <!-- filters for code coverage -->
-<filter>
-	<!-- whitelist processUncoveredFilesFromWhitelist="true" -->
-	<whitelist>
-		<directory suffix=".php">../..</directory>
-	</whitelist>
-</filter>
+	<filter>
+		<whitelist>
+			<directory suffix=".php">../../../search_lucene</directory>
+			<exclude>
+				<directory suffix=".php">../../../search_lucene/3rdparty</directory>
+				<directory suffix=".php">../../../search_lucene/l10n</directory>
+				<directory suffix=".php">../../../search_lucene/tests</directory>
+			</exclude>
+		</whitelist>
+	</filter>
+	<logging>
+		<!-- and this is where your report will be written -->
+		<log type="coverage-clover" target="./clover.xml"/>
+	</logging>
 </phpunit>
 
