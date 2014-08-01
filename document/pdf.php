@@ -1,7 +1,17 @@
 <?php
+/**
+ * ownCloud - search_lucene
+ *
+ * This file is licensed under the Affero General Public License version 3 or
+ * later. See the COPYING file.
+ *
+ * @author Jörn Friedrich Dreyer <jfd@butonic.de>
+ * @copyright Jörn Friedrich Dreyer 2012-2014
+ */
 
 namespace OCA\Search_Lucene\Document;
 
+use OCA\Search_Lucene\Utility\PdfParser;
 use \OCP\Util;
 /**
  * PDF document
@@ -36,9 +46,8 @@ class Pdf extends \Zend_Search_Lucene_Document
 			//TODO handle PDF 1.6 metadata Zend_Pdf::getMetadata()
 
 			//do the content extraction
-			$pdfParse = new \App_Search_Helper_PdfParser();
+			$pdfParse = new PdfParser();
 			$body = $pdfParse->pdf2txt($zendpdf->render());
-
 
 			if ($body != '') {
 				// Store contents

@@ -1,11 +1,23 @@
 <?php
+/**
+ * ownCloud - search_lucene
+ *
+ * This file is licensed under the Affero General Public License version 3 or
+ * later. See the COPYING file.
+ *
+ * @author Jörn Friedrich Dreyer <jfd@butonic.de>
+ * @copyright Jörn Friedrich Dreyer 2012-2014
+ */
 
 namespace OCA\Search_Lucene\Document;
 /**
- * Odt document.
+ * Ods document.
  * @see http://en.wikipedia.org/wiki/OpenDocument_technical_specification
  */
-class Odt extends OpenDocument {
+class Ods extends OpenDocument {
+
+	const SCHEMA_ODTABLE = 'urn:oasis:names:tc:opendocument:xmlns:table:1.0';
+
     /**
      * Object constructor
      *
@@ -15,12 +27,12 @@ class Odt extends OpenDocument {
      */
     private function __construct($fileName, $storeContent) {
         if (!class_exists('ZipArchive', false)) {
-            throw new \Zend_Search_Lucene_Exception('Open Document Text processing functionality requires Zip extension to be loaded');
+            throw new \Zend_Search_Lucene_Exception('Open Document Spreadsheet processing functionality requires Zip extension to be loaded');
         }
 
         // Document data holders
-		$documentHeadlines = array();
-		$documentParagraphs = array();
+		$documentTables = array();
+		$documentCells = array();
 
         // Open OpenXML package
         $package = new \ZipArchive();
@@ -29,18 +41,17 @@ class Odt extends OpenDocument {
         // Read relations and search for officeDocument
         $content = $package->getFromName('content.xml');
         if ($content === false) {
-            throw new \Zend_Search_Lucene_Exception('Invalid archive or corrupted .odt file.');
+            throw new \Zend_Search_Lucene_Exception('Invalid archive or corrupted .ods file.');
         }
 		$loadEntities = libxml_disable_entity_loader(true);
 		$sxe = simplexml_load_string($content, 'SimpleXMLElement', LIBXML_NOBLANKS | LIBXML_COMPACT);
 		libxml_disable_entity_loader($loadEntities);
 
-		foreach ($sxe->xpath('//text:h') as $headline) {
-			$documentHeadlines[] = (string)$headline;
+		foreach ($sxe->xpath('//table:table[@table:name]') as $table) {
+			$documentTables[] = (string)$table->attributes($this::SCHEMA_ODTABLE)->name;
 		}
-
-		foreach ($sxe->xpath('//text:p') as $paragraph) {
-			$documentParagraphs[] = (string)$paragraph;
+		foreach ($sxe->xpath('//text:p') as $cell) {
+			$documentCells[] = (string)$cell;
 		}
 
         // Read core properties
@@ -51,11 +62,11 @@ class Odt extends OpenDocument {
 
         // Store contents
         if ($storeContent) {
-			$this->addField(\Zend_Search_Lucene_Field::Text('headlines', implode(' ', $documentHeadlines), 'UTF-8'));
-			$this->addField(\Zend_Search_Lucene_Field::Text('body', implode(' ', $documentParagraphs), 'UTF-8'));
+			$this->addField(\Zend_Search_Lucene_Field::Text('sheets', implode(' ', $documentTables), 'UTF-8'));
+			$this->addField(\Zend_Search_Lucene_Field::Text('body', implode(' ', $documentCells), 'UTF-8'));
         } else {
-			$this->addField(\Zend_Search_Lucene_Field::UnStored('headlines', implode(' ', $documentHeadlines), 'UTF-8'));
-			$this->addField(\Zend_Search_Lucene_Field::UnStored('body', implode(' ', $documentParagraphs), 'UTF-8'));
+			$this->addField(\Zend_Search_Lucene_Field::UnStored('sheets', implode(' ', $documentTables), 'UTF-8'));
+			$this->addField(\Zend_Search_Lucene_Field::UnStored('body', implode(' ', $documentCells), 'UTF-8'));
         }
 
         // Store meta data properties
@@ -70,18 +81,18 @@ class Odt extends OpenDocument {
     }
 
     /**
-     * Load Odt document from a file
+     * Load Ods document from a file
      *
      * @param string  $fileName
      * @param boolean $storeContent
-     * @return Odt
+     * @return Ods
      * @throws \Zend_Search_Lucene_Document_Exception
      */
-    public static function loadOdtFile($fileName, $storeContent = false) {
+    public static function loadOdsFile($fileName, $storeContent = false) {
         if (!is_readable($fileName)) {
             throw new \Zend_Search_Lucene_Document_Exception('Provided file \'' . $fileName . '\' is not readable.');
         }
 
-        return new Odt($fileName, $storeContent);
+        return new Ods($fileName, $storeContent);
     }
 }
