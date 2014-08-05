@@ -52,18 +52,36 @@ class TestDocumentDocx extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider dataProvider
 	 */
-	function testParse($term, $field, $descriptiveLocation, $skipped) {
+	function testParseWhole($term, $field, $descriptiveLocation, $skipped) {
 
 		if ($skipped) {
 			$this->markTestSkipped('TODO search ' .$descriptiveLocation. ' in ' . $field);
 		}
 
-		$doc = Docx::loadDocxFile(__DIR__.'/data/libreoffice/document.docx', true);
+		$doc = Docx::loadDocxFile(__DIR__.'/data/libreoffice/document whole.docx', true);
 
 		$value = $doc->getFieldValue($field);
 
 		$containsTestTerm = stristr($value, $term) !== false;
-		$this->assertTrue($containsTestTerm, $value.' does not contain "'.$term.'" in '.$descriptiveLocation);
+		$this->assertTrue($containsTestTerm, $field.'/'.$descriptiveLocation.' does not contain "'.$term.'" in '.$value);
+
+	}
+
+	/**
+	 * @dataProvider dataProvider
+	 */
+	function testParseSplit($term, $field, $descriptiveLocation, $skipped) {
+
+		if ($skipped) {
+			$this->markTestSkipped('TODO search ' .$descriptiveLocation. ' in ' . $field);
+		}
+
+		$doc = Docx::loadDocxFile(__DIR__.'/data/libreoffice/document split.docx', true);
+
+		$value = $doc->getFieldValue($field);
+
+		$containsTestTerm = stristr($value, $term) !== false;
+		$this->assertTrue($containsTestTerm, $field.'/'.$descriptiveLocation.' does not contain "'.$term.'" in '.$value);
 
 	}
 
@@ -76,7 +94,7 @@ class TestDocumentDocx extends \PHPUnit_Framework_TestCase {
 			array('term4', 'body', 'font2', false),
 			array('term5', 'body', 'font3', false),
 			array('term6', 'body', 'link', false),
-			array('term7', 'body', 'link name', false),
+			array('term7', 'body', 'link name', true),
 			array('term8', 'body', 'strikethrough', false),
 			array('term9', 'body', 'subscript', false),
 			array('term10', 'body', 'superscript', false),
@@ -97,20 +115,20 @@ class TestDocumentDocx extends \PHPUnit_Framework_TestCase {
 			array('term25', 'body', 'bold underlined', false),
 			array('term26', 'body', 'italic underlined', false),
 			array('term27', 'body', 'bold italic underlined', false),
-			array('term28', 'body', 'footer', false),
-			array('term29', 'body', 'header', false),
+			array('term28', 'body', 'footer', true),
+			array('term29', 'body', 'header', true),
 			array('term30', 'body', 'color', false),
-			array('term31', 'body', 'table header', false),
-			array('term32', 'body', 'table row', false),
+			array('term31', 'body', 'table header', true),
+			array('term32', 'body', 'table row', true),
 			array('term33', 'body', '6pt', false),
 			array('term34', 'body', '8pt', false),
-			array('term35', 'body', 'footnote', false),
-			array('term36', 'body', 'comment', false),
+			array('term35', 'body', 'footnote', true),
+			array('term36', 'body', 'comment', true),
 			array('term37', 'title', 'meta title', false),
 			array('term38', 'subject', 'meta subject', false),
 			array('term39', 'keywords', 'meta keywords', false),
-			array('term40', 'comment', 'meta comment', false),
-			array('term41', 'custom', 'meta custom property', false),
+			array('term40', 'comment', 'meta comment', true),
+			array('term41', 'custom', 'meta custom property', true),
 		);
 	}
 }
