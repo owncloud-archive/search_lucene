@@ -188,6 +188,7 @@ class TestDocumentPdf extends \PHPUnit_Framework_TestCase {
 	function testParseV15($term, $field, $descriptiveLocation, $skipped) {
 
 		if ($skipped) {
+			$this->markTestSkipped('FIXME pdfparser does not correctly extract text from pdf v1.5');
 			$this->markTestSkipped('TODO search ' .$descriptiveLocation. ' in ' . $field);
 		}
 
