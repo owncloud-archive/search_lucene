@@ -18,6 +18,8 @@ use OCA\Search_Lucene\Document\Odt;
 use OCA\Search_Lucene\Document\Pdf;
 use OCP\ILogger;
 use OCP\IServerContainer;
+use ZendSearch\Lucene\Document\HTML;
+use ZendSearch\Lucene\Document;
 
 /**
  * @author Jörn Dreyer <jfd@butonic.de>
@@ -150,7 +152,7 @@ class Indexer {
 			$fileExtension = strtolower(pathinfo($file->getName(), PATHINFO_EXTENSION));
 
 			// initialize plain lucene document
-			$doc = new \Zend_Search_Lucene_Document();
+			$doc = new Document();
 
 			// index content for local files only
 			$storage = $file->getStorage();
@@ -164,14 +166,14 @@ class Indexer {
 				if ('text/html' === $mimeType) {
 
 					//TODO could be indexed, even if not local
-					$doc = \Zend_Search_Lucene_Document_Html::loadHTML($file->getContent());
+					$doc = HTML::loadHTML($file->getContent());
 				} else if ('text/' === substr($mimeType, 0, 5)
 					|| 'application/x-tex' === $mimeType) {
 
 					$body = $file->getContent();
 
 					if ($body != '') {
-						$doc->addField(\Zend_Search_Lucene_Field::UnStored('body', $body));
+						$doc->addField(Document\Field::UnStored('body', $body));
 					}
 
 				} else if ('application/pdf' === $mimeType) {
@@ -181,17 +183,17 @@ class Indexer {
 				// the zend classes only understand docx and not doc files
 				} else if ($fileExtension === 'docx') {
 
-					$doc = \Zend_Search_Lucene_Document_Docx::loadDocxFile($path);
+					$doc = Document\Docx::loadDocxFile($path);
 
 				//} else if ('application/msexcel' === $mimeType) {
 				} else if ($fileExtension === 'xlsx') {
 
-					$doc = \Zend_Search_Lucene_Document_Xlsx::loadXlsxFile($path);
+					$doc = Document\Xlsx::loadXlsxFile($path);
 
 				//} else if ('application/mspowerpoint' === $mimeType) {
 				} else if ($fileExtension === 'pptx') {
 
-					$doc = \Zend_Search_Lucene_Document_Pptx::loadPptxFile($path);
+					$doc = Document\Pptx::loadPptxFile($path);
 
 				} else if ($fileExtension === 'odt') {
 
@@ -207,16 +209,16 @@ class Indexer {
 			}
 
 			// Store filecache id as unique id to lookup by when deleting
-			$doc->addField(\Zend_Search_Lucene_Field::Keyword('fileId', $file->getId()));
+			$doc->addField(Document\Field::Keyword('fileId', $file->getId()));
 
 			// Store document path for the search results
-			$doc->addField(\Zend_Search_Lucene_Field::Text('path', $file->getPath(), 'UTF-8'));
+			$doc->addField(Document\Field::Text('path', $file->getPath(), 'UTF-8'));
 
-			$doc->addField(\Zend_Search_Lucene_Field::unIndexed('mtime', $file->getMTime()));
+			$doc->addField(Document\Field::unIndexed('mtime', $file->getMTime()));
 
-			$doc->addField(\Zend_Search_Lucene_Field::unIndexed('size', $file->getSize()));
+			$doc->addField(Document\Field::unIndexed('size', $file->getSize()));
 
-			$doc->addField(\Zend_Search_Lucene_Field::unIndexed('mimetype', $mimeType));
+			$doc->addField(Document\Field::unIndexed('mimetype', $mimeType));
 
 			$this->index->updateFile($doc, $file->getId(), $commit);
 

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The code has been taken from hashbangcode.
  * 

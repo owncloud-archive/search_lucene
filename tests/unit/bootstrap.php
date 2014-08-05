@@ -13,5 +13,7 @@ if(!class_exists('PHPUnit_Framework_TestCase')) {
 	require_once('PHPUnit/Autoload.php');
 }
 
+require_once __DIR__ . '/../../3rdparty/autoload.php';
+
 OC_Hook::clear();
 OC_Log::$enabled = false;
