@@ -51,18 +51,36 @@ class TestDocumentOdt extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider dataProvider
 	 */
-	function testParse($term, $field, $descriptiveLocation, $skipped) {
+	function testParseWhole($term, $field, $descriptiveLocation, $skipped) {
 
 		if ($skipped) {
 			$this->markTestSkipped('TODO search ' .$descriptiveLocation. ' in ' . $field);
 		}
 
-		$doc = Odt::loadOdtFile(__DIR__.'/data/libreoffice/document.odt', true);
+		$doc = Odt::loadOdtFile(__DIR__.'/data/libreoffice/document whole.odt', true);
 
 		$value = $doc->getFieldValue($field);
 
 		$containsTestTerm = stristr($value, $term) !== false;
-		$this->assertTrue($containsTestTerm, $value.' does not contain "'.$term.'" in '.$descriptiveLocation);
+		$this->assertTrue($containsTestTerm, $field.'/'.$descriptiveLocation.' does not contain "'.$term.'" in '.$value);
+
+	}
+
+	/**
+	 * @dataProvider dataProvider
+	 */
+	function testParseSplit($term, $field, $descriptiveLocation, $skipped) {
+
+		if ($skipped) {
+			$this->markTestSkipped('TODO search ' .$descriptiveLocation. ' in ' . $field);
+		}
+
+		$doc = Odt::loadOdtFile(__DIR__.'/data/libreoffice/document split.odt', true);
+
+		$value = $doc->getFieldValue($field);
+
+		$containsTestTerm = stristr($value, $term) !== false;
+		$this->assertTrue($containsTestTerm, $field.'/'.$descriptiveLocation.' does not contain "'.$term.'" in '.$value);
 
 	}
 
@@ -75,7 +93,7 @@ class TestDocumentOdt extends \PHPUnit_Framework_TestCase {
 			array('term4', 'body', 'font2', false),
 			array('term5', 'body', 'font3', false),
 			array('term6', 'body', 'link', false),
-			array('term7', 'body', 'link name', false),
+			array('term7', 'body', 'link name', true),
 			array('term8', 'body', 'strikethrough', false),
 			array('term9', 'body', 'subscript', false),
 			array('term10', 'body', 'superscript', false),
@@ -96,8 +114,8 @@ class TestDocumentOdt extends \PHPUnit_Framework_TestCase {
 			array('term25', 'body', 'bold underlined', false),
 			array('term26', 'body', 'italic underlined', false),
 			array('term27', 'body', 'bold italic underlined', false),
-			array('term28', 'body', 'footer', false),
-			array('term29', 'body', 'header', false),
+			array('term28', 'body', 'footer', true),
+			array('term29', 'body', 'header', true),
 			array('term30', 'body', 'color', false),
 			array('term31', 'body', 'table header', false),
 			array('term32', 'body', 'table row', false),
@@ -108,8 +126,9 @@ class TestDocumentOdt extends \PHPUnit_Framework_TestCase {
 			array('term37', 'title', 'meta title', false),
 			array('term38', 'subject', 'meta subject', false),
 			array('term39', 'keywords', 'meta keywords', false),
-			array('term40', 'comment', 'meta comment', false),
-			array('term41', 'custom', 'meta custom property', false),
+			array('term40', 'comment', 'meta comment', true),
+			array('term41', 'custom', 'meta custom property', true),
+			array('term42', 'body', 'link url', true),
 		);
 	}
 }
