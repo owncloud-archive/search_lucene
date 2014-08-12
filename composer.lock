@@ -172,12 +172,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/butonic/ZendSearch.git",
-                "reference": "23408d99b1c9c189e0e9da35af318a432949854b"
+                "reference": "a1ba74997afd97d6054b7d8113a02cd51b7d6d41"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/butonic/ZendSearch/zipball/23408d99b1c9c189e0e9da35af318a432949854b",
-                "reference": "23408d99b1c9c189e0e9da35af318a432949854b",
+                "url": "https://api.github.com/repos/butonic/ZendSearch/zipball/a1ba74997afd97d6054b7d8113a02cd51b7d6d41",
+                "reference": "a1ba74997afd97d6054b7d8113a02cd51b7d6d41",
                 "shasum": ""
             },
             "require": {
@@ -202,7 +202,7 @@
             "support": {
                 "source": "https://github.com/butonic/ZendSearch/tree/owncloud-stripped"
             },
-            "time": "2014-08-06 18:50:03"
+            "time": "2014-08-12 09:49:11"
         }
     ],
     "packages-dev": [],
