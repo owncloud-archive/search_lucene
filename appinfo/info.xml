@@ -12,13 +12,13 @@
 	<default_enable/>
 	<description>Activate this app when you want to be
 		able to find files by searching their content.
-		The implementation does not search the files
-		directly but will build a reverse index based on lucene.
+		We currently support text, latex, HTML, PDF, MS Office 2007
+		or newer and Open/Libre Office files.
 
 		Currently only your personal files will be indexed,
 		and only your index is searched, so you will not be able
-		to find files that have been shared with you or that
-		reside on remote mount points.
+		to search inside files that have been shared with you or that
+		reside on external storage.
 
 		Every time a file has been written ownCloud will
 		index it with a background job. Furthermore, when
@@ -31,12 +31,16 @@
 		still be able to retrieve file search results for any
 		indexed files.
 
-		We currently support text, latex, HTML, PDF, MS Office 2007
-		or newer and Open/Libre Office files.
+		The implementation does not search the files
+		directly but will build a reverse index based on lucene.
+		It is a known security vs. performance trade off that the
+		reverse index is not encrypted and will allow an attacker
+		to draw conclusions about the content of the indexed files.
 
-		Depending on the file size and version of PDF / office files
-		indexing may fail. This is a known issue and help is welcome
-		to get these problems reproduced and sorted out.
+		Depending on the file size, version and content of PDF / office
+		files indexing may fail. This is a known issue and help is welcome
+		to get these problems reproduced and sorted out. Start by having a
+		look at the skipped unit tests.
 	</description>
 	<ocsid>166057</ocsid>
 </info>
