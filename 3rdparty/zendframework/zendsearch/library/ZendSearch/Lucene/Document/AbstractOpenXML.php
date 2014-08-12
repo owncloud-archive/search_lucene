@@ -40,6 +40,13 @@ abstract class AbstractOpenXML extends Document
      *
      * @var string
      */
+    const SCHEMA_OFFICE_COREPROPERTIES = 'http://schemas.openxmlformats.org/officedocument/2006/relationships/metadata/core-properties';
+
+    /**
+     * Xml Schema - Core properties
+     *
+     * @var string
+     */
     const SCHEMA_COREPROPERTIES = 'http://schemas.openxmlformats.org/package/2006/metadata/core-properties';
 
     /**
@@ -78,8 +85,8 @@ abstract class AbstractOpenXML extends Document
 
         foreach ($relations->Relationship as $rel) {
             if ($rel["Type"] == self::SCHEMA_COREPROPERTIES
-				|| $rel["Type"] == 'http://schemas.openxmlformats.org/officedocument/2006/relationships/metadata/core-properties'
-			) {
+                || $rel["Type"] == self::SCHEMA_OFFICE_COREPROPERTIES
+            ) {
                 // Found core properties! Read in contents...
                 $contents = simplexml_load_string(
                     $package->getFromName(dirname($rel["Target"]) . "/" . basename($rel["Target"]))
