@@ -187,7 +187,7 @@ class TestDocumentPdf extends \PHPUnit_Framework_TestCase {
 			array('term4', 'body', 'font2', false),
 			array('term5', 'body', 'font3', false),
 			array('term6', 'body', 'link', false),
-			array('term7', 'body', 'link name', false),
+			array('term7', 'body', 'link name', true),
 			array('term8', 'body', 'strikethrough', false),
 			array('term9', 'body', 'subscript', false),
 			array('term10', 'body', 'superscript', false),
