@@ -56,11 +56,13 @@ class Odt extends OpenDocument {
 		libxml_disable_entity_loader($loadEntities);
 
 		foreach ($sxe->xpath('//text:h') as $headline) {
-			$documentHeadlines[] = (string)$headline;
+			$h = strip_tags($headline->asXML());
+			$documentHeadlines[] = $h;
 		}
 
 		foreach ($sxe->xpath('//text:p') as $paragraph) {
-			$documentParagraphs[] = (string)$paragraph;
+			$p = strip_tags($paragraph->asXML());
+			$documentParagraphs[] = $p;
 		}
 
 		// Read core properties
@@ -72,10 +74,10 @@ class Odt extends OpenDocument {
 		// Store contents
 		if ($storeContent) {
 			$this->addField(Field::Text('headlines', implode(' ', $documentHeadlines), 'UTF-8'));
-			$this->addField(Field::Text('body', implode(' ', $documentParagraphs), 'UTF-8'));
+			$this->addField(Field::Text('body', implode('', $documentParagraphs), 'UTF-8'));
 		} else {
 			$this->addField(Field::UnStored('headlines', implode(' ', $documentHeadlines), 'UTF-8'));
-			$this->addField(Field::UnStored('body', implode(' ', $documentParagraphs), 'UTF-8'));
+			$this->addField(Field::UnStored('body', implode('', $documentParagraphs), 'UTF-8'));
 		}
 
 		// Store meta data properties

@@ -25,7 +25,25 @@ use ZendSearch\Lucene\Document;
  * @author Jörn Dreyer <jfd@butonic.de>
  */
 class Indexer {
-
+/*
+	// TODO use dublin core for fieldnames? would require touching zend documents or provide a metadata mapping
+	const FIELD_TYPE_FILE_ID = 'fileId';
+	const FIELD_TYPE_KEYWORDS = 'keywords';
+	//the rest is derived from dublin core
+	const FIELD_TYPE_CREATOR = 'creator'; // alternative is author
+	const FIELD_TYPE_SUBJECT = 'subject';
+	const FIELD_TYPE_TITLE = 'title';
+	const FIELD_TYPE_DESCRIPTION = 'description';
+	const FIELD_TYPE_CREATED = 'created';
+	const FIELD_TYPE_MODIFIED = 'modified';
+	const FIELD_TYPE_PAGES = 'pages';
+	const FIELD_TYPE_PUBLISHER = 'publisher';
+	const FIELD_TYPE_ACCESS_RIGHTS = 'accessRights'; // user searchable? multivalue?
+	const FIELD_TYPE_FILE_FORMAT = 'FileFormat'; // alternative is mimetype
+	const FIELD_TYPE_LOCATION = 'location'; // alternative is path
+	const FIELD_TYPE_SIZE = 'size'; // Size Or Duration
+	//TODO when user uses author:Jörn, author should be replaced by creator
+*/
 	/**
 	 * @var \OCA\Search_Lucene\Core\Files
 	 */
@@ -167,6 +185,7 @@ class Indexer {
 
 					//TODO could be indexed, even if not local
 					$doc = HTML::loadHTML($file->getContent());
+
 				} else if ('text/' === substr($mimeType, 0, 5)
 					|| 'application/x-tex' === $mimeType) {
 

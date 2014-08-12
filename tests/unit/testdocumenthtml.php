@@ -44,43 +44,23 @@
 
 namespace OCA\Search_Lucene\Tests\Unit;
 
-use OCA\Search_Lucene\Document\Pdf;
+use ZendSearch\Lucene\Document\HTML;
 
-class TestDocumentPdf extends \PHPUnit_Framework_TestCase {
+class TestDocumentHtml extends \PHPUnit_Framework_TestCase {
+
 
 	/**
-	 * @dataProvider dataProviderA1
+	 * @dataProvider dataProviderHTML
 	 */
-	function testParseA1Whole($term, $field, $descriptiveLocation, $skipped) {
+	function testParseHTMLWhole($term, $field, $descriptiveLocation, $skipped) {
 
 		if ($skipped) {
 			$this->markTestSkipped('TODO search ' .$descriptiveLocation. ' in ' . $field);
 		}
 
-		$data = file_get_contents(__DIR__.'/data/libreoffice/document whole - a1.pdf');
+		$data = file_get_contents(__DIR__.'/data/libreoffice/document whole.html');
 
-		$doc = Pdf::loadPdf($data, true);
-
-		$value = $doc->getFieldValue($field);
-
-		$containsTestTerm = stristr($value, $term) !== false;
-		$this->assertTrue($containsTestTerm, $field.'/'.$descriptiveLocation.' does not contain "'.$term.'" in '.$value);
-
-	}
-	/**
-	 * @dataProvider dataProviderA1
-	 */
-	function testParseA1Split($term, $field, $descriptiveLocation, $skipped) {
-
-		$this->markTestSkipped('FIXME pdfparser introduces too many blanks between PDF objects');
-
-		if ($skipped) {
-			$this->markTestSkipped('TODO search ' .$descriptiveLocation. ' in ' . $field);
-		}
-
-		$data = file_get_contents(__DIR__.'/data/libreoffice/document split - a1.pdf');
-
-		$doc = Pdf::loadPdf($data, true);
+		$doc = HTML::loadHTML($data, true);
 
 		$value = $doc->getFieldValue($field);
 
@@ -89,7 +69,29 @@ class TestDocumentPdf extends \PHPUnit_Framework_TestCase {
 
 	}
 
-	public function dataProviderA1() {
+	/**
+	 * @dataProvider dataProviderHTML
+	 */
+	function testParseHTMLSplit($term, $field, $descriptiveLocation, $skipped) {
+
+		$this->markTestSkipped('FIXME html document introduces too many blanks between html tags');
+
+		if ($skipped) {
+			$this->markTestSkipped('TODO search ' .$descriptiveLocation. ' in ' . $field);
+		}
+
+		$data = file_get_contents(__DIR__.'/data/libreoffice/document split.html');
+
+		$doc = HTML::loadHTML($data, true);
+
+		$value = $doc->getFieldValue($field);
+
+		$containsTestTerm = stristr($value, $term) !== false;
+		$this->assertTrue($containsTestTerm, $field.'/'.$descriptiveLocation.' does not contain "'.$term.'" in '.$value);
+
+	}
+
+	public function dataProviderHTML() {
 		return array(
 			array('term0', 'body', 'title', false),
 			array('term1', 'body', 'subtitle', false),
@@ -129,25 +131,26 @@ class TestDocumentPdf extends \PHPUnit_Framework_TestCase {
 			array('term35', 'body', 'footnote', false),
 			array('term36', 'body', 'comment', true),
 			array('term37', 'title', 'meta title', false),
-			array('term38', 'subject', 'meta subject', false),
+			array('term38', 'subject', 'meta subject', true),
 			array('term39', 'keywords', 'meta keywords', false),
 			array('term40', 'comment', 'meta comment', true),
 			array('term41', 'custom', 'meta custom property', true),
 		);
 	}
 
+
 	/**
-	 * @dataProvider dataProviderV14
+	 * @dataProvider dataProviderXHTML
 	 */
-	function testParseV14Whole($term, $field, $descriptiveLocation, $skipped) {
+	function testParseXHTMLWhole($term, $field, $descriptiveLocation, $skipped) {
 
 		if ($skipped) {
 			$this->markTestSkipped('TODO search ' .$descriptiveLocation. ' in ' . $field);
 		}
 
-		$data = file_get_contents(__DIR__.'/data/libreoffice/document whole - 1.4.pdf');
+		$data = file_get_contents(__DIR__.'/data/libreoffice/document whole.xhtml');
 
-		$doc = Pdf::loadPdf($data, true);
+		$doc = HTML::loadHTML($data, true);
 
 		$value = $doc->getFieldValue($field);
 
@@ -157,19 +160,17 @@ class TestDocumentPdf extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @dataProvider dataProviderV14
+	 * @dataProvider dataProviderXHTML
 	 */
-	function testParseV14Split($term, $field, $descriptiveLocation, $skipped) {
-
-		$this->markTestSkipped('FIXME pdfparser introduces too many blanks between PDF objects');
+	function testParseXHTMLSplit($term, $field, $descriptiveLocation, $skipped) {
 
 		if ($skipped) {
 			$this->markTestSkipped('TODO search ' .$descriptiveLocation. ' in ' . $field);
 		}
 
-		$data = file_get_contents(__DIR__.'/data/libreoffice/document split - 1.4.pdf');
+		$data = file_get_contents(__DIR__.'/data/libreoffice/document split.xhtml');
 
-		$doc = Pdf::loadPdf($data, true);
+		$doc = HTML::loadHTML($data, true);
 
 		$value = $doc->getFieldValue($field);
 
@@ -178,7 +179,7 @@ class TestDocumentPdf extends \PHPUnit_Framework_TestCase {
 
 	}
 
-	public function dataProviderV14() {
+	public function dataProviderXHTML() {
 		return array(
 			array('term0', 'body', 'title', false),
 			array('term1', 'body', 'subtitle', false),
@@ -208,77 +209,8 @@ class TestDocumentPdf extends \PHPUnit_Framework_TestCase {
 			array('term25', 'body', 'bold underlined', false),
 			array('term26', 'body', 'italic underlined', false),
 			array('term27', 'body', 'bold italic underlined', false),
-			array('term28', 'body', 'footer', false),
-			array('term29', 'body', 'header', false),
-			array('term30', 'body', 'color', false),
-			array('term31', 'body', 'table header', false),
-			array('term32', 'body', 'table row', false),
-			array('term33', 'body', '6pt', false),
-			array('term34', 'body', '8pt', false),
-			array('term35', 'body', 'footnote', false),
-			array('term36', 'body', 'comment', true),
-			array('term37', 'title', 'meta title', false),
-			array('term38', 'subject', 'meta subject', false),
-			array('term39', 'keywords', 'meta keywords', false),
-			array('term40', 'comment', 'meta comment', true),
-			array('term41', 'custom', 'meta custom property', true),
-		);
-	}
-
-	/**
-	 * @dataProvider dataProviderV15
-	 */
-	function testParseV15($term, $field, $descriptiveLocation, $skipped) {
-
-		$this->markTestSkipped('FIXME pdfparser does not correctly extract text from pdf v1.5');
-
-		if ($skipped) {
-			$this->markTestSkipped('TODO search ' .$descriptiveLocation. ' in ' . $field);
-		}
-
-		$data = file_get_contents(__DIR__.'/data/cairo/document.pdf');
-
-		$doc = Pdf::loadPdf($data, true);
-
-		$value = $doc->getFieldValue($field);
-
-		$containsTestTerm = stristr($value, $term) !== false;
-		$this->assertTrue($containsTestTerm, $field.'/'.$descriptiveLocation.' does not contain "'.$term.'" in '.$value);
-
-	}
-
-	public function dataProviderV15() {
-		return array(
-			array('term0', 'body', 'title', false),
-			array('term1', 'body', 'subtitle', false),
-			array('term2', 'body', 'text', false),
-			array('term3', 'body', 'font1', false),
-			array('term4', 'body', 'font2', false),
-			array('term5', 'body', 'font3', false),
-			array('term6', 'body', 'link', false),
-			array('term7', 'body', 'link name', false),
-			array('term8', 'body', 'strikethrough', false),
-			array('term9', 'body', 'subscript', false),
-			array('term10', 'body', 'superscript', false),
-			array('term11', 'body', 'bulletlist', false),
-			array('term12', 'body', 'enumeration', false),
-			array('term13', 'body', 'text frame', false),
-			array('term14', 'body', 'heading 1', false),
-			array('term15', 'body', 'heading 2', false),
-			array('term16', 'body', 'heading 3', false),
-			array('term17', 'body', 'heading 4', false),
-			array('term18', 'body', 'centered', false),
-			array('term19', 'body', 'right', false),
-			array('term20', 'body', 'justified', false),
-			array('term21', 'body', 'bold', false),
-			array('term22', 'body', 'italic', false),
-			array('term23', 'body', 'underlined', false),
-			array('term24', 'body', 'bold italic', false),
-			array('term25', 'body', 'bold underlined', false),
-			array('term26', 'body', 'italic underlined', false),
-			array('term27', 'body', 'bold italic underlined', false),
-			array('term28', 'body', 'footer', false),
-			array('term29', 'body', 'header', false),
+			array('term28', 'body', 'footer', true),
+			array('term29', 'body', 'header', true),
 			array('term30', 'body', 'color', false),
 			array('term31', 'body', 'table header', false),
 			array('term32', 'body', 'table row', false),
@@ -287,10 +219,10 @@ class TestDocumentPdf extends \PHPUnit_Framework_TestCase {
 			array('term35', 'body', 'footnote', false),
 			array('term36', 'body', 'comment', false),
 			array('term37', 'title', 'meta title', false),
-			array('term38', 'subject', 'meta subject', false),
-			array('term39', 'keywords', 'meta keywords', false),
-			array('term40', 'comment', 'meta comment', false),
-			array('term41', 'custom', 'meta custom property', false),
+			array('term38', 'subject', 'meta subject', true),
+			array('term39', 'keywords', 'meta keywords', true),
+			array('term40', 'comment', 'meta comment', true),
+			array('term41', 'custom', 'meta custom property', true),
 		);
 	}
 }
