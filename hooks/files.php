@@ -62,6 +62,7 @@ class Files {
 		if (!empty($userId)) {
 
 			// mark written file as new
+			/** @var \OCP\Files\Folder $userFolder */
 			$userFolder = $container->query('ServerContainer')->getUserFolder();
 			$node = $userFolder->get($param['path']);
 			/** @var StatusMapper $mapper */
@@ -101,6 +102,7 @@ class Files {
 		}
 
 		if (!empty($param['newpath'])) {
+			/** @var \OCP\Files\Folder $userFolder */
 			$userFolder = $container->query('ServerContainer')->getUserFolder();
 			$node = $userFolder->get($param['newpath']);
 

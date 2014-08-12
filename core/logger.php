@@ -12,6 +12,7 @@
 namespace OCA\Search_Lucene\Core;
 
 use OCP\ILogger;
+use \OC\Log;
 
 /**
  * Class Logger
@@ -20,7 +21,7 @@ use OCP\ILogger;
  *
  * @package OCA\Search_Lucene\Core
  */
-class Logger extends \OC\Log {
+class Logger extends Log {
 
 	private $appName;
 	private $logger;

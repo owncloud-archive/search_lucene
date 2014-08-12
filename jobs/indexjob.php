@@ -12,8 +12,10 @@
 namespace OCA\Search_Lucene\Jobs;
 
 use OCA\Search_Lucene\AppInfo\Application;
+use OCA\Search_Lucene\Core\Logger;
+use OC\BackgroundJob\QueuedJob;
 
-class IndexJob extends \OC\BackgroundJob\QueuedJob {
+class IndexJob extends QueuedJob {
 
 	public function run($arguments){
 		$app = new Application();

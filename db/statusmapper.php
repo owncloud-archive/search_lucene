@@ -88,8 +88,9 @@ class StatusMapper extends Mapper {
 
 	/**
 	 * Updates an entry in the db from a status
-	 * @throws \InvalidArgumentException if entity has no id
 	 * @param Entity $entity the status that should be created
+	 * @return Entity|null
+	 * @throws \InvalidArgumentException if entity has no id
 	 */
 	public function update(Entity $entity){
 		// if entity wasn't changed it makes no sense to run a db query
@@ -107,7 +108,7 @@ class StatusMapper extends Mapper {
 
 		// get updated fields to save, fields have to be set using a setter to
 		// be saved
-		// dont update the fileId field
+		// don't update the fileId field
 		unset($properties['fileId']);
 
 		$columns = '';

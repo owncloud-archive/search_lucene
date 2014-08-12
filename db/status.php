@@ -31,11 +31,11 @@ class Status extends Entity {
 	public $fileId;
 	public $status;
 
-	// we use fileid as the primary key
+	// we use fileId as the primary key
 	private $_fieldTypes = array('fileId' => 'integer');
 
 	/**
-	 * @return an array with attribute and type
+	 * @return array with attribute and type
 	 */
 	public function getFieldTypes() {
 		return $this->_fieldTypes;
@@ -45,7 +45,7 @@ class Status extends Entity {
 	 * Adds type information for a field so that its automatically casted to
 	 * that value once its being returned from the database
 	 * @param string $fieldName the name of the attribute
-	 * @param string $type the type which will be used to call settype()
+	 * @param string $type the type which will be used to call setType()
 	 */
 	protected function addType($fieldName, $type){
 		$this->_fieldTypes[$fieldName] = $type;
@@ -73,7 +73,7 @@ class Status extends Entity {
 	}
 
 	/**
-	 * Transform a database columnname to a property
+	 * Transform a database column name to a property
 	 * @param string $columnName the name of the column
 	 * @return string the property name
 	 */

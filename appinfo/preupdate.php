@@ -9,7 +9,7 @@
  * @copyright Jörn Friedrich Dreyer 2012-2014
  */
 
-$currentVersion=OCP\Config::getAppValue('search_lucene', 'installed_version');
+$currentVersion = OCP\Config::getAppValue('search_lucene', 'installed_version');
 
 if (version_compare($currentVersion, '0.6.0', '<')) {
 	//force reindexing of files
