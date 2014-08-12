@@ -12,7 +12,7 @@
 namespace OCA\Search_Lucene\Db;
 
 use OC\Files\Filesystem;
-use OCA\Search_Lucene\Core\Db;
+use OC\Files\Mount\Mount;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\Mapper;
@@ -167,7 +167,7 @@ class StatusMapper extends Mapper {
 		foreach ($mounts as $mount) {
 			if (is_string($mount)) {
 				$storage = Filesystem::getStorage($mount);
-			} else if ($mount instanceof \OC\Files\Mount\Mount) {
+			} else if ($mount instanceof Mount) {
 				$storage = $mount->getStorage();
 			} else {
 				$storage = null;

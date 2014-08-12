@@ -18,16 +18,16 @@ use OCP\IUserSession;
 class Files {
 
 	/**
-	 * @var \OCP\IUserManager
+	 * @var IUserManager
 	 */
 	private $userManager;
 	/**
-	 * @var \OCP\IUserSession
+	 * @var IUserSession
 	 */
 	private $userSession;
 
 	/**
-	 * @var \OC\Files\Node\Folder
+	 * @var Folder
 	 */
 	private $rootFolder;
 
@@ -54,7 +54,7 @@ class Files {
 
 	/**
 	 * @param string $userId
-	 * @return null|\OCP\Files\Folder
+	 * @return \OCP\Files\Folder
 	 * @throws SetUpException
 	 */
 	public function setUpIndexFolder($userId = null) {
@@ -70,7 +70,7 @@ class Files {
 
 	/**
 	 * @param string $userId
-	 * @return null|\OCP\Files\Folder
+	 * @return \OCP\Files\Folder
 	 * @throws SetUpException
 	 */
 	public function setUpUserHome($userId = null) {
@@ -97,7 +97,7 @@ class Files {
 	/**
 	 * @param \OCP\Files\Folder $parent
 	 * @param string $folderName
-	 * @return null|\OCP\Files\Folder
+	 * @return \OCP\Files\Folder
 	 * @throws SetUpException
 	 */
 	private function getOrCreateSubFolder(Folder $parent, $folderName) {

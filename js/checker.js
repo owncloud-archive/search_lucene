@@ -10,7 +10,7 @@ function luceneIndexFiles() {
 		count = unIndexedCount;
 		if (count > 0) {
 			spinner = $('form.searchbox #spinner .icon-loading');
-			if (spinner.length == 0) {
+			if (spinner.length === 0) {
 				$('#searchbox').addClass('indexing');
 				spinner = $('<div id="spinner"/>');
 				$('form.searchbox').append(spinner);

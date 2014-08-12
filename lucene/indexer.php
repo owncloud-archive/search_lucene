@@ -11,6 +11,7 @@
 
 namespace OCA\Search_Lucene\Lucene;
 
+use OCP\Files\File;
 use OCA\Search_Lucene\Core\Files;
 use OCA\Search_Lucene\Db\StatusMapper;
 use OCA\Search_Lucene\Document\Ods;
@@ -45,11 +46,11 @@ class Indexer {
 	//TODO when user uses author:Jörn, author should be replaced by creator
 */
 	/**
-	 * @var \OCA\Search_Lucene\Core\Files
+	 * @var Files
 	 */
 	private $files;
 	/**
-	 * @var \OCP\IServerContainer
+	 * @var IServerContainer
 	 */
 	private $server;
 	/**
@@ -61,11 +62,11 @@ class Indexer {
 	 */
 	private $skippedDirs;
 	/**
-	 * @var \OCA\Search_Lucene\Db\StatusMapper
+	 * @var StatusMapper
 	 */
 	private $mapper;
 	/**
-	 * @var \OCP\ILogger
+	 * @var ILogger
 	 */
 	private $logger;
 
@@ -90,19 +91,18 @@ class Indexer {
 				// the file again
 				$this->mapper->markError($fileStatus);
 
-				/** @var \OCP\Files\Node[] $nodes */
 				$nodes = $this->server->getUserFolder()->getById($id);
 				// getById can return more than one id because the containing storage might be mounted more than once
 				// Since we only want to index the file once, we only use the first entry
 
 				if (isset($nodes[0])) {
-					/** @var \OCP\Files\File $node */
+					/** @var File $node */
 					$node = $nodes[0];
 				} else {
 					throw new VanishedException($id);
 				}
 
-				if ( ! $node instanceof \OCP\Files\File ) {
+				if ( ! $node instanceof File ) {
 					throw new NotIndexedException();
 				}
 
@@ -157,13 +157,13 @@ class Indexer {
 	 *
 	 * @author Jörn Dreyer <jfd@butonic.de>
 	 *
-	 * @param \OCP\Files\File $file the file to be indexed
+	 * @param File $file the file to be indexed
 	 * @param bool $commit
 	 *
 	 * @return bool true when something was stored in the index, false otherwise (eg, folders are not indexed)
-	 * @throws \OCA\Search_Lucene\Lucene\NotIndexedException when an unsupported file type is encountered
+	 * @throws NotIndexedException when an unsupported file type is encountered
 	 */
-	public function indexFile(\OCP\Files\File $file, $commit = true) {
+	public function indexFile(File $file, $commit = true) {
 
 			// we decide how to index on mime type or file extension
 			$mimeType = $file->getMimeType();
