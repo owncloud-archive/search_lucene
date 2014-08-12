@@ -12,7 +12,6 @@
 namespace OCA\Search_Lucene\Document;
 
 use Smalot\PdfParser\Parser;
-use OCP\Util;
 use ZendSearch\Lucene\Document;
 
 /**

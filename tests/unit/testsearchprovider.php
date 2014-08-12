@@ -25,10 +25,7 @@ namespace OCA\Search_Lucene\Tests\Unit;
 
 use OCA\Search_Lucene\Tests\Unit\Util\DummyIndex;
 use ZendSearch\Lucene\Document;
-use ZendSearch\Lucene\Index\Term;
 use ZendSearch\Lucene\Search\QueryHit;
-use ZendSearch\Lucene\SearchIndexInterface;
-use ZendSearch\Lucene\Storage\Directory\DirectoryInterface;
 
 class TestSearchProvider extends TestCase {
 

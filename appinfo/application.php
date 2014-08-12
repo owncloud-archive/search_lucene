@@ -68,9 +68,11 @@ class Application extends App {
 		});
 
 		$container->registerService('SkippedDirs', function($c) {
+			/** @var \OCP\IConfig $config */
+			$config = $c->query('ServerContainer')->getConfig();
 			return explode(
 				';',
-				\OCP\Config::getUserValue($c->query('UserId'), 'search_lucene', 'skipped_dirs', '.git;.svn;.CVS;.bzr')
+				$config->getUserValue($c->query('UserId'), 'search_lucene', 'skipped_dirs', '.git;.svn;.CVS;.bzr')
 			);
 		});
 

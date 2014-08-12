@@ -12,11 +12,12 @@
 namespace OCA\Search_Lucene\Search;
 
 use OCA\Search_Lucene\AppInfo\Application;
+use OCP\Search\Provider;
 
 /**
  * @author Jörn Dreyer <jfd@butonic.de>
  */
-class LuceneProvider extends \OCP\Search\Provider {
+class LuceneProvider extends Provider {
 
 	/**
 	 * performs a search on the users index
@@ -66,17 +67,17 @@ class LuceneProvider extends \OCP\Search\Provider {
 	}
 
 	/**
-	 * get the base type of a mimetype string
+	 * get the base type of an internet media type string
 	 * 
 	 * returns 'text' for 'text/plain'
 	 * 
 	 * @author Jörn Dreyer <jfd@butonic.de>
 	 * 
-	 * @param string $mimetype mimetype
-	 * @return string basetype 
+	 * @param string $mimeType internet media type
+	 * @return string top-level type
 	 */
-	public static function baseTypeOf($mimetype) {
-		return substr($mimetype, 0, strpos($mimetype, '/'));
+	public static function baseTypeOf($mimeType) {
+		return substr($mimeType, 0, strpos($mimeType, '/'));
 	}
 
 }

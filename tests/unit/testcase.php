@@ -144,7 +144,11 @@ abstract class TestCase extends PHPUnit_Framework_TestCase {
 			$mapper->delete($status);
 		}
 	}
-	
+
+	/**
+	 * @param string $path
+	 * @return integer
+	 */
 	protected function getFileId($path) {
 		
 		$view = new View('/' . $this->userName . '/files');

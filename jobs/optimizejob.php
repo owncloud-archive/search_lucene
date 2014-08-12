@@ -12,8 +12,10 @@
 namespace OCA\Search_Lucene\Jobs;
 
 use OCA\Search_Lucene\AppInfo\Application;
+use OCA\Search_Lucene\Core\Logger;
+use OC\BackgroundJob\TimedJob;
 
-class OptimizeJob extends \OC\BackgroundJob\TimedJob {
+class OptimizeJob extends TimedJob {
 
 	public function __construct() {
 		$this->setInterval(86400); //execute at most once a day
