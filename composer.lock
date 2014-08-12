@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ac8137a3d872eba7b29b324c90d273ce",
+    "hash": "c8fa66f33f93d3fddf66a191e5dd30c1",
     "packages": [
         {
             "name": "smalot/pdfparser",
-            "version": "v0.9.21",
+            "version": "dev-owncloud-stripped",
             "source": {
                 "type": "git",
-                "url": "https://github.com/smalot/pdfparser.git",
-                "reference": "b5c4745bff4c83ac4d6018e20e4817186f1310eb"
+                "url": "https://github.com/butonic/pdfparser.git",
+                "reference": "35badea1a84eabbc225f528121c8d5eceec73c8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smalot/pdfparser/zipball/b5c4745bff4c83ac4d6018e20e4817186f1310eb",
-                "reference": "b5c4745bff4c83ac4d6018e20e4817186f1310eb",
+                "url": "https://api.github.com/repos/butonic/pdfparser/zipball/35badea1a84eabbc225f528121c8d5eceec73c8b",
+                "reference": "35badea1a84eabbc225f528121c8d5eceec73c8b",
                 "shasum": ""
             },
             "require": {
@@ -33,29 +33,38 @@
                     "Smalot\\PdfParser\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0"
             ],
             "authors": [
                 {
-                    "name": "Sebastien Malot",
+                    "name": "Sebastien MALOT",
                     "email": "sebastien@malot.fr",
-                    "homepage": "http://www.malot.fr",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "homepage": "http://www.malot.fr"
                 }
             ],
             "description": "Pdf parser library. Can read and extract information from pdf file.",
             "homepage": "http://www.pdfparser.org",
-            "time": "2014-07-07 12:22:57"
+            "support": {
+                "issues": "https://github.com/smalot/pdfparser/issues",
+                "source": "https://github.com/butonic/pdfparser/tree/owncloud-stripped"
+            },
+            "time": "2014-08-06 18:36:07"
         },
         {
             "name": "tecnick.com/tcpdf",
-            "version": "6.0.089",
+            "version": "dev-owncloud-stripped",
             "source": {
                 "type": "git",
-                "url": "git://git.code.sf.net/p/tcpdf/code",
-                "reference": "979432f754965bc13960776df51cb28eabfc0938"
+                "url": "https://github.com/butonic/tcpdf.git",
+                "reference": "109f260c827836ec7a557c5e57b220502d62e682"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/butonic/tcpdf/zipball/109f260c827836ec7a557c5e57b220502d62e682",
+                "reference": "109f260c827836ec7a557c5e57b220502d62e682",
+                "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
@@ -63,7 +72,6 @@
             "type": "library",
             "autoload": {
                 "classmap": [
-                    "fonts",
                     "config",
                     "include",
                     "tcpdf.php",
@@ -82,7 +90,6 @@
                     "include/barcodes/qrcode.php"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "LGPLv3"
             ],
@@ -96,15 +103,18 @@
             "description": "TCPDF is a PHP class for generating PDF documents.",
             "homepage": "http://www.tcpdf.org/",
             "keywords": [
+                "PDF",
                 "PDFD32000-2008",
-                "TCPDF",
                 "barcodes",
                 "datamatrix",
-                "pdf",
                 "pdf417",
-                "qrcode"
+                "qrcode",
+                "tcpdf"
             ],
-            "time": "2014-07-16 17:59:23"
+            "support": {
+                "source": "https://github.com/butonic/tcpdf/tree/owncloud-stripped"
+            },
+            "time": "2014-08-06 18:28:47"
         },
         {
             "name": "zendframework/zend-stdlib",
@@ -158,16 +168,16 @@
         },
         {
             "name": "zendframework/zendsearch",
-            "version": "dev-master",
+            "version": "dev-owncloud-stripped",
             "source": {
                 "type": "git",
-                "url": "https://github.com/zendframework/ZendSearch.git",
-                "reference": "cd06d485eb679f112f9e2fceb7d4480b9b8c2816"
+                "url": "https://github.com/butonic/ZendSearch.git",
+                "reference": "a1ba74997afd97d6054b7d8113a02cd51b7d6d41"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/ZendSearch/zipball/cd06d485eb679f112f9e2fceb7d4480b9b8c2816",
-                "reference": "cd06d485eb679f112f9e2fceb7d4480b9b8c2816",
+                "url": "https://api.github.com/repos/butonic/ZendSearch/zipball/a1ba74997afd97d6054b7d8113a02cd51b7d6d41",
+                "reference": "a1ba74997afd97d6054b7d8113a02cd51b7d6d41",
                 "shasum": ""
             },
             "require": {
@@ -180,7 +190,6 @@
                     "ZendSearch": "library/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -190,24 +199,40 @@
                 "lucene",
                 "zf2"
             ],
-            "time": "2014-02-15 15:17:08"
+            "support": {
+                "source": "https://github.com/butonic/ZendSearch/tree/owncloud-stripped"
+            },
+            "time": "2014-08-12 09:49:11"
         }
     ],
-    "packages-dev": [
-
-    ],
+    "packages-dev": [],
     "aliases": [
-
+        {
+            "alias": "v0.9.21",
+            "alias_normalized": "0.9.21.0",
+            "version": "dev-owncloud-stripped",
+            "package": "smalot/pdfparser"
+        },
+        {
+            "alias": "6.0.089-dev",
+            "alias_normalized": "6.0.089.0-dev",
+            "version": "dev-owncloud-stripped",
+            "package": "tecnick.com/tcpdf"
+        },
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-owncloud-stripped",
+            "package": "zendframework/zendsearch"
+        }
     ],
     "minimum-stability": "stable",
     "stability-flags": {
+        "smalot/pdfparser": 20,
+        "tecnick.com/tcpdf": 20,
         "zendframework/zendsearch": 20
     },
     "prefer-stable": false,
-    "platform": [
-
-    ],
-    "platform-dev": [
-
-    ]
+    "platform": [],
+    "platform-dev": []
 }
