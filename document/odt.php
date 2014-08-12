@@ -46,8 +46,13 @@ class Odt extends OpenDocument {
 		if ($content === false) {
 			throw new RuntimeException('Invalid archive or corrupted .odt file.');
 		}
+
+		// Prevent php from loading remote resources
 		$loadEntities = libxml_disable_entity_loader(true);
+
 		$sxe = simplexml_load_string($content, 'SimpleXMLElement', LIBXML_NOBLANKS | LIBXML_COMPACT);
+
+		// Restore entity loader state
 		libxml_disable_entity_loader($loadEntities);
 
 		foreach ($sxe->xpath('//text:h') as $headline) {
