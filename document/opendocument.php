@@ -36,9 +36,13 @@ abstract class OpenDocument extends Document
 		// Data holders
 		$coreProperties = array();
 
-		// Read relations and search for core properties
+		// Prevent php from loading remote resources
 		$loadEntities = libxml_disable_entity_loader(true);
+
+		// Read relations and search for core properties
 		$sxe = simplexml_load_string($package->getFromName("meta.xml"));
+
+		// Restore entity loader state
 		libxml_disable_entity_loader($loadEntities);
 
 		if (is_object($sxe) && $sxe instanceof \SimpleXMLElement) {
