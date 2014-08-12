@@ -11,11 +11,13 @@
 
 namespace OCA\Search_Lucene\Lucene;
 use OCA\Search_Lucene\Core\Files;
+use OCA\Search_Lucene\Core\SetUpException;
 use OCP\ILogger;
 use ZendSearch\Lucene\Analysis\Analyzer\Analyzer;
 use ZendSearch\Lucene\Analysis\Analyzer\Common\Utf8Num\CaseInsensitive;
 use ZendSearch\Lucene\Document;
 use ZendSearch\Lucene\Lucene;
+use ZendSearch\Lucene\SearchIndexInterface;
 
 /**
  * @author Jörn Dreyer <jfd@butonic.de>
@@ -24,11 +26,11 @@ class Index {
 
 	public $files;
 	/**
-	 * @var \Zend_Search_Lucene
+	 * @var SearchIndexInterface
 	 */
 	public $index;
 	/**
-	 * @var \OCP\ILogger
+	 * @var ILogger
 	 */
 	public $logger;
 
@@ -42,15 +44,11 @@ class Index {
 	 *
 	 * @author Jörn Dreyer <jfd@butonic.de>
 	 *
-	 * @throws \Exception
+	 * @throws SetUpException
 	 */
 	public function openOrCreate() {
 
 		$indexFolder = $this->files->setUpIndexFolder();
-
-		if (is_null($indexFolder)) {
-			throw new \Exception('Could not set up index folder');
-		}
 
 		$storage = $indexFolder->getStorage();
 		$localPath = $storage->getLocalFile($indexFolder->getInternalPath());

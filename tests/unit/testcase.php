@@ -24,7 +24,9 @@
 namespace OCA\Search_Lucene\Tests\Unit;
 
 use OC\Files\Storage\Storage;
+use OC\Files\Cache\Scanner;
 use OC\Files\View;
+use \OC\Files\Filesystem;
 use OCA\Search_Lucene\AppInfo\Application;
 use OCA\Search_Lucene\Db\Status;
 use OCA\Search_Lucene\Db\StatusMapper;
@@ -33,7 +35,7 @@ use PHPUnit_Framework_TestCase;
 abstract class TestCase extends PHPUnit_Framework_TestCase {
 
 	/**
-	 * @var \OC\Files\Storage\Storage $storage
+	 * @var Storage $storage
 	 */
 	private $storage;
 	
@@ -44,7 +46,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase {
 	private $userName;
 
 	/**
-	 * @var \OC\Files\Cache\Scanner
+	 * @var Scanner
 	 */
 	protected $scanner;
 
@@ -67,7 +69,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase {
 
 		\OC_Util::tearDownFS();
 		$us->setUser(null);
-		\OC\Files\Filesystem::tearDown();
+		Filesystem::tearDown();
 		\OC_Util::setupFS($this->userName);
 
 		$us->setUser($um->get($this->userName));
@@ -108,7 +110,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase {
 			}
 		}
 
-		list($storage, $internalPath) = $view->resolvePath('');
+		list($storage,) = $view->resolvePath('');
 		/** @var $storage Storage */
 		$this->storage = $storage;
 		$this->scanner = $storage->getScanner();
