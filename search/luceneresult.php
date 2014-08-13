@@ -12,11 +12,12 @@
 namespace OCA\Search_Lucene\Search;
 use OC\Files\Filesystem;
 use ZendSearch\Lucene\Search\QueryHit;
+use OC\Search\Result\File;
 
 /**
  * A found file
  */
-class LuceneResult extends \OC\Search\Result\File {
+class LuceneResult extends File {
 
 	/**
 	 * Type name; translated in templates
@@ -31,7 +32,7 @@ class LuceneResult extends \OC\Search\Result\File {
 
 	/**
 	 * Create a new content search result
-	 * @param \Zend_Search_Lucene_Search_QueryHit $hit file data given by provider
+	 * @param QueryHit $hit file data given by provider
 	 */
 	public function __construct(QueryHit $hit) {
 		$this->id = (string)$hit->fileId;
@@ -63,8 +64,8 @@ class LuceneResult extends \OC\Search\Result\File {
 		// add read permissions
 		$permissions = \OCP\PERMISSION_READ;
 		// get directory
-		$fileinfo = pathinfo($path);
-		$dir = $fileinfo['dirname'] . '/';
+		$fileInfo = pathinfo($path);
+		$dir = $fileInfo['dirname'] . '/';
 		// add update permissions
 		if (Filesystem::isUpdatable($dir)) {
 			$permissions |= \OCP\PERMISSION_UPDATE;

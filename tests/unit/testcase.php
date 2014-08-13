@@ -24,16 +24,19 @@
 namespace OCA\Search_Lucene\Tests\Unit;
 
 use OC\Files\Storage\Storage;
+use OC\Files\Cache\Scanner;
 use OC\Files\View;
+use \OC\Files\Filesystem;
 use OCA\Search_Lucene\AppInfo\Application;
 use OCA\Search_Lucene\Db\Status;
 use OCA\Search_Lucene\Db\StatusMapper;
+use OCP\IUserSession;
 use PHPUnit_Framework_TestCase;
 
 abstract class TestCase extends PHPUnit_Framework_TestCase {
 
 	/**
-	 * @var \OC\Files\Storage\Storage $storage
+	 * @var Storage $storage
 	 */
 	private $storage;
 	
@@ -44,9 +47,14 @@ abstract class TestCase extends PHPUnit_Framework_TestCase {
 	private $userName;
 
 	/**
-	 * @var \OC\Files\Cache\Scanner
+	 * @var Scanner
 	 */
 	protected $scanner;
+
+	/**
+	 * @var IUserSession
+	 */
+	protected $userSession;
 
 	//for search lucene
 	public function setUp() {
@@ -56,7 +64,8 @@ abstract class TestCase extends PHPUnit_Framework_TestCase {
 
 		// reset backend
 		$um = $container->getServer()->getUserManager();
-		$us = $container->getServer()->getUserSession();
+		$this->userSession = $container->getServer()->getUserSession();
+
 		$um->clearBackends();
 		$um->registerBackend(new \OC_User_Database());
 
@@ -66,11 +75,11 @@ abstract class TestCase extends PHPUnit_Framework_TestCase {
 		$um->createUser($this->userName, $this->userName);
 
 		\OC_Util::tearDownFS();
-		$us->setUser(null);
-		\OC\Files\Filesystem::tearDown();
+		$this->userSession->setUser(null);
+		Filesystem::tearDown();
 		\OC_Util::setupFS($this->userName);
 
-		$us->setUser($um->get($this->userName));
+		$this->userSession->setUser($um->get($this->userName));
 
 		$view = new \OC\Files\View('/' . $this->userName . '/files');
 
@@ -108,23 +117,12 @@ abstract class TestCase extends PHPUnit_Framework_TestCase {
 			}
 		}
 
-		list($storage, $internalPath) = $view->resolvePath('');
+		list($storage,) = $view->resolvePath('');
 		/** @var $storage Storage */
 		$this->storage = $storage;
 		$this->scanner = $storage->getScanner();
 
-		// hookup scanner
-		/*
-		$this->scanner->listen('\OC\Files\Cache\Scanner', 'postScanFile', function($path, $storage) {
-			$h = new Hooks();
-			$h->postScanFile($path, $storage);
-		});
-		 */
-
 		$this->scanner->scan('');
-
-		// init 3rdparty classloader
-		//new Application();
 	}
 
 	public function tearDown() {
@@ -144,7 +142,11 @@ abstract class TestCase extends PHPUnit_Framework_TestCase {
 			$mapper->delete($status);
 		}
 	}
-	
+
+	/**
+	 * @param string $path
+	 * @return integer
+	 */
 	protected function getFileId($path) {
 		
 		$view = new View('/' . $this->userName . '/files');

@@ -12,7 +12,6 @@
 namespace OCA\Search_Lucene\Document;
 
 use Smalot\PdfParser\Parser;
-use OCP\Util;
 use ZendSearch\Lucene\Document;
 
 /**
@@ -67,7 +66,7 @@ class Pdf extends Document
 	 */
 	public static function loadPdf($data, $storeContent = false)
 	{
-		return new Pdf($data, false, $storeContent);
+		return new Pdf($data, $storeContent);
 	}
 
 }

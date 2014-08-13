@@ -12,7 +12,7 @@
 namespace OCA\Search_Lucene\Db;
 
 use OC\Files\Filesystem;
-use OCA\Search_Lucene\Core\Db;
+use OC\Files\Mount\Mount;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\Mapper;
@@ -88,8 +88,9 @@ class StatusMapper extends Mapper {
 
 	/**
 	 * Updates an entry in the db from a status
-	 * @throws \InvalidArgumentException if entity has no id
 	 * @param Entity $entity the status that should be created
+	 * @return Entity|null
+	 * @throws \InvalidArgumentException if entity has no id
 	 */
 	public function update(Entity $entity){
 		// if entity wasn't changed it makes no sense to run a db query
@@ -107,7 +108,7 @@ class StatusMapper extends Mapper {
 
 		// get updated fields to save, fields have to be set using a setter to
 		// be saved
-		// dont update the fileId field
+		// don't update the fileId field
 		unset($properties['fileId']);
 
 		$columns = '';
@@ -166,7 +167,7 @@ class StatusMapper extends Mapper {
 		foreach ($mounts as $mount) {
 			if (is_string($mount)) {
 				$storage = Filesystem::getStorage($mount);
-			} else if ($mount instanceof \OC\Files\Mount\Mount) {
+			} else if ($mount instanceof Mount) {
 				$storage = $mount->getStorage();
 			} else {
 				$storage = null;

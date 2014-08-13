@@ -23,7 +23,7 @@ class Odt extends OpenDocument {
 	/**
 	 * Object constructor
 	 *
-	 * @param string  $fileName
+	 * @param string $fileName
 	 * @param boolean $storeContent
 	 * @throws ExtensionNotLoadedException
 	 * @throws RuntimeException
@@ -33,7 +33,7 @@ class Odt extends OpenDocument {
 			throw new ExtensionNotLoadedException('Open Document Text processing functionality requires Zip extension to be loaded');
 		}
 
-        // Document data holders
+		// Document data holders
 		$documentHeadlines = array();
 		$documentParagraphs = array();
 

@@ -64,7 +64,7 @@ class TestDocumentHtml extends \PHPUnit_Framework_TestCase {
 
 		$value = $doc->getFieldValue($field);
 
-		$containsTestTerm = stristr($value, $term) !== false;
+		$containsTestTerm = is_string(stristr($value, $term));
 		$this->assertTrue($containsTestTerm, $field.'/'.$descriptiveLocation.' does not contain "'.$term.'" in '.$value);
 
 	}
@@ -86,7 +86,7 @@ class TestDocumentHtml extends \PHPUnit_Framework_TestCase {
 
 		$value = $doc->getFieldValue($field);
 
-		$containsTestTerm = stristr($value, $term) !== false;
+		$containsTestTerm = is_string(stristr($value, $term));
 		$this->assertTrue($containsTestTerm, $field.'/'.$descriptiveLocation.' does not contain "'.$term.'" in '.$value);
 
 	}
@@ -154,7 +154,7 @@ class TestDocumentHtml extends \PHPUnit_Framework_TestCase {
 
 		$value = $doc->getFieldValue($field);
 
-		$containsTestTerm = stristr($value, $term) !== false;
+		$containsTestTerm = is_string(stristr($value, $term));
 		$this->assertTrue($containsTestTerm, $field.'/'.$descriptiveLocation.' does not contain "'.$term.'" in '.$value);
 
 	}
@@ -174,7 +174,7 @@ class TestDocumentHtml extends \PHPUnit_Framework_TestCase {
 
 		$value = $doc->getFieldValue($field);
 
-		$containsTestTerm = stristr($value, $term) !== false;
+		$containsTestTerm = is_string(stristr($value, $term));
 		$this->assertTrue($containsTestTerm, $field.'/'.$descriptiveLocation.' does not contain "'.$term.'" in '.$value);
 
 	}
