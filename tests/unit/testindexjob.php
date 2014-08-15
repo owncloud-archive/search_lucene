@@ -49,7 +49,6 @@ class TestIndexJob extends TestCase {
 		/** @var Index $index */
 		$index = $container->query('Index');
 
-
 		// search for it
 		/** @var QueryHit[] $hits */
 		$hits = $index->find('foo');

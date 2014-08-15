@@ -55,6 +55,8 @@ class TestOptimizeJob extends TestCase {
 		$job = new OptimizeJob();
 		$job->run(array('user' => 'test'));
 
+		// make sure we can still find documents
+
 		// get an index
 		/** @var Index $index */
 		$index = $container->query('Index');

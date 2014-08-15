@@ -70,6 +70,14 @@ class Indexer {
 	 */
 	private $logger;
 
+	/**
+	 * @param Files $files
+	 * @param IServerContainer $server
+	 * @param Index $index
+	 * @param array $skippedDirs
+	 * @param StatusMapper $mapper
+	 * @param ILogger $logger
+	 */
 	public function __construct(Files $files, IServerContainer $server, Index $index, array $skippedDirs, StatusMapper $mapper, ILogger $logger) {
 		$this->files = $files;
 		$this->server = $server;
@@ -79,6 +87,10 @@ class Indexer {
 		$this->logger = $logger;
 	}
 
+	/**
+	 * @param array $fileIds
+	 * @param \OC_EventSource $eventSource
+	 */
 	public function indexFiles (array $fileIds, \OC_EventSource $eventSource = null) {
 
 		foreach ($fileIds as $id) {

@@ -16,6 +16,8 @@ use OCA\Search_Lucene\Core\Logger;
 use OCA\Search_Lucene\Db\StatusMapper;
 use OCA\Search_Lucene\Lucene\Index;
 use OCP\BackgroundJob;
+use OCP\Files\File;
+use OCP\Files\Folder;
 
 /**
  * 
@@ -62,7 +64,7 @@ class Files {
 		if (!empty($userId)) {
 
 			// mark written file as new
-			/** @var \OCP\Files\Folder $userFolder */
+			/** @var Folder $userFolder */
 			$userFolder = $container->query('ServerContainer')->getUserFolder();
 			$node = $userFolder->get($param['path']);
 			/** @var StatusMapper $mapper */
@@ -70,7 +72,7 @@ class Files {
 			$status = $mapper->getOrCreateFromFileId($node->getId());
 
 			// only index files
-			if ($node instanceof \OCP\Files\File) {
+			if ($node instanceof File) {
 				$mapper->markNew($status);
 			} else {
 				$mapper->markSkipped($status);
@@ -102,12 +104,12 @@ class Files {
 		}
 
 		if (!empty($param['newpath'])) {
-			/** @var \OCP\Files\Folder $userFolder */
+			/** @var Folder $userFolder */
 			$userFolder = $container->query('ServerContainer')->getUserFolder();
 			$node = $userFolder->get($param['newpath']);
 
 			// only index files
-			if ($node instanceof \OCP\Files\File) {
+			if ($node instanceof File) {
 				$mapper = $container->query('StatusMapper');
 				$mapper->getOrCreateFromFileId($node->getId());
 				self::indexFile(array('path'=>$param['newpath']));
