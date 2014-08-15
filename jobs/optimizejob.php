@@ -21,6 +21,9 @@ class OptimizeJob extends TimedJob {
 		$this->setInterval(86400); //execute at most once a day
 	}
 
+	/**
+	 * @param array $arguments
+	 */
 	public function run($arguments){
 		$app = new Application();
 		$container = $app->getContainer();

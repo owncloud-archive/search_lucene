@@ -92,7 +92,7 @@ class Index {
 	 * 
 	 * @author Jörn Dreyer <jfd@butonic.de>
 	 * 
-	 * @param Document $doc  the document to store for the path
+	 * @param Document $doc the document to store for the path
 	 * @param int $fileId file id to update
 	 * @param bool $commit
 	 * 

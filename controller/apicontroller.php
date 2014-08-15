@@ -19,10 +19,28 @@ use OCP\AppFramework\Controller;
 
 class ApiController extends Controller {
 
+	/**
+	 * @var $mapper StatusMapper
+	 */
 	private $mapper;
+
+	/**
+	 * @var $index Index
+	 */
 	private $index;
+
+	/**
+	 * @var $indexer Indexer
+	 */
 	private $indexer;
 
+	/**
+	 * @param string $appName
+	 * @param IRequest $request
+	 * @param StatusMapper $mapper
+	 * @param Index $index
+	 * @param Indexer $indexer
+	 */
 	public function __construct($appName, IRequest $request, StatusMapper $mapper, Index $index, Indexer $indexer) {
 		parent::__construct($appName, $request);
 		$this->mapper = $mapper;
@@ -32,10 +50,11 @@ class ApiController extends Controller {
 
 
 	/**
-	 * index the given fileIds or, if not given, all unindexed files
+	 * index the given fileId or, if not given, all unindexed files
+	 * @param int $fileId optional fileId to index
 	 * @NoAdminRequired
 	 */
-	public function index($fileId) {
+	public function index($fileId = null) {
 		if ( isset($fileId) ){
 			$fileIds = array($fileId);
 		} else {

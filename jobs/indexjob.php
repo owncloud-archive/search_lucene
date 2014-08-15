@@ -17,6 +17,9 @@ use OC\BackgroundJob\QueuedJob;
 
 class IndexJob extends QueuedJob {
 
+	/**
+	 * @param array $arguments
+	 */
 	public function run($arguments){
 		$app = new Application();
 		$container = $app->getContainer();
