@@ -147,6 +147,7 @@ class StatusMapper extends Mapper {
 	 */
 	public function getUnindexed() {
 		$files = array();
+		//TODO use server api for mounts & root
 		$absoluteRoot = Filesystem::getView()->getAbsolutePath('/');
 		$mounts = Filesystem::getMountPoints($absoluteRoot);
 		$mount = Filesystem::getMountPoint($absoluteRoot);
