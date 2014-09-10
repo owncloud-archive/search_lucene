@@ -34,6 +34,16 @@ class Status extends Entity {
 	// we use fileId as the primary key
 	private $_fieldTypes = array('fileId' => 'integer');
 
+
+	/**
+	 * @param string $fileId
+	 * @param string $status
+	 */
+	public function __construct($fileId = null, $status = null) {
+		// use setters to mark properties as updated
+		$this->setFileId($fileId);
+		$this->setStatus($status);
+	}
 	/**
 	 * @return array with attribute and type
 	 */

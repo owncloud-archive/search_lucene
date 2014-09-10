@@ -34,20 +34,17 @@ class StatusMapper extends Mapper {
 
 	/**
 	 * Deletes a status from the table
-	 * @param Entity|integer $statusOrId the status that should be deleted
+	 * @param Entity $status the status that should be deleted
 	 */
-	public function delete($statusOrId){
-		if ($statusOrId instanceof Status) {
-			$statusOrId = $statusOrId->getFileId();
-		}
+	public function delete(Entity $status){
 		$sql = 'DELETE FROM `' . $this->tableName . '` WHERE `fileid` = ?';
-		$this->execute($sql, array($statusOrId));
+		$this->execute($sql, array($status->getFileId()));
 	}
 
 	/**
 	 * Creates a new entry in the db from an entity
-	 * @param Entity $entity the entity that should be created
-	 * @return Entity the saved entity with the set id
+	 * @param Status $entity the entity that should be created
+	 * @return Status the saved entity with the set id
 	 */
 	public function insert(Entity $entity){
 		// get updated fields to save, fields have to be set using a setter to
@@ -204,9 +201,7 @@ class StatusMapper extends Mapper {
 		try {
 			return $this->findEntity($sql, array($fileId));
 		} catch (DoesNotExistException $e) {
-			$status = new Status();
-			$status->setFileId($fileId);
-			$status->setStatus(Status::STATUS_NEW);
+			$status = new Status($fileId, Status::STATUS_NEW);
 			return $this->insert($status);
 		}
 	}

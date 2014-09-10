@@ -137,8 +137,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase {
 		/** @var StatusMapper $mapper */
 		$mapper = $container->query('StatusMapper');
 		foreach ($ids as $id) {
-			$status = new Status();
-			$status->setFileId($id);
+			$status = new Status($id);
 			$mapper->delete($status);
 		}
 	}

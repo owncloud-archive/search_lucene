@@ -13,6 +13,7 @@ namespace OCA\Search_Lucene\Hooks;
 
 use OCA\Search_Lucene\AppInfo\Application;
 use OCA\Search_Lucene\Core\Logger;
+use OCA\Search_Lucene\Db\Status;
 use OCA\Search_Lucene\Db\StatusMapper;
 use OCA\Search_Lucene\Lucene\Index;
 use OCP\BackgroundJob;
@@ -145,7 +146,8 @@ class Files {
 		foreach ($deletedIds as $fileId) {
 			$logger->debug( 'deleting status for ('.$fileId.') ' );
 			//delete status
-			$mapper->delete($fileId);
+			$status = new Status($fileId);
+			$mapper->delete($status);
 			//delete from lucene
 			$count += $index->deleteFile($fileId);
 

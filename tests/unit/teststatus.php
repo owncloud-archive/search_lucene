@@ -44,8 +44,7 @@ class TestStatus extends TestCase {
 		$mapper = $container->query('StatusMapper');
 
 		// run test
-		$status = new Status();
-		$status->setFileId($fileId);
+		$status = $mapper->getOrCreateFromFileId($fileId);
 		$mapper->$method($status);
 
 		$this->assertInstanceOf('OCA\Search_Lucene\Db\Status', $status);
