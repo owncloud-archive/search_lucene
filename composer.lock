@@ -172,17 +172,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/butonic/ZendSearch.git",
-                "reference": "b18cdc633b1fd2f64c0ebda0badfca3067da05e8"
+                "reference": "78b21b79d0a421bb483361ec5cabd1c9025ef08b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/butonic/ZendSearch/zipball/b18cdc633b1fd2f64c0ebda0badfca3067da05e8",
-                "reference": "b18cdc633b1fd2f64c0ebda0badfca3067da05e8",
+                "url": "https://api.github.com/repos/butonic/ZendSearch/zipball/78b21b79d0a421bb483361ec5cabd1c9025ef08b",
+                "reference": "78b21b79d0a421bb483361ec5cabd1c9025ef08b",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3",
-                "zendframework/zend-stdlib": "2.*"
+                "zendframework/zend-stdlib": "2.*",
+                "zendframework/zendxml": "1.0.0"
             },
             "type": "library",
             "autoload": {
@@ -202,7 +203,52 @@
             "support": {
                 "source": "https://github.com/butonic/ZendSearch/tree/owncloud-stripped"
             },
-            "time": "2014-08-13 09:34:35"
+            "time": "2014-09-10 12:44:05"
+        },
+        {
+            "name": "zendframework/zendxml",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/ZendXml.git",
+                "reference": "559b34f426d33a11c3db118e00ce14bb8dc64e5f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/ZendXml/zipball/559b34f426d33a11c3db118e00ce14bb8dc64e5f",
+                "reference": "559b34f426d33a11c3db118e00ce14bb8dc64e5f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "fabpot/php-cs-fixer": "*@dev",
+                "phpunit/phpunit": "~3.7"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "ZendXml": "library/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Utility library for XML usage, best practices, and security in PHP",
+            "homepage": "http://packages.zendframework.com/",
+            "keywords": [
+                "security",
+                "xml",
+                "zf2"
+            ],
+            "time": "2014-03-05 22:25:44"
         }
     ],
     "packages-dev": [],

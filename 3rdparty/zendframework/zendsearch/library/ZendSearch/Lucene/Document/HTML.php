@@ -87,7 +87,11 @@ class HTML extends Document
             $htmlData = $data;
         }
         ErrorHandler::start(E_WARNING);
+        // Prevent php from loading remote resources
+        $loadEntities = libxml_disable_entity_loader(true);
         $this->_doc->loadHTML($htmlData);
+        // Restore entity loader state
+        libxml_disable_entity_loader($loadEntities);
         ErrorHandler::stop();
 
         if ($this->_doc->encoding === null) {
@@ -100,9 +104,13 @@ class HTML extends Document
                 $htmlTagOffset = $matches[0][1] + strlen($matches[0][0]);
 
                 ErrorHandler::start(E_WARNING);
+                // Prevent php from loading remote resources
+                $loadEntities = libxml_disable_entity_loader(true);
                 $this->_doc->loadHTML(iconv($defaultEncoding, 'UTF-8//IGNORE', substr($htmlData, 0, $htmlTagOffset))
                                      . '<head><META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8"/></head>'
                                      . iconv($defaultEncoding, 'UTF-8//IGNORE', substr($htmlData, $htmlTagOffset)));
+                // Restore entity loader state
+                libxml_disable_entity_loader($loadEntities);
                 ErrorHandler::stop();
 
                 // Remove additional HEAD section
@@ -112,9 +120,13 @@ class HTML extends Document
             } else {
                 // It's an HTML fragment
                 ErrorHandler::start(E_WARNING);
+                // Prevent php from loading remote resources
+                $loadEntities = libxml_disable_entity_loader(true);
                 $this->_doc->loadHTML('<html><head><META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8"/></head><body>'
                                      . iconv($defaultEncoding, 'UTF-8//IGNORE', $htmlData)
                                      . '</body></html>');
+                // Restore entity loader state
+                libxml_disable_entity_loader($loadEntities);
                 ErrorHandler::stop();
             }
 
@@ -314,10 +326,14 @@ class HTML extends Document
             // into valid XHTML (It's automatically done by loadHTML() method)
             $highlightedWordNodeSetDomDocument = new \DOMDocument('1.0', 'UTF-8');
             ErrorHandler::start(E_WARNING);
+            // Prevent php from loading remote resources
+            $loadEntities = libxml_disable_entity_loader(true);
             $success = $highlightedWordNodeSetDomDocument->
                                 loadHTML('<html><head><meta http-equiv="Content-type" content="text/html; charset=UTF-8"/></head><body>'
                                        . $highlightedWordNodeSetHTML
                                        . '</body></html>');
+            // Restore entity loader state
+            libxml_disable_entity_loader($loadEntities);
             ErrorHandler::stop();
             if (!$success) {
                 throw new RuntimeException("Error occured while loading highlighted text fragment: '$highlightedWordNodeSetHTML'.");

@@ -21,6 +21,7 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "zendframework/zend-stdlib": "2.*"
+        "zendframework/zend-stdlib": "2.*",
+        "zendframework/zendxml": "1.0.0"
     }
 }

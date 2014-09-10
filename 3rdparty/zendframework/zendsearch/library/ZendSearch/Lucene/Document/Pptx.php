@@ -13,6 +13,7 @@ namespace ZendSearch\Lucene\Document;
 use ZendSearch\Lucene;
 use ZendSearch\Lucene\Exception\ExtensionNotLoadedException;
 use ZendSearch\Lucene\Exception\RuntimeException;
+use ZendXml\Security as XmlSecurity;
 
 /**
  * Pptx document.
@@ -81,31 +82,25 @@ class Pptx extends AbstractOpenXML
             throw new RuntimeException('Invalid archive or corrupted .pptx file.');
         }
 
-        // Prevent php from loading remote resources
-        $loadEntities = libxml_disable_entity_loader(true);
-
-        $relations = simplexml_load_string($relationsXml);
-
-        // Restore entity loader state
-        libxml_disable_entity_loader($loadEntities);
+        $relations = XmlSecurity::scan($relationsXml);
 
         foreach ($relations->Relationship as $rel) {
             if ($rel["Type"] == AbstractOpenXML::SCHEMA_OFFICEDOCUMENT) {
                 // Found office document! Search for slides...
-                $slideRelations = simplexml_load_string($package->getFromName( $this->absoluteZipPath(dirname($rel["Target"]) . "/_rels/" . basename($rel["Target"]) . ".rels")) );
+                $slideRelations = XmlSecurity::scan($package->getFromName( $this->absoluteZipPath(dirname($rel["Target"]) . "/_rels/" . basename($rel["Target"]) . ".rels")) );
                 foreach ($slideRelations->Relationship as $slideRel) {
                     if ($slideRel["Type"] == self::SCHEMA_SLIDERELATION) {
                         // Found slide!
-                        $slides[ str_replace( 'rId', '', (string)$slideRel["Id"] ) ] = simplexml_load_string(
+                        $slides[ str_replace( 'rId', '', (string)$slideRel["Id"] ) ] = XmlSecurity::scan(
                             $package->getFromName( $this->absoluteZipPath(dirname($rel["Target"]) . "/" . dirname($slideRel["Target"]) . "/" . basename($slideRel["Target"])) )
                         );
 
                         // Search for slide notes
-                        $slideNotesRelations = simplexml_load_string($package->getFromName( $this->absoluteZipPath(dirname($rel["Target"]) . "/" . dirname($slideRel["Target"]) . "/_rels/" . basename($slideRel["Target"]) . ".rels")) );
+                        $slideNotesRelations = XmlSecurity::scan($package->getFromName( $this->absoluteZipPath(dirname($rel["Target"]) . "/" . dirname($slideRel["Target"]) . "/_rels/" . basename($slideRel["Target"]) . ".rels")) );
                         foreach ($slideNotesRelations->Relationship as $slideNoteRel) {
                             if ($slideNoteRel["Type"] == self::SCHEMA_SLIDENOTESRELATION) {
                                 // Found slide notes!
-                                $slideNotes[ str_replace( 'rId', '', (string)$slideRel["Id"] ) ] = simplexml_load_string(
+                                $slideNotes[ str_replace( 'rId', '', (string)$slideRel["Id"] ) ] = XmlSecurity::scan(
                                     $package->getFromName( $this->absoluteZipPath(dirname($rel["Target"]) . "/" . dirname($slideRel["Target"]) . "/" . dirname($slideNoteRel["Target"]) . "/" . basename($slideNoteRel["Target"])) )
                                 );
 

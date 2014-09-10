@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Zend\\Stdlib\\' => array($vendorDir . '/zendframework/zend-stdlib'),
+    'ZendXml' => array($vendorDir . '/zendframework/zendxml/library'),
     'ZendSearch' => array($vendorDir . '/zendframework/zendsearch/library'),
     'Smalot\\PdfParser\\' => array($vendorDir . '/smalot/pdfparser/src'),
 );
