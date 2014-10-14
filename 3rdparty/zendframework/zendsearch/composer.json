@@ -1,0 +1,27 @@
+{
+    "name": "zendframework/zendsearch",
+    "description": "a general purpose text search engine written entirely in PHP 5",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "zf2",
+        "lucene"
+    ],
+    "homepage": "http://packages.zendframework.com/",
+    "autoload": {
+        "psr-0": {
+            "ZendSearch": "library/"
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "http://packages.zendframework.com/"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zend-stdlib": "2.*",
+        "zendframework/zendxml": "1.0.0"
+    }
+}

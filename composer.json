@@ -1,0 +1,37 @@
+{
+	"name": "owncloud/search_lucene",
+	"license": "AGPL",
+	"authors": [
+		{
+			"name": "Jörn Friedrich Dreyer",
+			"email": "jfd@butonic.de",
+			"role": "Developer",
+			"homepage": "http://www.butonic.de"
+		}
+	],
+	"config": {
+		"vendor-dir": "3rdparty"
+	},
+	"support": {
+		"issues": "https://github.com/owncloud/search_lucene/issues"
+	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/butonic/pdfparser"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/butonic/tcpdf"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/butonic/ZendSearch"
+		}
+	],
+	"require": {
+		"smalot/pdfparser": "dev-owncloud-stripped as v0.9.21",
+		"tecnick.com/tcpdf": "dev-owncloud-stripped as 6.0.089-dev",
+		"zendframework/zendsearch": "dev-owncloud-stripped as dev-master"
+	}
+}

@@ -1,0 +1,284 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "c8fa66f33f93d3fddf66a191e5dd30c1",
+    "packages": [
+        {
+            "name": "smalot/pdfparser",
+            "version": "dev-owncloud-stripped",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/butonic/pdfparser.git",
+                "reference": "35badea1a84eabbc225f528121c8d5eceec73c8b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/butonic/pdfparser/zipball/35badea1a84eabbc225f528121c8d5eceec73c8b",
+                "reference": "35badea1a84eabbc225f528121c8d5eceec73c8b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "tecnick.com/tcpdf": ">=6.0.050"
+            },
+            "require-dev": {
+                "atoum/atoum": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Smalot\\PdfParser\\": "src/"
+                }
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastien MALOT",
+                    "email": "sebastien@malot.fr",
+                    "role": "Developer",
+                    "homepage": "http://www.malot.fr"
+                }
+            ],
+            "description": "Pdf parser library. Can read and extract information from pdf file.",
+            "homepage": "http://www.pdfparser.org",
+            "support": {
+                "issues": "https://github.com/smalot/pdfparser/issues",
+                "source": "https://github.com/butonic/pdfparser/tree/owncloud-stripped"
+            },
+            "time": "2014-08-06 18:36:07"
+        },
+        {
+            "name": "tecnick.com/tcpdf",
+            "version": "dev-owncloud-stripped",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/butonic/tcpdf.git",
+                "reference": "6156742a44d5df31a4948790ce689e56e8adbbcc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/butonic/tcpdf/zipball/6156742a44d5df31a4948790ce689e56e8adbbcc",
+                "reference": "6156742a44d5df31a4948790ce689e56e8adbbcc",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "config",
+                    "include",
+                    "tcpdf.php",
+                    "tcpdf_parser.php",
+                    "tcpdf_import.php",
+                    "tcpdf_barcodes_1d.php",
+                    "tcpdf_barcodes_2d.php",
+                    "include/tcpdf_colors.php",
+                    "include/tcpdf_filters.php",
+                    "include/tcpdf_font_data.php",
+                    "include/tcpdf_fonts.php",
+                    "include/tcpdf_images.php",
+                    "include/tcpdf_static.php",
+                    "include/barcodes/datamatrix.php",
+                    "include/barcodes/pdf417.php",
+                    "include/barcodes/qrcode.php"
+                ]
+            },
+            "license": [
+                "LGPLv3"
+            ],
+            "authors": [
+                {
+                    "name": "Nicola Asuni",
+                    "email": "info@tecnick.com",
+                    "homepage": "http://nicolaasuni.tecnick.com"
+                }
+            ],
+            "description": "TCPDF is a PHP class for generating PDF documents.",
+            "homepage": "http://www.tcpdf.org/",
+            "keywords": [
+                "PDF",
+                "PDFD32000-2008",
+                "barcodes",
+                "datamatrix",
+                "pdf417",
+                "qrcode",
+                "tcpdf"
+            ],
+            "support": {
+                "source": "https://github.com/butonic/tcpdf/tree/owncloud-stripped"
+            },
+            "time": "2014-09-09 08:32:39"
+        },
+        {
+            "name": "zendframework/zend-stdlib",
+            "version": "2.3.1",
+            "target-dir": "Zend/Stdlib",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/Component_ZendStdlib.git",
+                "reference": "c1f4830018b5d4f034d32fa01a9e17ea176f56f6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/c1f4830018b5d4f034d32fa01a9e17ea176f56f6",
+                "reference": "c1f4830018b5d4f034d32fa01a9e17ea176f56f6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.23"
+            },
+            "require-dev": {
+                "zendframework/zend-eventmanager": "self.version",
+                "zendframework/zend-serializer": "self.version",
+                "zendframework/zend-servicemanager": "self.version"
+            },
+            "suggest": {
+                "zendframework/zend-eventmanager": "To support aggregate hydrator usage",
+                "zendframework/zend-serializer": "Zend\\Serializer component",
+                "zendframework/zend-servicemanager": "To support hydrator plugin manager usage"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.3-dev",
+                    "dev-develop": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Zend\\Stdlib\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "keywords": [
+                "stdlib",
+                "zf2"
+            ],
+            "time": "2014-04-15 15:28:48"
+        },
+        {
+            "name": "zendframework/zendsearch",
+            "version": "dev-owncloud-stripped",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/butonic/ZendSearch.git",
+                "reference": "78b21b79d0a421bb483361ec5cabd1c9025ef08b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/butonic/ZendSearch/zipball/78b21b79d0a421bb483361ec5cabd1c9025ef08b",
+                "reference": "78b21b79d0a421bb483361ec5cabd1c9025ef08b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "zendframework/zend-stdlib": "2.*",
+                "zendframework/zendxml": "1.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "ZendSearch": "library/"
+                }
+            },
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "a general purpose text search engine written entirely in PHP 5",
+            "homepage": "http://packages.zendframework.com/",
+            "keywords": [
+                "lucene",
+                "zf2"
+            ],
+            "support": {
+                "source": "https://github.com/butonic/ZendSearch/tree/owncloud-stripped"
+            },
+            "time": "2014-09-10 12:44:05"
+        },
+        {
+            "name": "zendframework/zendxml",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/ZendXml.git",
+                "reference": "559b34f426d33a11c3db118e00ce14bb8dc64e5f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/ZendXml/zipball/559b34f426d33a11c3db118e00ce14bb8dc64e5f",
+                "reference": "559b34f426d33a11c3db118e00ce14bb8dc64e5f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "fabpot/php-cs-fixer": "*@dev",
+                "phpunit/phpunit": "~3.7"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "ZendXml": "library/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Utility library for XML usage, best practices, and security in PHP",
+            "homepage": "http://packages.zendframework.com/",
+            "keywords": [
+                "security",
+                "xml",
+                "zf2"
+            ],
+            "time": "2014-03-05 22:25:44"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [
+        {
+            "alias": "v0.9.21",
+            "alias_normalized": "0.9.21.0",
+            "version": "dev-owncloud-stripped",
+            "package": "smalot/pdfparser"
+        },
+        {
+            "alias": "6.0.089-dev",
+            "alias_normalized": "6.0.089.0-dev",
+            "version": "dev-owncloud-stripped",
+            "package": "tecnick.com/tcpdf"
+        },
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-owncloud-stripped",
+            "package": "zendframework/zendsearch"
+        }
+    ],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "smalot/pdfparser": 20,
+        "tecnick.com/tcpdf": 20,
+        "zendframework/zendsearch": 20
+    },
+    "prefer-stable": false,
+    "platform": [],
+    "platform-dev": []
+}

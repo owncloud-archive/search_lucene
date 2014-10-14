@@ -1,0 +1,24 @@
+diff --git a/3rdparty/zendframework/zendsearch/library/ZendSearch/Lucene/Document/AbstractOpenXML.php b/3rdparty/zendframework/zendsearch/library/ZendSearch/Lucene/Doc
+index a290913..d5e4d16 100644
+--- a/3rdparty/zendframework/zendsearch/library/ZendSearch/Lucene/Document/AbstractOpenXML.php
++++ b/3rdparty/zendframework/zendsearch/library/ZendSearch/Lucene/Document/AbstractOpenXML.php
+@@ -40,7 +40,7 @@ abstract class AbstractOpenXML extends Document
+      *
+      * @var string
+      */
+-    const SCHEMA_COREPROPERTIES = 'http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties';
++    const SCHEMA_COREPROPERTIES = 'http://schemas.openxmlformats.org/package/2006/metadata/core-properties';
+ 
+     /**
+      * Xml Schema - Dublin Core
+@@ -70,7 +70,9 @@ abstract class AbstractOpenXML extends Document
+         // Read relations and search for core properties
+         $relations = simplexml_load_string($package->getFromName("_rels/.rels"));
+         foreach ($relations->Relationship as $rel) {
+-            if ($rel["Type"] == self::SCHEMA_COREPROPERTIES) {
++            if ($rel["Type"] == self::SCHEMA_COREPROPERTIES
++                               || $rel["Type"] == 'http://schemas.openxmlformats.org/officedocument/2006/relationships/metadata/core-properties'
++                       ) {
+                 // Found core properties! Read in contents...
+                 $contents = simplexml_load_string(
+                     $package->getFromName(dirname($rel["Target"]) . "/" . basename($rel["Target"]))

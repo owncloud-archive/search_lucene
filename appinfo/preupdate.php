@@ -1,36 +1,18 @@
 <?php
+/**
+ * ownCloud - search_lucene
+ *
+ * This file is licensed under the Affero General Public License version 3 or
+ * later. See the COPYING file.
+ *
+ * @author Jörn Friedrich Dreyer <jfd@butonic.de>
+ * @copyright Jörn Friedrich Dreyer 2012-2014
+ */
 
-$currentVersion=OCP\Config::getAppValue('search_lucene', 'installed_version');
+$currentVersion = OCP\Config::getAppValue('search_lucene', 'installed_version');
 
-if (version_compare($currentVersion, '0.5.2', '<')) {
-	
-	//delete duplicate id entries
-	
-	$dbtype = OCP\Config::getSystemValue('dbtype', 'sqlite3');
-	
-	if ($dbtype === 'mysql') {
-		// fix MySQL ERROR 1093 (HY000), see http://stackoverflow.com/a/12969601
-		$sql = 'DELETE FROM `*PREFIX*lucene_status`
-				WHERE `fileid` IN (
-					SELECT `fileid` FROM (
-						SELECT `fileid`
-						FROM `*PREFIX*lucene_status`
-						GROUP BY `fileid`
-						HAVING count(`status`) > 1
-					) AS `mysqlerr1093hack`
-				)
-			';
-	} else {
-		$sql = 'DELETE FROM `*PREFIX*lucene_status`
-				WHERE `fileid` IN (
-					SELECT `fileid`
-					FROM `*PREFIX*lucene_status`
-					GROUP BY `fileid`
-					HAVING count(`status`) > 1
-				)
-			';
-	}
-	
-	$stmt = OCP\DB::prepare($sql);
+if (version_compare($currentVersion, '0.6.0', '<')) {
+	//force reindexing of files
+	$stmt = OCP\DB::prepare('DELETE FROM `*PREFIX*lucene_status`');
 	$stmt->execute();
 }
