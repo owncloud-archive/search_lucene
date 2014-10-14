@@ -75,12 +75,12 @@ class Files {
 			// only index files
 			if ($node instanceof File) {
 				$mapper->markNew($status);
+
+				//Add Background Job:
+				BackgroundJob::registerJob( 'OCA\Search_Lucene\Jobs\IndexJob', array('user' => $userId) );
 			} else {
 				$mapper->markSkipped($status);
 			}
-
-			//Add Background Job:
-			BackgroundJob::registerJob( 'OCA\Search_Lucene\Jobs\IndexJob', array('user' => $userId) );
 		} else {
 			$container->query('Logger')->debug(
 				'Hook indexFile could not determine user when called with param '.json_encode($param)

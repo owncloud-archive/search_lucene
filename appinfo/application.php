@@ -90,7 +90,11 @@ class Application extends App {
 		 * Core
 		 */
 		$container->registerService('UserId', function($c) {
-			return $c->query('ServerContainer')->getUserSession()->getUser()->getUID();
+			$user = $c->query('ServerContainer')->getUserSession()->getUser();
+			if ($user) {
+				return $c->query('ServerContainer')->getUserSession()->getUser()->getUID();
+			}
+			return false;
 		});
 
 		$container->registerService('Logger', function($c) {
