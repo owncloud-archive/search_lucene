@@ -17,7 +17,7 @@ OCP\Util::addStyle('search_lucene', 'lucene');
 // --- replace default file search provider -----------------------------------------------
 
 //add search provider
-\OC::$server->getSearch()->registerProvider('OCA\Search_Lucene\Search\LuceneProvider');
+\OC::$server->getSearch()->registerProvider('OCA\Search_Lucene\Search\LuceneProvider', array('apps' => array('files')));
 
 // add background job for index optimization:
 
