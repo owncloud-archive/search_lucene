@@ -9,6 +9,10 @@
  * @copyright Jörn Friedrich Dreyer 2012-2014
  */
 
+use OCA\Search_Lucene\Jobs\DeleteJob;
+use OCA\Search_Lucene\Jobs\OptimizeJob;
+
+
 // --- always add js & css -----------------------------------------------
 
 OCP\Util::addScript('search_lucene', 'checker');
@@ -25,7 +29,8 @@ $arguments = array('user' => \OCP\User::getUser());
 
 //only when we know for which user:
 if ($arguments['user']) {
-	\OCP\BackgroundJob::registerJob( 'OCA\Search_Lucene\Jobs\OptimizeJob', $arguments );
+	\OC::$server->getJobList()->add(new OptimizeJob(), $arguments);
+	\OC::$server->getJobList()->add(new DeleteJob(), $arguments);
 }
 
 // --- add hooks -----------------------------------------------
@@ -45,10 +50,3 @@ OCP\Util::connectHook(
 		OC\Files\Filesystem::signal_post_rename,
 		'OCA\Search_Lucene\Hooks\Files',
 		OCA\Search_Lucene\Hooks\Files::handle_post_rename);
-
-//listen for file deletions to clean the database
-OCP\Util::connectHook(
-		OC\Files\Filesystem::CLASSNAME,
-		'post_delete', //FIXME add referenceable constant in core
-		'OCA\Search_Lucene\Hooks\Files',
-		OCA\Search_Lucene\Hooks\Files::handle_delete);

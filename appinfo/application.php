@@ -12,7 +12,6 @@
 namespace OCA\Search_Lucene\AppInfo;
 
 use OCA\Search_Lucene\Controller\ApiController;
-use OCA\Search_Lucene\Core\Db;
 use OCA\Search_Lucene\Core\Logger;
 use OCA\Search_Lucene\Db\StatusMapper;
 use OCA\Search_Lucene\Lucene\Index;
