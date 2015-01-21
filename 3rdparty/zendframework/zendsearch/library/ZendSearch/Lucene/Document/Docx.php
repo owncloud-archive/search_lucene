@@ -14,7 +14,6 @@ use ZendSearch\Lucene;
 use ZendSearch\Lucene\Document\Exception\InvalidArgumentException;
 use ZendSearch\Lucene\Exception\ExtensionNotLoadedException;
 use ZendSearch\Lucene\Exception\RuntimeException;
-use ZendXml\Security as XMLSecurity;
 
 /**
  * Docx document.
@@ -62,12 +61,18 @@ class Docx extends AbstractOpenXML
             throw new RuntimeException('Invalid archive or corrupted .docx file.');
         }
 
-        $relations = XMLSecurity::scan($relationsXml);
+        // Prevent php from loading remote resources
+        $loadEntities = libxml_disable_entity_loader(true);
+
+        $relations = simplexml_load_string($relationsXml);
+
+        // Restore entity loader state
+        libxml_disable_entity_loader($loadEntities);
 
         foreach($relations->Relationship as $rel) {
             if ($rel ["Type"] == AbstractOpenXML::SCHEMA_OFFICEDOCUMENT) {
                 // Found office document! Read in contents...
-                $contents = XMLSecurity::scan($package->getFromName(
+                $contents = simplexml_load_string($package->getFromName(
                                                                 $this->absoluteZipPath(dirname($rel['Target'])
                                                               . '/'
                                                               . basename($rel['Target']))

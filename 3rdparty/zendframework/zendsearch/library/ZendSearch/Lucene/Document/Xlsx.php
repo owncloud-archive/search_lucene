@@ -13,7 +13,6 @@ namespace ZendSearch\Lucene\Document;
 use ZendSearch\Lucene;
 use ZendSearch\Lucene\Exception\ExtensionNotLoadedException;
 use ZendSearch\Lucene\Exception\RuntimeException;
-use ZendXml\Security as XmlSecurity;
 
 /**
  * Xlsx document.
@@ -91,18 +90,24 @@ class Xlsx extends AbstractOpenXML
             throw new RuntimeException('Invalid archive or corrupted .xlsx file.');
         }
 
-        $relations = XmlSecurity::scan($relationsXml);
+        // Prevent php from loading remote resources
+        $loadEntities = libxml_disable_entity_loader(true);
+
+        $relations = simplexml_load_string($relationsXml);
+
+        // Restore entity loader state
+        libxml_disable_entity_loader($loadEntities);
 
         foreach ($relations->Relationship as $rel) {
             if ($rel["Type"] == AbstractOpenXML::SCHEMA_OFFICEDOCUMENT) {
                 // Found office document! Read relations for workbook...
-                $workbookRelations = XmlSecurity::scan($package->getFromName($this->absoluteZipPath(dirname($rel["Target"]) . "/_rels/" . basename($rel["Target"]) . ".rels")));
+                $workbookRelations = simplexml_load_string($package->getFromName( $this->absoluteZipPath(dirname($rel["Target"]) . "/_rels/" . basename($rel["Target"]) . ".rels")) );
                 $workbookRelations->registerXPathNamespace("rel", AbstractOpenXML::SCHEMA_RELATIONSHIP);
 
                 // Read shared strings
                 $sharedStringsPath = $workbookRelations->xpath("rel:Relationship[@Type='" . self::SCHEMA_SHAREDSTRINGS . "']");
                 $sharedStringsPath = (string)$sharedStringsPath[0]['Target'];
-                $xmlStrings = XmlSecurity::scan($package->getFromName( $this->absoluteZipPath(dirname($rel["Target"]) . "/" . $sharedStringsPath)) );
+                $xmlStrings = simplexml_load_string($package->getFromName( $this->absoluteZipPath(dirname($rel["Target"]) . "/" . $sharedStringsPath)) );
                 if (isset($xmlStrings) && isset($xmlStrings->si)) {
                     foreach ($xmlStrings->si as $val) {
                         if (isset($val->t)) {
@@ -116,7 +121,7 @@ class Xlsx extends AbstractOpenXML
                 // Loop relations for workbook and extract worksheets...
                 foreach ($workbookRelations->Relationship as $workbookRelation) {
                     if ($workbookRelation["Type"] == self::SCHEMA_WORKSHEETRELATION) {
-                        $worksheets[ str_replace( 'rId', '', (string)$workbookRelation["Id"]) ] = XmlSecurity::scan(
+                        $worksheets[ str_replace( 'rId', '', (string)$workbookRelation["Id"]) ] = simplexml_load_string(
                             $package->getFromName( $this->absoluteZipPath(dirname($rel["Target"]) . "/" . dirname($workbookRelation["Target"]) . "/" . basename($workbookRelation["Target"])) )
                         );
                     }
