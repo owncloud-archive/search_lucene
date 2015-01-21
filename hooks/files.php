@@ -6,36 +6,27 @@
  * later. See the COPYING file.
  *
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
- * @copyright Jörn Friedrich Dreyer 2012-2014
+ * @copyright Jörn Friedrich Dreyer 2012-2015
  */
 
 namespace OCA\Search_Lucene\Hooks;
 
 use OCA\Search_Lucene\AppInfo\Application;
 use OCA\Search_Lucene\Db\StatusMapper;
-use OCA\Search_Lucene\Jobs\DeleteJob;
 use OCA\Search_Lucene\Jobs\IndexJob;
 use OCP\BackgroundJob;
 use OCP\Files\File;
 use OCP\Files\Folder;
 
-/**
- * 
- * @author Jörn Dreyer <jfd@butonic.de>
- */
 class Files {
 
 	/**
 	 * handle for indexing file
-	 *
-	 * @param string $path
 	 */
 	const handle_post_write = 'indexFile';
 
 	/**
 	 * handle for renaming file
-	 *
-	 * @param string $path
 	 */
 	const handle_post_rename = 'renameFile';
 
@@ -43,8 +34,6 @@ class Files {
 	 * handle file writes (triggers reindexing)
 	 * 
 	 * the file indexing is queued as a background job
-	 * 
-	 * @author Jörn Dreyer <jfd@butonic.de>
 	 * 
 	 * @param $param array from postWriteFile-Hook
 	 */
@@ -82,8 +71,6 @@ class Files {
 
 	/**
 	 * handle file renames (triggers indexing and deletion)
-	 * 
-	 * @author Jörn Dreyer <jfd@butonic.de>
 	 * 
 	 * @param $param array from postRenameFile-Hook
 	 */

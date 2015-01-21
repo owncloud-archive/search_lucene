@@ -5,7 +5,7 @@
  * This file is licensed under the Affero General Public License version 3 or
  * later. See the COPYING file.
  *
- * @author ThomasMüller <deepdiver@owncloud.com>
+ * @author Thomas Müller <deepdiver@owncloud.com>
  * @copyright Thomas Müller 2015
  */
 
@@ -61,7 +61,6 @@ class DeleteJob extends TimedJob {
 			$mapper->delete($status);
 			//delete from lucene
 			$count += $index->deleteFile($fileId);
-
 		}
 
 		$logger->debug( 'removed '.$count.' files from index' );

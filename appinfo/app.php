@@ -6,12 +6,11 @@
  * later. See the COPYING file.
  *
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
- * @copyright Jörn Friedrich Dreyer 2012-2014
+ * @copyright Jörn Friedrich Dreyer 2012-2015
  */
 
 use OCA\Search_Lucene\Jobs\DeleteJob;
 use OCA\Search_Lucene\Jobs\OptimizeJob;
-
 
 // --- always add js & css -----------------------------------------------
 
@@ -23,12 +22,9 @@ OCP\Util::addStyle('search_lucene', 'lucene');
 //add search provider
 \OC::$server->getSearch()->registerProvider('OCA\Search_Lucene\Search\LuceneProvider', array('apps' => array('files')));
 
-// add background job for index optimization:
-
-$arguments = array('user' => \OCP\User::getUser());
-
-//only when we know for which user:
-if ($arguments['user']) {
+// add background job for index optimization when we know for which user:
+if (\OC::$server->getUserSession()->getUser()) {
+	$arguments = array('user' => \OC::$server->getUserSession()->getUser()->getUID());
 	\OC::$server->getJobList()->add(new OptimizeJob(), $arguments);
 	\OC::$server->getJobList()->add(new DeleteJob(), $arguments);
 }

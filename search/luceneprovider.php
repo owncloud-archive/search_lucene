@@ -6,7 +6,7 @@
  * later. See the COPYING file.
  *
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
- * @copyright Jörn Friedrich Dreyer 2012-2014
+ * @copyright Jörn Friedrich Dreyer 2012-2015
  */
 
 namespace OCA\Search_Lucene\Search;
@@ -14,15 +14,10 @@ namespace OCA\Search_Lucene\Search;
 use OCA\Search_Lucene\AppInfo\Application;
 use OCP\Search\Provider;
 
-/**
- * @author Jörn Dreyer <jfd@butonic.de>
- */
 class LuceneProvider extends Provider {
 
 	/**
 	 * performs a search on the users index
-	 * 
-	 * @author Jörn Dreyer <jfd@butonic.de>
 	 * 
 	 * @param string $query lucene search query
 	 * @return \OCA\Search_Lucene\Search\LuceneResult[]
@@ -70,8 +65,6 @@ class LuceneProvider extends Provider {
 	 * get the base type of an internet media type string
 	 * 
 	 * returns 'text' for 'text/plain'
-	 * 
-	 * @author Jörn Dreyer <jfd@butonic.de>
 	 * 
 	 * @param string $mimeType internet media type
 	 * @return string top-level type

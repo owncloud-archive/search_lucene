@@ -6,10 +6,10 @@
  * later. See the COPYING file.
  *
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
- * @copyright Jörn Friedrich Dreyer 2012-2014
+ * @copyright Jörn Friedrich Dreyer 2012-2015
  */
 
-$currentVersion = OCP\Config::getAppValue('search_lucene', 'installed_version');
+$currentVersion = \OC::$server->getConfig()->getAppValue('search_lucene', 'installed_version');
 
 if (version_compare($currentVersion, '0.6.0', '<')) {
 	//force reindexing of files

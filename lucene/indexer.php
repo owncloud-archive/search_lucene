@@ -6,7 +6,7 @@
  * later. See the COPYING file.
  *
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
- * @copyright Jörn Friedrich Dreyer 2012-2014
+ * @copyright Jörn Friedrich Dreyer 2012-2015
  */
 
 namespace OCA\Search_Lucene\Lucene;
@@ -22,9 +22,6 @@ use OCP\IServerContainer;
 use ZendSearch\Lucene\Document\HTML;
 use ZendSearch\Lucene\Document;
 
-/**
- * @author Jörn Dreyer <jfd@butonic.de>
- */
 class Indexer {
 /*
 	// TODO use dublin core for fieldnames? would require touching zend documents or provide a metadata mapping
@@ -166,8 +163,6 @@ class Indexer {
 
 	/**
 	 * index a file
-	 *
-	 * @author Jörn Dreyer <jfd@butonic.de>
 	 *
 	 * @param File $file the file to be indexed
 	 * @param bool $commit

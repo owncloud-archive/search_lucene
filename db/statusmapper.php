@@ -6,7 +6,7 @@
  * later. See the COPYING file.
  *
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
- * @copyright Jörn Friedrich Dreyer 2012-2014
+ * @copyright Jörn Friedrich Dreyer 2012-2015
  */
 
 namespace OCA\Search_Lucene\Db;
@@ -19,9 +19,6 @@ use OCP\AppFramework\Db\Mapper;
 use OCP\IDb;
 use OCP\ILogger;
 
-/**
- * @author Jörn Dreyer <jfd@butonic.de>
- */
 class StatusMapper extends Mapper {
 
 	private $logger;
@@ -43,7 +40,7 @@ class StatusMapper extends Mapper {
 
 	/**
 	 * Creates a new entry in the db from an entity
-	 * @param Status $entity the entity that should be created
+	 * @param Entity $entity the entity that should be created
 	 * @return Status the saved entity with the set id
 	 */
 	public function insert(Entity $entity){
@@ -155,8 +152,8 @@ class StatusMapper extends Mapper {
 		$query = $this->db->prepareQuery('
 			SELECT `*PREFIX*filecache`.`fileid`
 			FROM `*PREFIX*filecache`
-			LEFT JOIN `*PREFIX*lucene_status`
-			ON `*PREFIX*filecache`.`fileid` = `*PREFIX*lucene_status`.`fileid`
+			LEFT JOIN `' . $this->tableName . '`
+			ON `*PREFIX*filecache`.`fileid` = `' . $this->tableName . '`.`fileid`
 			WHERE `storage` = ?
 			AND ( `status` IS NULL OR `status` = ? )
 			AND `path` LIKE \'files/%\'
@@ -244,10 +241,10 @@ class StatusMapper extends Mapper {
 		$files = array();
 
 		$query = $this->db->prepareQuery('
-			SELECT `*PREFIX*lucene_status`.`fileid`
-			FROM `*PREFIX*lucene_status`
+			SELECT `' . $this->tableName . '`.`fileid`
+			FROM `' . $this->tableName . '`
 			LEFT JOIN `*PREFIX*filecache`
-				ON `*PREFIX*filecache`.`fileid` = `*PREFIX*lucene_status`.`fileid`
+				ON `*PREFIX*filecache`.`fileid` = `' . $this->tableName . '`.`fileid`
 			WHERE `*PREFIX*filecache`.`fileid` IS NULL
 		');
 
