@@ -11,7 +11,6 @@
 namespace ZendSearch\Lucene\Document;
 
 use ZendSearch\Lucene\Document;
-use ZendXml\Security as XMLSecurity;
 
 /**
  * OpenXML document.
@@ -75,15 +74,21 @@ abstract class AbstractOpenXML extends Document
         // Data holders
         $coreProperties = array();
 
+        // Prevent php from loading remote resources
+        $loadEntities = libxml_disable_entity_loader(true);
+
         // Read relations and search for core properties
-        $relations = XMLSecurity::Scan($package->getFromName("_rels/.rels"));
+        $relations = simplexml_load_string($package->getFromName("_rels/.rels"));
+
+        // Restore entity loader state
+        libxml_disable_entity_loader($loadEntities);
 
         foreach ($relations->Relationship as $rel) {
             if ($rel["Type"] == self::SCHEMA_COREPROPERTIES
                 || $rel["Type"] == self::SCHEMA_OFFICE_COREPROPERTIES
             ) {
                 // Found core properties! Read in contents...
-                $contents = XMLSecurity::Scan(
+                $contents = simplexml_load_string(
                     $package->getFromName(dirname($rel["Target"]) . "/" . basename($rel["Target"]))
                 );
 
