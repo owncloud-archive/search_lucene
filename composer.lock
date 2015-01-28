@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/butonic/tcpdf.git",
-                "reference": "6156742a44d5df31a4948790ce689e56e8adbbcc"
+                "reference": "5b6dcc9549e901eae62abefda0a916a7394c6718"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/butonic/tcpdf/zipball/6156742a44d5df31a4948790ce689e56e8adbbcc",
-                "reference": "6156742a44d5df31a4948790ce689e56e8adbbcc",
+                "url": "https://api.github.com/repos/butonic/tcpdf/zipball/5b6dcc9549e901eae62abefda0a916a7394c6718",
+                "reference": "5b6dcc9549e901eae62abefda0a916a7394c6718",
                 "shasum": ""
             },
             "require": {
@@ -100,7 +100,7 @@
                     "homepage": "http://nicolaasuni.tecnick.com"
                 }
             ],
-            "description": "TCPDF is a PHP class for generating PDF documents.",
+            "description": "TCPDF is a PHP class for generating PDF documents and barcodes.",
             "homepage": "http://www.tcpdf.org/",
             "keywords": [
                 "PDF",
@@ -114,7 +114,7 @@
             "support": {
                 "source": "https://github.com/butonic/tcpdf/tree/owncloud-stripped"
             },
-            "time": "2014-09-09 08:32:39"
+            "time": "2015-01-21 15:04:34"
         },
         {
             "name": "zendframework/zend-stdlib",
@@ -279,6 +279,7 @@
         "zendframework/zendsearch": 20
     },
     "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": [],
     "platform-dev": []
 }
