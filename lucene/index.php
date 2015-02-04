@@ -6,10 +6,11 @@
  * later. See the COPYING file.
  *
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
- * @copyright Jörn Friedrich Dreyer 2012-2014
+ * @copyright Jörn Friedrich Dreyer 2012-2015
  */
 
 namespace OCA\Search_Lucene\Lucene;
+
 use OCA\Search_Lucene\Core\Files;
 use OCA\Search_Lucene\Core\SetUpException;
 use OCP\ILogger;
@@ -19,9 +20,6 @@ use ZendSearch\Lucene\Document;
 use ZendSearch\Lucene\Lucene;
 use ZendSearch\Lucene\SearchIndexInterface;
 
-/**
- * @author Jörn Dreyer <jfd@butonic.de>
- */
 class Index {
 
 	public $files;
@@ -41,8 +39,6 @@ class Index {
 
 	/**
 	 * opens or creates the given lucene index
-	 *
-	 * @author Jörn Dreyer <jfd@butonic.de>
 	 *
 	 * @throws SetUpException
 	 */
@@ -73,8 +69,6 @@ class Index {
 
 	/**
 	 * optimizes the lucene index
-	 *
-	 * @author Jörn Dreyer <jfd@butonic.de>
 	 * 
 	 * @return void
 	 */
@@ -89,8 +83,6 @@ class Index {
 	 * 1. the file is deleted from the index
 	 * 2. the file is readded to the index
 	 * 3. the file is marked as index in the status table
-	 * 
-	 * @author Jörn Dreyer <jfd@butonic.de>
 	 * 
 	 * @param Document $doc the document to store for the path
 	 * @param int $fileId file id to update
@@ -120,8 +112,6 @@ class Index {
 
 	/**
 	 * removes a file from the lucene index
-	 * 
-	 * @author Jörn Dreyer <jfd@butonic.de>
 	 * 
 	 * @param int $fileId file id to remove from the index
 	 * 

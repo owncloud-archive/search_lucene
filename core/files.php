@@ -6,7 +6,7 @@
  * later. See the COPYING file.
  *
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
- * @copyright Jörn Friedrich Dreyer 2012-2014
+ * @copyright Jörn Friedrich Dreyer 2012-2015
  */
 
 namespace OCA\Search_Lucene\Core;
@@ -83,7 +83,6 @@ class Files {
 		if (is_null($user) || !$this->userManager->userExists($user->getUID())) {
 			throw new SetUpException('could not set up user home for '.json_encode($user));
 		}
-		//if ($user !== $this->userSession->getUser()) {
 		if ($user !== $this->userSession->getUser()) {
 			\OC_Util::tearDownFS();
 			$this->userSession->setUser($user);

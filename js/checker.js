@@ -55,8 +55,8 @@ $(document).ready(function () {
 
 	OC.search.resultTypes.lucene = t('search_lucene', 'In');
 
-	OC.search.customResults.lucene = function (row, item){
-		row.find('td.result .text').text(t('search_lucene', 'Score: {score}', {score: Math.round(item.score*100)/100}));
+	OC.search.customResults.lucene = function ($row, item){
+		$row.find('td.result .text').text(t('search_lucene', 'Score: {score}', {score: Math.round(item.score*100)/100}));
 	};
 
 });

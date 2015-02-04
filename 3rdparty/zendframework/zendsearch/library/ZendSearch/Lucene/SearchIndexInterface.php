@@ -173,7 +173,7 @@ interface SearchIndexInterface extends Index\TermsStreamInterface
     /**
      * Performs a query against the index and returns an array
      * of Zend_Search_Lucene_Search_QueryHit objects.
-     * Input is a string or Zend_Search_Lucene_Search_Query.
+     * Input is a string or \ZendSearch\Lucene\Search\Query .
      *
      * @param mixed $query
      * @return array|\ZendSearch\Lucene\Search\QueryHit
