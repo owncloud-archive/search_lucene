@@ -15,6 +15,7 @@ use OCA\Search_Lucene\Jobs\OptimizeJob;
 // --- always add js & css -----------------------------------------------
 
 OCP\Util::addScript('search_lucene', 'checker');
+OCP\Util::addScript('search_lucene', 'search');
 OCP\Util::addStyle('search_lucene', 'lucene');
 
 // --- replace default file search provider -----------------------------------------------

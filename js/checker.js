@@ -49,14 +49,8 @@ $(document).ready(function () {
 		}, 100);
 	});
 
+	//TODO ideas
 	//clock that shows progress ○◔◑◕●.
 	//hovering over it shows the current file
 	//clicking it stops the indexer: ⌛
-
-	OC.search.resultTypes.lucene = t('search_lucene', 'In');
-
-	OC.search.customResults.lucene = function ($row, item){
-		$row.find('td.result .text').text(t('search_lucene', 'Score: {score}', {score: Math.round(item.score*100)/100}));
-	};
-
 });
