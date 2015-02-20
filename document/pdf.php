@@ -11,6 +11,7 @@
 
 namespace OCA\Search_Lucene\Document;
 
+use OCA\Search_Lucene\NotIndexedException;
 use Smalot\PdfParser\Parser;
 use ZendSearch\Lucene\Document;
 
@@ -25,6 +26,7 @@ class Pdf extends Document
 	 *
 	 * @param string  $data
 	 * @param boolean $storeContent
+	 * @throws NotIndexedException
 	 */
 	private function __construct($data, $storeContent) {
 
@@ -32,26 +34,31 @@ class Pdf extends Document
 
 		//do the content extraction
 		$parser = new Parser();
-		$pdf = $parser->parseContent($data);
 
-		$body = $pdf->getText();
+		try {
+			$pdf = $parser->parseContent($data);
 
-		// Store contents
-		if ($storeContent) {
-			$this->addField(Document\Field::Text('body', $body, 'UTF-8'));
-		} else {
-			$this->addField(Document\Field::UnStored('body', $body, 'UTF-8'));
-		}
+			$body = $pdf->getText();
 
-		$details = $pdf->getDetails();
-
-		// Store meta data properties
-		foreach ($details as $key => $value) {
-			$key = strtolower($key);
-			if ($key === 'author') {
-				$key = 'creator';
+			// Store contents
+			if ($storeContent) {
+				$this->addField(Document\Field::Text('body', $body, 'UTF-8'));
+			} else {
+				$this->addField(Document\Field::UnStored('body', $body, 'UTF-8'));
 			}
-			$this->addField(Document\Field::Text($key, $value, 'UTF-8'));
+
+			$details = $pdf->getDetails();
+
+			// Store meta data properties
+			foreach ($details as $key => $value) {
+				$key = strtolower($key);
+				if ($key === 'author') {
+					$key = 'creator';
+				}
+				$this->addField(Document\Field::Text($key, $value, 'UTF-8'));
+			}
+		} catch (\Exception $ex) {
+			throw new NotIndexedException (null, null, $ex);
 		}
 
 	}
