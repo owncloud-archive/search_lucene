@@ -11,7 +11,7 @@
 
 namespace OCA\Search_Lucene\Document;
 
-use OCA\Search_Lucene\NotIndexedException;
+use OCA\Search_Lucene\Lucene\NotIndexedException;
 use Smalot\PdfParser\Parser;
 use ZendSearch\Lucene\Document;
 
