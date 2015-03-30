@@ -48,7 +48,7 @@ class LuceneResult extends File {
 		);
 		$this->permissions = $this->getPermissions($this->path);
 		$this->modified = (int)$hit->mtime;
-		$this->mime = $hit->mimetype;
+		$this->mime_type = $hit->mimetype;
 	}
 
 	protected function getRelativePath ($path) {
