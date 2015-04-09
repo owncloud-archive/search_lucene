@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c8fa66f33f93d3fddf66a191e5dd30c1",
+    "hash": "e86650ba89302b408ae008572bb379af",
     "packages": [
         {
             "name": "smalot/pdfparser",
-            "version": "dev-owncloud-stripped",
+            "version": "v0.9.23",
             "source": {
                 "type": "git",
-                "url": "https://github.com/butonic/pdfparser.git",
-                "reference": "35badea1a84eabbc225f528121c8d5eceec73c8b"
+                "url": "https://github.com/smalot/pdfparser.git",
+                "reference": "9d3a71bdf7bdef7b2e1ccbdc1be67d4cc736299d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/butonic/pdfparser/zipball/35badea1a84eabbc225f528121c8d5eceec73c8b",
-                "reference": "35badea1a84eabbc225f528121c8d5eceec73c8b",
+                "url": "https://api.github.com/repos/smalot/pdfparser/zipball/9d3a71bdf7bdef7b2e1ccbdc1be67d4cc736299d",
+                "reference": "9d3a71bdf7bdef7b2e1ccbdc1be67d4cc736299d",
                 "shasum": ""
             },
             "require": {
@@ -33,6 +33,7 @@
                     "Smalot\\PdfParser\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0"
             ],
@@ -40,17 +41,13 @@
                 {
                     "name": "Sebastien MALOT",
                     "email": "sebastien@malot.fr",
-                    "role": "Developer",
-                    "homepage": "http://www.malot.fr"
+                    "homepage": "http://www.malot.fr",
+                    "role": "Developer"
                 }
             ],
             "description": "Pdf parser library. Can read and extract information from pdf file.",
             "homepage": "http://www.pdfparser.org",
-            "support": {
-                "issues": "https://github.com/smalot/pdfparser/issues",
-                "source": "https://github.com/butonic/pdfparser/tree/owncloud-stripped"
-            },
-            "time": "2014-08-06 18:36:07"
+            "time": "2015-03-18 08:17:46"
         },
         {
             "name": "tecnick.com/tcpdf",
@@ -254,12 +251,6 @@
     "packages-dev": [],
     "aliases": [
         {
-            "alias": "v0.9.21",
-            "alias_normalized": "0.9.21.0",
-            "version": "dev-owncloud-stripped",
-            "package": "smalot/pdfparser"
-        },
-        {
             "alias": "6.0.089-dev",
             "alias_normalized": "6.0.089.0-dev",
             "version": "dev-owncloud-stripped",
@@ -274,7 +265,6 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "smalot/pdfparser": 20,
         "tecnick.com/tcpdf": 20,
         "zendframework/zendsearch": 20
     },
