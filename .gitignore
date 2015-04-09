@@ -1,0 +1,8 @@
+3rdparty/smalot/pdfparser/src/Smalot/PdfParser/Tests/
+3rdparty/smalot/pdfparser/docs/
+3rdparty/smalot/pdfparser/.atoum.php
+3rdparty/smalot/pdfparser/.bootstrap.atoum.php
+3rdparty/smalot/pdfparser/.gitattributes
+3rdparty/smalot/pdfparser/.gitignore
+3rdparty/smalot/pdfparser/.travis.yml
+
