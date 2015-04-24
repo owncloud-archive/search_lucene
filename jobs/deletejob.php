@@ -17,6 +17,7 @@ use OC\BackgroundJob\TimedJob;
 use OCA\Search_Lucene\Db\Status;
 use OCA\Search_Lucene\Db\StatusMapper;
 use OCA\Search_Lucene\Lucene\Index;
+use OCP\App;
 
 class DeleteJob extends TimedJob {
 
@@ -29,6 +30,9 @@ class DeleteJob extends TimedJob {
 	 * @param array $arguments
 	 */
 	public function run($arguments){
+		if (!App::isEnabled('search_lucene')) {
+			return;
+		}
 
 		$app = new Application();
 		$container = $app->getContainer();

@@ -14,6 +14,7 @@ namespace OCA\Search_Lucene\Jobs;
 use OCA\Search_Lucene\AppInfo\Application;
 use OCA\Search_Lucene\Core\Logger;
 use OC\BackgroundJob\QueuedJob;
+use OCP\App;
 
 class IndexJob extends QueuedJob {
 
@@ -21,6 +22,10 @@ class IndexJob extends QueuedJob {
 	 * @param array $arguments
 	 */
 	public function run($arguments){
+		if (!App::isEnabled('search_lucene')) {
+			return;
+		}
+		
 		$app = new Application();
 		$container = $app->getContainer();
 
