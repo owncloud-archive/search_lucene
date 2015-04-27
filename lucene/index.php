@@ -47,7 +47,7 @@ class Index {
 		$indexFolder = $this->files->setUpIndexFolder();
 
 		$storage = $indexFolder->getStorage();
-		$localPath = $storage->getLocalFile($indexFolder->getInternalPath());
+		$localPath = $storage->getLocalFolder($indexFolder->getInternalPath());
 
 		//let lucene search for numbers as well as words
 		Analyzer::setDefault(
