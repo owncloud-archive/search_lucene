@@ -12,7 +12,7 @@ env:
 branches:
   only:
     - master
-    - /^stable\d*$/
+    - /^stable\d+(\.\d+)?$/
 
 before_install:
 #  - composer install
