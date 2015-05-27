@@ -1,53 +1,5 @@
 [
     {
-        "name": "smalot/pdfparser",
-        "version": "dev-owncloud-stripped",
-        "version_normalized": "dev-owncloud-stripped",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/butonic/pdfparser.git",
-            "reference": "35badea1a84eabbc225f528121c8d5eceec73c8b"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/butonic/pdfparser/zipball/35badea1a84eabbc225f528121c8d5eceec73c8b",
-            "reference": "35badea1a84eabbc225f528121c8d5eceec73c8b",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0",
-            "tecnick.com/tcpdf": ">=6.0.050"
-        },
-        "require-dev": {
-            "atoum/atoum": "dev-master"
-        },
-        "time": "2014-08-06 18:36:07",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "Smalot\\PdfParser\\": "src/"
-            }
-        },
-        "license": [
-            "GPL-3.0"
-        ],
-        "authors": [
-            {
-                "name": "Sebastien MALOT",
-                "email": "sebastien@malot.fr",
-                "role": "Developer",
-                "homepage": "http://www.malot.fr"
-            }
-        ],
-        "description": "Pdf parser library. Can read and extract information from pdf file.",
-        "homepage": "http://www.pdfparser.org",
-        "support": {
-            "issues": "https://github.com/smalot/pdfparser/issues",
-            "source": "https://github.com/butonic/pdfparser/tree/owncloud-stripped"
-        }
-    },
-    {
         "name": "zendframework/zend-stdlib",
         "version": "2.3.1",
         "version_normalized": "2.3.1.0",
@@ -252,5 +204,50 @@
         "support": {
             "source": "https://github.com/butonic/tcpdf/tree/owncloud-stripped"
         }
+    },
+    {
+        "name": "smalot/pdfparser",
+        "version": "v0.9.23",
+        "version_normalized": "0.9.23.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/smalot/pdfparser.git",
+            "reference": "9d3a71bdf7bdef7b2e1ccbdc1be67d4cc736299d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/smalot/pdfparser/zipball/9d3a71bdf7bdef7b2e1ccbdc1be67d4cc736299d",
+            "reference": "9d3a71bdf7bdef7b2e1ccbdc1be67d4cc736299d",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0",
+            "tecnick.com/tcpdf": ">=6.0.050"
+        },
+        "require-dev": {
+            "atoum/atoum": "dev-master"
+        },
+        "time": "2015-03-18 08:17:46",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Smalot\\PdfParser\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "Sebastien MALOT",
+                "email": "sebastien@malot.fr",
+                "homepage": "http://www.malot.fr",
+                "role": "Developer"
+            }
+        ],
+        "description": "Pdf parser library. Can read and extract information from pdf file.",
+        "homepage": "http://www.pdfparser.org"
     }
 ]
