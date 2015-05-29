@@ -49,6 +49,11 @@ class LuceneResult extends File {
 		$this->permissions = $this->getPermissions($this->path);
 		$this->modified = (int)$hit->mtime;
 		$this->mime_type = $hit->mimetype;
+		
+		$fileInfo = \OC\Files\Filesystem::getFileInfo($this->path);
+		if (is_object($fileInfo)) {
+			$this->etag = $fileInfo->getEtag();
+		}
 	}
 
 	protected function getRelativePath ($path) {

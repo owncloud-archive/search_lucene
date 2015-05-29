@@ -20,6 +20,7 @@
 					OCA.Files.App.fileList.lazyLoadPreview({
 						path: result.path,
 						mime: result.mime,
+						etag: result.etag,
 						callback: function (url) {
 							$row.find('td.icon').css('background-image', 'url(' + url + ')');
 						}
