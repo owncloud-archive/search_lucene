@@ -15,7 +15,6 @@ if(!class_exists('PHPUnit_Framework_TestCase')) {
 
 require_once __DIR__ . '/../../3rdparty/autoload.php';
 
-OC_Hook::clear();
 OC_Log::$enabled = false;
 
 OC_App::disable('files_encryption');
