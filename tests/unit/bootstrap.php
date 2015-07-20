@@ -1,8 +1,5 @@
 <?php
 
-global $RUNTIME_NOAPPS;
-$RUNTIME_NOAPPS = true;
-
 if (!defined('PHPUNIT_RUN')) {
 	define('PHPUNIT_RUN', 1);
 }
@@ -15,6 +12,4 @@ if(!class_exists('PHPUnit_Framework_TestCase')) {
 
 require_once __DIR__ . '/../../3rdparty/autoload.php';
 
-OC_Log::$enabled = false;
-
-OC_App::disable('files_encryption');
+OC_Hook::clear();
