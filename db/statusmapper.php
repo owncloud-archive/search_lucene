@@ -76,7 +76,6 @@ class StatusMapper extends Mapper {
 
 		$this->execute($sql, $params);
 
-		$entity->setFileId((int) $this->db->getInsertId($this->tableName));
 		return $entity;
 	}
 
