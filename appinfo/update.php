@@ -13,6 +13,10 @@ $currentVersion = \OC::$server->getConfig()->getAppValue('search_lucene', 'insta
 
 if (version_compare($currentVersion, '0.5.0', '<')) {
 	//clear old background jobs
-	$stmt = OCP\DB::prepare('DELETE FROM `*PREFIX*queuedtasks` WHERE `app`=?');
-	$stmt->execute(array('search_lucene'));
+	try {
+		$stmt = OCP\DB::prepare('DELETE FROM `*PREFIX*queuedtasks` WHERE `app`=?');
+		$stmt->execute(array('search_lucene'));
+	} catch (Doctrine\DBAL\Exception\TableNotFoundException $e) {
+		// ignore, nothing to delete
+	}
 }
