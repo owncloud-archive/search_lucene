@@ -43,7 +43,7 @@ class LuceneResult extends File {
 		$this->link = \OCP\Util::linkTo(
 			'files',
 			'index.php',
-			array('dir' => dirname($this->path), 'file' => $this->name)
+			array('dir' => dirname($this->path), 'scrollto' => $this->name)
 		);
 		$this->permissions = $this->getPermissions($this->path);
 		$this->modified = (int)$hit->mtime;
