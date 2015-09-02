@@ -74,10 +74,10 @@ class Odt extends OpenDocument {
 		// Store contents
 		if ($storeContent) {
 			$this->addField(Field::Text('headlines', implode(' ', $documentHeadlines), 'UTF-8'));
-			$this->addField(Field::Text('body', implode('', $documentParagraphs), 'UTF-8'));
+			$this->addField(Field::Text('body', implode(' ', $documentParagraphs), 'UTF-8'));
 		} else {
 			$this->addField(Field::UnStored('headlines', implode(' ', $documentHeadlines), 'UTF-8'));
-			$this->addField(Field::UnStored('body', implode('', $documentParagraphs), 'UTF-8'));
+			$this->addField(Field::UnStored('body', implode(' ', $documentParagraphs), 'UTF-8'));
 		}
 
 		// Store meta data properties
