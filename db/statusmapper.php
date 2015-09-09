@@ -169,17 +169,16 @@ class StatusMapper extends Mapper {
 				$this->logger->
 					debug( 'expected string or instance of \OC\Files\Mount\Mount got ' . json_encode($mount) );
 			}
-			if($storage != null)
-				//only index local files for now
-				if ($storage->isLocal()) {
-					$cache = $storage->getCache();
-					$numericId = $cache->getNumericStorageId();
+			
+			//only index local files for now
+			if ($storage && $storage->isLocal()) {
+				$cache = $storage->getCache();
+				$numericId = $cache->getNumericStorageId();
 
-					$result = $query->execute(array($numericId, Status::STATUS_NEW));
-
-					while ($row = $result->fetchRow()) {
-						$files[] = $row['fileid'];
-					}
+				$result = $query->execute(array($numericId, Status::STATUS_NEW));
+					
+				while ($row = $result->fetchRow()) {
+					$files[] = $row['fileid'];
 				}
 			}
 		}
