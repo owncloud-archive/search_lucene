@@ -243,8 +243,8 @@ class Indexer {
 			  // getUsersSharingFile() method expects it, which is relative to the user's dir 
 			  // of files, without assuming the data directory is the same as the user name.
       $full_home_dir = \OC::$server->getUserManager()->get(\OC_User::getUser())->getHome();
-      $data_dir      = \OC::$SERVERROOT . '/data';
-      $prefix        = preg_replace( "!^" . $data_dir . "!", "", $full_home_dir ) . '/files/';
+      include(\OC::$SERVERROOT . '/config/config.php');
+      $prefix        = preg_replace( "!^" . $CONFIG['datadirectory'] . "!", "", $full_home_dir ) . '/files/';
       $path          = preg_replace( '!'.$prefix.'!', "", $file->getPath());   
       $canReadIndiv  = Share::getUsersSharingFile($path, \OC_User::getUser(), true, false);
       $concatenated  = '_' . implode('_', $canReadIndiv['users']) . '_';
