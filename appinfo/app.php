@@ -46,3 +46,14 @@ OCP\Util::connectHook(
 		OC\Files\Filesystem::signal_post_rename,
 		'OCA\Search_Lucene\Hooks\Files',
 		OCA\Search_Lucene\Hooks\Files::handle_post_rename);
+
+//register to receive notification of sharing status changes
+OCP\Util::connectHook(
+    'OCP\Share', 
+    'post_shared', 
+    'OCA\Search_Lucene\Hooks\Share', 
+    'postShareHook');
+
+OCP\Util::connectHook('OCP\Share', 'post_unshare', 'OCA\Search_Lucene\Hooks\Share', 'postUnshareHook');
+
+		
