@@ -40,10 +40,13 @@ class LuceneResult extends File {
 		$this->name = basename($this->path);
 		$this->size = (int)$hit->size;
 		$this->score = $hit->score;
-		preg_match("!.*/files/(.*)!", $hit->path, $m);
-		$this->link = \OCP\Util::linkTo(
-			'remote.php',
-			'webdav/' . $m[1]
+		$dir = preg_replace("!/".$this->name."$!", "", $hit->path);
+		$this->link = \OC::$server->getURLGenerator()->linkToRoute(
+		    'files.view.index',
+        [
+            'dir' => $dir,
+            'scrollto' => $this->name,
+        ]
 		);
 		$this->permissions = $this->getPermissions($this->path);
 		$this->modified = (int)$hit->mtime;
