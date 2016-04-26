@@ -49,13 +49,9 @@ class FilesInFolder {
 	}
 
 	public function logit($text) {
-		$FH = fopen('/var/www/html/data/borealis.log', 'a');
-		if(is_string($text) || is_numeric($text) || is_bool($text)) {
-			fwrite($FH, $text . "\n");
-		} else {
-			fwrite($FH, print_r($text, true));
-		}
-		fclose($FH);
+		\OC::$server->getLogger()->debug((string)$text, [
+			'app' => 'search_lucene',
+		]);
 	}
 
 }
