@@ -35,8 +35,8 @@ class OptimizeJob extends TimedJob {
 		/** @var Logger $logger */
 		$logger = $container->query('Logger');
 
-    $logger->debug('background job optimizing index');
-    $container->query('FileUtility')->setUpIndexFolder();
-    $container->query('Index')->optimizeIndex();
+		$logger->debug('background job optimizing index');
+		$container->query('FileUtility')->setUpIndexFolder();
+		$container->query('Index')->optimizeIndex();
 	}
 }

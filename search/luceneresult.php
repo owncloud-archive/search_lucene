@@ -42,11 +42,11 @@ class LuceneResult extends File {
 		$this->score = $hit->score;
 		$dir = preg_replace("!/".$this->name."$!", "", $hit->path);
 		$this->link = \OC::$server->getURLGenerator()->linkToRoute(
-		    'files.view.index',
-        [
-            'dir' => $dir,
-            'scrollto' => $this->name,
-        ]
+			'files.view.index',
+			[
+				'dir' => $dir,
+				'scrollto' => $this->name,
+			]
 		);
 		$this->permissions = $this->getPermissions($this->path);
 		$this->modified = (int)$hit->mtime;
@@ -56,7 +56,7 @@ class LuceneResult extends File {
 	protected function getRelativePath ($path) {
 		$root = \OC::$server->getUserFolder();
 		return $root->getRelativePath($path);
-  	}
+	}
 
 	/**
 	 * Determine permissions for a given file path

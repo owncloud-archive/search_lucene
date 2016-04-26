@@ -121,9 +121,8 @@ class Application extends App {
 		});
 
 		$container->registerService('FilesInFolder', function($c) {
-        return new FilesInFolder($c->query('Db'));
-    });
-
+			return new FilesInFolder($c->query('Db'));
+		});
 	}
 
 

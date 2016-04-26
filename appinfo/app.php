@@ -49,11 +49,12 @@ OCP\Util::connectHook(
 
 //register to receive notification of sharing status changes
 OCP\Util::connectHook(
-    'OCP\Share', 
-    'post_shared', 
-    'OCA\Search_Lucene\Hooks\Share', 
-    'postShareHook');
+	'OCP\Share',
+	'post_shared',
+	'OCA\Search_Lucene\Hooks\Share',
+	'postShareHook');
 
-OCP\Util::connectHook('OCP\Share', 'post_unshare', 'OCA\Search_Lucene\Hooks\Share', 'postUnshareHook');
-
-		
+OCP\Util::connectHook('OCP\Share',
+	'post_unshare',
+	'OCA\Search_Lucene\Hooks\Share',
+	'postUnshareHook');

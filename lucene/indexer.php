@@ -239,16 +239,16 @@ class Indexer {
 			$doc->addField(Document\Field::Keyword('fileId', $file->getId()));
 			
 			// Store names of individuals who have read permissions
-			  // FIXME: this next four lines seem a bit awkward. The goal is to get the "path" as 
-			  // getUsersSharingFile() method expects it, which is relative to the user's dir 
-			  // of files, without assuming the data directory is the same as the user name.
-      $full_home_dir = \OC::$server->getUserManager()->get(\OC_User::getUser())->getHome();
-      include(\OC::$SERVERROOT . '/config/config.php');
-      $prefix        = preg_replace( "!^" . $CONFIG['datadirectory'] . "!", "", $full_home_dir ) . '/files/';
-      $path          = preg_replace( '!'.$prefix.'!', "", $file->getPath());   
-      $canReadIndiv  = Share::getUsersSharingFile($path, \OC_User::getUser(), true, false);
-      $concatenated  = '_' . implode('_', $canReadIndiv['users']) . '_';
-      $doc->addField(Document\Field::Text('can_read', $concatenated, 'UTF-8'));
+			// FIXME: this next four lines seem a bit awkward. The goal is to get the "path" as 
+			// getUsersSharingFile() method expects it, which is relative to the user's dir 
+			// of files, without assuming the data directory is the same as the user name.
+			$full_home_dir = \OC::$server->getUserManager()->get(\OC_User::getUser())->getHome();
+			include(\OC::$SERVERROOT . '/config/config.php');
+			$prefix = preg_replace( "!^" . $CONFIG['datadirectory'] . "!", "", $full_home_dir ) . '/files/';
+			$path = preg_replace( '!'.$prefix.'!', "", $file->getPath());
+			$canReadIndiv = Share::getUsersSharingFile($path, \OC_User::getUser(), true, false);
+			$concatenated = '_' . implode('_', $canReadIndiv['users']) . '_';
+			$doc->addField(Document\Field::Text('can_read', $concatenated, 'UTF-8'));
 
 			// Store document path for the search results
 			$doc->addField(Document\Field::Text('path', $file->getPath(), 'UTF-8'));
