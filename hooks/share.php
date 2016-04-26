@@ -18,7 +18,6 @@ class Share {
 	private static function reIndex($fileIds) {
 		$app = new Application();
 		$container = $app->getContainer();
-		self::logit(get_class($container));
 		$container->query('Indexer')->indexFiles($fileIds);
 	}
 
@@ -42,11 +41,5 @@ class Share {
 			$files = $container->query('FilesInFolder')->files($param['itemSource']);
 			self::reIndex($files);
 		}
-	}
-
-	public static function logit($text) {
-		\OC::$server->getLogger()->debug((string)$text, [
-			'app' => 'search_lucene',
-		]);
 	}
 }

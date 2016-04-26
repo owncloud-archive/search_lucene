@@ -48,10 +48,4 @@ class FilesInFolder {
 		return ($sub_result['is_sub'] > 0);
 	}
 
-	public function logit($text) {
-		\OC::$server->getLogger()->debug((string)$text, [
-			'app' => 'search_lucene',
-		]);
-	}
-
 }
