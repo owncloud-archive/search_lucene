@@ -22,8 +22,8 @@ class Share {
 	}
 
 	public static function postShareHook(array $param) {
-		if ('file' == $param['itemType']) {
-			self::reIndex(array($param['itemSource']));
+		if ('file' === $param['itemType']) {
+			self::reIndex([$param['itemSource']]);
 		} else {
 			$app = new Application();
 			$container = $app->getContainer();
@@ -33,8 +33,8 @@ class Share {
 	}
 
 	public static function postUnshareHook(array $param) {
-		if ('file' == $param['itemType']) {
-			self::reIndex(array($param['itemSource']));
+		if ('file' === $param['itemType']) {
+			self::reIndex([$param['itemSource']]);
 		} else {
 			$app = new Application();
 			$container = $app->getContainer();
