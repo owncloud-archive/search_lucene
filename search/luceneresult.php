@@ -36,14 +36,17 @@ class LuceneResult extends File {
 	 */
 	public function __construct(QueryHit $hit) {
 		$this->id = (string)$hit->fileId;
-		$this->path = $this->getRelativePath($hit->path);
+		$this->path = $hit->path;
 		$this->name = basename($this->path);
 		$this->size = (int)$hit->size;
 		$this->score = $hit->score;
-		$this->link = \OCP\Util::linkTo(
-			'files',
-			'index.php',
-			array('dir' => dirname($this->path), 'scrollto' => $this->name)
+		$dir = preg_replace("!/".$this->name."$!", "", $hit->path);
+		$this->link = \OC::$server->getURLGenerator()->linkToRoute(
+		    'files.view.index',
+        [
+            'dir' => $dir,
+            'scrollto' => $this->name,
+        ]
 		);
 		$this->permissions = $this->getPermissions($this->path);
 		$this->modified = (int)$hit->mtime;

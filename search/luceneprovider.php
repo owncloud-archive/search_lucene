@@ -49,7 +49,11 @@ class LuceneProvider extends Provider {
 				$hits = $index->find($query);
 
 				//limit results. we cant show more than ~30 anyway. TODO use paging later
+				$user = \OC_User::getUser();
 				for ($i = 0; $i < 30 && $i < count($hits); $i++) {
+				  if (false === strpos($hits[$i]->can_read, '_'.$user.'_')) {
+				    continue;
+				  }
 					$results[] = new LuceneResult($hits[$i]);
 				}
 
