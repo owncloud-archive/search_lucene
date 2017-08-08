@@ -56,7 +56,7 @@ class TestSearchProvider extends TestCase {
 		$this->assertInstanceOf('OCA\Search_Lucene\Search\LuceneResult', $searchResult);
 		$this->assertEquals($fileId, $searchResult->id);
 		$this->assertEquals('lucene', $searchResult->type);
-		$this->assertEquals($path, $searchResult->path);
+		$this->assertEquals('/test/files'.$path, $searchResult->path);
 		$this->assertEquals($name, $searchResult->name);
 		$this->assertEquals($mimeType, $searchResult->mime_type);
 		$this->assertEquals($size, $searchResult->size);

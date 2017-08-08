@@ -12,6 +12,7 @@
 namespace OCA\Search_Lucene\Lucene;
 
 use OCP\Files\File;
+use OCP\Share;
 use OCA\Search_Lucene\Core\Files;
 use OCA\Search_Lucene\Db\StatusMapper;
 use OCA\Search_Lucene\Document\Ods;
@@ -236,6 +237,22 @@ class Indexer {
 
 			// Store filecache id as unique id to lookup by when deleting
 			$doc->addField(Document\Field::Keyword('fileId', $file->getId()));
+			
+			// Store names of individuals who have read permissions
+			// FIXME: this next four lines seem a bit awkward. The goal is to get the "path" as 
+			// getUsersSharingFile() method expects it, which is relative to the user's dir 
+			// of files, without assuming the data directory is the same as the user name.
+			$user = \OC::$server->getUserSession()->getUser();
+			if (!$user) {
+				return false;
+			}
+			$full_home_dir = $user->getHome();
+			$datadirectory = \OC::$server->getConfig()->getSystemValue('datadirectory');
+			$prefix = preg_replace( "!^" . $datadirectory . "!", "", $full_home_dir ) . '/files/';
+			$path = preg_replace( '!'.$prefix.'!', "", $file->getPath());
+			$canReadIndiv = Share::getUsersSharingFile($path, $user, true, false);
+			$concatenated = '_' . implode('_', $canReadIndiv['users']) . '_';
+			$doc->addField(Document\Field::Text('can_read', $concatenated, 'UTF-8'));
 
 			// Store document path for the search results
 			$doc->addField(Document\Field::Text('path', $file->getPath(), 'UTF-8'));

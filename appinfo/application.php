@@ -14,6 +14,7 @@ namespace OCA\Search_Lucene\AppInfo;
 use OCA\Search_Lucene\Controller\ApiController;
 use OCA\Search_Lucene\Core\Logger;
 use OCA\Search_Lucene\Db\StatusMapper;
+use OCA\Search_Lucene\Db\FilesInFolder;
 use OCA\Search_Lucene\Lucene\Index;
 use OCA\Search_Lucene\Lucene\Indexer;
 use OCA\Search_Lucene\Core\Files;
@@ -119,6 +120,9 @@ class Application extends App {
 			return $c->query('ServerContainer')->getRootFolder();
 		});
 
+		$container->registerService('FilesInFolder', function($c) {
+			return new FilesInFolder($c->query('Db'));
+		});
 	}
 
 

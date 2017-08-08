@@ -40,15 +40,8 @@ class DeleteJob extends TimedJob {
 		/** @var Logger $logger */
 		$logger = $container->query('Logger');
 
-
-		if (empty($arguments['user'])) {
-			$logger->debug('indexer job did not receive user in arguments: '.json_encode($arguments) );
-			return;
-		}
-
-		$userId = $arguments['user'];
-		$logger->debug('background job optimizing index for '.$userId );
-		$container->query('FileUtility')->setUpIndexFolder($userId);
+		$logger->debug('background job optimizing index');
+		$container->query('FileUtility')->setUpIndexFolder();
 
 		/** @var Index $index */
 		$index = $container->query('Index');

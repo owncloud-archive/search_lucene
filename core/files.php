@@ -63,9 +63,7 @@ class Files {
 		// FIXME \OC::$server->getAppFolder() returns '/search'
 		//$indexFolder = \OC::$server->getAppFolder();
 
-		$userHome = $this->setUpUserHome($userId);
-
-		return $this->getOrCreateSubFolder($userHome, 'lucene_index');
+		return $this->getOrCreateSubFolder($this->rootFolder, '/' . 'lucene_index');
 	}
 
 	/**

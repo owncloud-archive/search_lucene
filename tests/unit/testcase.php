@@ -71,11 +71,9 @@ abstract class TestCase extends PHPUnit_Framework_TestCase {
 
 		// create test user
 		$this->userName = 'test';
-		$user = $um->get($this->userName);
-		if ($user) {
-			$user->delete();
+		if (!\OC_User::userExists($this->userName)) {
+			$um->createUser($this->userName, $this->userName);
 		}
-		$um->createUser($this->userName, $this->userName);
 
 		\OC_Util::tearDownFS();
 		$this->userSession->setUser(null);

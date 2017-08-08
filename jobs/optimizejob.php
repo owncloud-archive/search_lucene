@@ -35,13 +35,8 @@ class OptimizeJob extends TimedJob {
 		/** @var Logger $logger */
 		$logger = $container->query('Logger');
 
-		if (!empty($arguments['user'])) {
-			$userId = $arguments['user'];
-			$logger->debug('background job optimizing index for '.$userId );
-			$container->query('FileUtility')->setUpIndexFolder($userId);
-			$container->query('Index')->optimizeIndex();
-		} else {
-			$logger->debug('indexer job did not receive user in arguments: '.json_encode($arguments) );
-		}
+		$logger->debug('background job optimizing index');
+		$container->query('FileUtility')->setUpIndexFolder();
+		$container->query('Index')->optimizeIndex();
 	}
 }
