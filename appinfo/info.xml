@@ -7,8 +7,8 @@
 	<types>
 		<filesystem/>
 	</types>
-	<version>0.8.0</version>
-	<require>7</require>
+	<use-migrations>true</use-migrations>
+	<version>0.8.1</version>
 	<default_enable/>
 	<description>Activate this app when you want to be
 		able to find files by searching their content.
@@ -43,5 +43,8 @@
 		look at the skipped unit tests.
 	</description>
 	<ocsid>168709</ocsid>
+	<dependencies>
+		<owncloud min-version="10.0.3" max-version="11.0" />
+	</dependencies>
 </info>
 
