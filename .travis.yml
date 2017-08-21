@@ -1,4 +1,6 @@
 language: php
+sudo: required
+dist: trusty
 php:
   - 5.6
   - 7.0
@@ -32,7 +34,7 @@ script:
 
   # Run phpunit tests
   - cd tests/unit
-  - phpunit --configuration phpunit.xml
+  - ../../../../lib/composer/bin/phpunit --configuration phpunit.xml
 
   # Create coverage report
   - wget https://scrutinizer-ci.com/ocular.phar
