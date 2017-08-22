@@ -26,15 +26,16 @@ namespace OCA\Search_Lucene\Tests\Unit;
 use OC\Files\Storage\Storage;
 use OC\Files\Cache\Scanner;
 use OC\Files\View;
-use \OC\Files\Filesystem;
+use OC\Files\Filesystem;
 use OCA\Search_Lucene\AppInfo\Application;
 use OCA\Search_Lucene\Db\Status;
 use OCA\Search_Lucene\Db\StatusMapper;
 use OCP\IUserSession;
-use PHPUnit_Framework_TestCase;
+use Test\Traits\UserTrait;
 
-abstract class TestCase extends PHPUnit_Framework_TestCase {
-
+abstract class TestCase extends \PHPUnit_Framework_TestCase {
+	use UserTrait;
+	
 	/**
 	 * @var Storage $storage
 	 */
@@ -58,31 +59,22 @@ abstract class TestCase extends PHPUnit_Framework_TestCase {
 
 	//for search lucene
 	public function setUp() {
-
+		$this->setUpUserTrait();
+	
 		$app = new Application();
 		$container = $app->getContainer();
-
-		// reset backend
-		$um = $container->getServer()->getUserManager();
 		$this->userSession = $container->getServer()->getUserSession();
-
-		$um->clearBackends();
-		$um->registerBackend(new \OC_User_Database());
 
 		// create test user
 		$this->userName = 'test';
-		$user = $um->get($this->userName);
-		if ($user) {
-			$user->delete();
-		}
-		$um->createUser($this->userName, $this->userName);
+		$user = $this->createUser($this->userName, $this->userName);
 
 		\OC_Util::tearDownFS();
 		$this->userSession->setUser(null);
 		Filesystem::tearDown();
 		\OC_Util::setupFS($this->userName);
 
-		$this->userSession->setUser($um->get($this->userName));
+		$this->userSession->setUser($user);
 
 		$view = new \OC\Files\View('/' . $this->userName . '/files');
 
@@ -129,6 +121,8 @@ abstract class TestCase extends PHPUnit_Framework_TestCase {
 	}
 
 	public function tearDown() {
+		$this->tearDownUserTrait();
+		
 		if (is_null($this->storage)) {
 			return;
 		}

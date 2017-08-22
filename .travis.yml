@@ -1,4 +1,6 @@
 language: php
+sudo: required
+dist: trusty
 php:
   - 5.6
   - 7.0
@@ -6,6 +8,8 @@ php:
 env:
   global:
     - CORE_BRANCH=master
+    - APP_NAME=search_lucene
+
   matrix:
     - DB=sqlite
 
@@ -16,17 +20,21 @@ branches:
 
 before_install:
 #  - composer install
-  - wget https://raw.githubusercontent.com/owncloud/administration/master/travis-ci/before_install.sh
-  - bash ./before_install.sh search_lucene $CORE_BRANCH $DB
+  - which php
+  - more `which pecl`
+  - which phpize
+  - bash tests/.travis/before_install.sh $APP_NAME $CORE_BRANCH $DB
+  - cd ../core
+  - php occ app:enable $APP_NAME
 
 script:
   # Test lint
-  - cd ../core/apps/search_lucene
+  - cd apps/$APP_NAME
   - sh -c "if [ '$DB' = 'sqlite' ]; then ant test; fi"
 
   # Run phpunit tests
   - cd tests/unit
-  - phpunit --configuration phpunit.xml
+  - ../../../../lib/composer/bin/phpunit --configuration phpunit.xml
 
   # Create coverage report
   - wget https://scrutinizer-ci.com/ocular.phar
@@ -34,8 +42,11 @@ script:
 
 matrix:
   include:
-    - php: 5.6
+    - php: 7
       env: DB=mysql
-    - php: 5.6
+    - php: 7
       env: DB=pgsql
+    - php: 7
+      env: DB=oracle
+
   fast_finish: true

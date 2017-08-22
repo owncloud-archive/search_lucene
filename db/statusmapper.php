@@ -198,7 +198,7 @@ class StatusMapper extends Mapper {
 		);
 		$sql = '
 			SELECT `fileid`, `status`
-			FROM ' . $this->tableName . '
+			FROM `' . $this->tableName . '`
 			WHERE `fileid` = ?
 		';
 		return $this->findEntity($sql, array($fileId));
