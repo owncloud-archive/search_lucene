@@ -11,6 +11,7 @@
 
 use OCA\Search_Lucene\Jobs\DeleteJob;
 use OCA\Search_Lucene\Jobs\OptimizeJob;
+use OCP\IUser;
 
 // --- always add js & css -----------------------------------------------
 
@@ -23,10 +24,14 @@ OCP\Util::addStyle('search_lucene', 'lucene');
 \OC::$server->getSearch()->registerProvider('OCA\Search_Lucene\Search\LuceneProvider', array('apps' => array('files')));
 
 // add background job for index optimization when we know for which user:
-if (\OC::$server->getUserSession()->getUser()) {
-	$arguments = array('user' => \OC::$server->getUserSession()->getUser()->getUID());
-	\OC::$server->getJobList()->add(new OptimizeJob(), $arguments);
-	\OC::$server->getJobList()->add(new DeleteJob(), $arguments);
+$userSession = \OC::$server->getUserSession();
+if (!is_null($userSession)) {
+	$user = \OC::$server->getUserSession()->getUser();
+	if ($user instanceof IUser){
+		$arguments = array('user' => $user->getUID());
+		\OC::$server->getJobList()->add(new OptimizeJob(), $arguments);
+		\OC::$server->getJobList()->add(new DeleteJob(), $arguments);
+	}
 }
 
 // --- add hooks -----------------------------------------------
