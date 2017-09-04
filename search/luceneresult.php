@@ -40,10 +40,11 @@ class LuceneResult extends File {
 		$this->name = basename($this->path);
 		$this->size = (int)$hit->size;
 		$this->score = $hit->score;
-		$this->link = \OCP\Util::linkTo(
-			'files',
-			'index.php',
-			array('dir' => dirname($this->path), 'scrollto' => $this->name)
+		
+		$myfile='webdav'.dirname($this->path).'/'.$this->name;
+		$this->link = \OCP\Util::linkToAbsolute(
+			'remote.php',
+			$myfile
 		);
 		$this->permissions = $this->getPermissions($this->path);
 		$this->modified = (int)$hit->mtime;
