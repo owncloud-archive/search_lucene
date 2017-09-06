@@ -13,6 +13,7 @@ namespace OCA\Search_Lucene\Search;
 use OC\Files\Filesystem;
 use ZendSearch\Lucene\Search\QueryHit;
 use OC\Search\Result\File;
+use OCP\Constants;
 
 /**
  * A found file
@@ -48,6 +49,11 @@ class LuceneResult extends File {
 		$this->permissions = $this->getPermissions($this->path);
 		$this->modified = (int)$hit->mtime;
 		$this->mime_type = $hit->mimetype;
+		
+		$fileInfo = \OC\Files\Filesystem::getFileInfo($this->path);
+		if (is_object($fileInfo)) {
+			$this->etag = $fileInfo->getEtag();
+		}
 	}
 
 	protected function getRelativePath ($path) {
@@ -62,21 +68,21 @@ class LuceneResult extends File {
 	 */
 	function getPermissions($path) {
 		// add read permissions
-		$permissions = \OCP\PERMISSION_READ;
+		$permissions = Constants::PERMISSION_READ;
 		// get directory
 		$fileInfo = pathinfo($path);
 		$dir = $fileInfo['dirname'] . '/';
 		// add update permissions
 		if (Filesystem::isUpdatable($dir)) {
-			$permissions |= \OCP\PERMISSION_UPDATE;
+			$permissions |= Constants::PERMISSION_UPDATE;
 		}
 		// add delete permissions
 		if (Filesystem::isDeletable($dir)) {
-			$permissions |= \OCP\PERMISSION_DELETE;
+			$permissions |= Constants::PERMISSION_DELETE;
 		}
 		// add share permissions
 		if (Filesystem::isSharable($dir)) {
-			$permissions |= \OCP\PERMISSION_SHARE;
+			$permissions |= Constants::PERMISSION_SHARE;
 		}
 		// return
 		return $permissions;
