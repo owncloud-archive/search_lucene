@@ -41,8 +41,8 @@ class LuceneResult extends File {
 		$this->size = (int)$hit->size;
 		$this->score = $hit->score;
 		$this->link = \OCP\Util::linkTo(
+			'apps',
 			'files',
-			'index.php',
 			array('dir' => dirname($this->path), 'scrollto' => $this->name)
 		);
 		$this->permissions = $this->getPermissions($this->path);
