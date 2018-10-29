@@ -2,8 +2,8 @@ language: php
 sudo: required
 dist: trusty
 php:
-  - 5.6
-  - 7.0
+  - 7.1
+  - 7.2
 
 env:
   global:
@@ -36,17 +36,20 @@ script:
   - cd tests/unit
   - ../../../../lib/composer/bin/phpunit --configuration phpunit.xml
 
-  # Create coverage report
-  - wget https://scrutinizer-ci.com/ocular.phar
-  - php ocular.phar code-coverage:upload --format=php-clover clover.xml
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 
 matrix:
   include:
-    - php: 7
+    - php: 7.1
       env: DB=mysql
-    - php: 7
+    - php: 7.1
       env: DB=pgsql
-    - php: 7
+    - php: 7.1
       env: DB=oracle
+    - php: 5.6
+      env: DB=mysql CORE_BRANCH=stable10
+    - php: 7.0
+      env: DB=mysql CORE_BRANCH=stable10
 
   fast_finish: true
